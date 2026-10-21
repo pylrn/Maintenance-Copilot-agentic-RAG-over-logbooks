@@ -1,6 +1,6 @@
 # Person two integration handoff
 
-Development checkout: `/Volumes/MAC/Projects_devolopment/nexai_implimentation`, branch `person-1-retrieval-platform`. Source planning folder: `/Users/kush/Documents/ChatGPT/maintainence copilot`. Use this implementation checkout as your baseline; the planning folder has no app code. Use a separate checkout/branch for concurrent editing. Read `docs/work-split/PERSON_2_AGENT_UI_WORKFLOWS.md` for full assignment and the ready-to-paste prompt.
+Development checkout: `/Volumes/MAC/Projects_devolopment/nexai_implimentation`, branch `person-1-retrieval-platform`. Source planning folder: `/Users/kush/Documents/ChatGPT/maintainence copilot`. Canonical remote: `https://github.com/pylrn/Maintenance-Copilot-agentic-RAG-over-logbooks.git`. Person-one commits use `person-1-retrieval-platform`; coordinate integration through its pull request. Use this implementation checkout as your baseline; the planning folder has no app code. Use a separate checkout/branch for concurrent editing. Read `docs/work-split/PERSON_2_AGENT_UI_WORKFLOWS.md` for full assignment and the ready-to-paste prompt.
 
 ## Available now
 

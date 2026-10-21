@@ -1,5 +1,9 @@
 # Maintenance Atlas
 
+Predictive Intelligence for Logbook Operations & Troubleshooting.
+
+Project repository: [pylrn/Maintenance-Copilot-agentic-RAG-over-logbooks](https://github.com/pylrn/Maintenance-Copilot-agentic-RAG-over-logbooks). All project development commits should target this repository; person one uses `person-1-retrieval-platform`.
+
 Person one's retrieval/platform implementation for NEXAI PS 1.3. The development root is `/Volumes/MAC/Projects_devolopment/nexai_implimentation`; the planning source remains `/Users/kush/Documents/ChatGPT/maintainence copilot`.
 
 Implemented: source-preserving aviation/facility ingestion, PostgreSQL 17/pgvector storage, immutable corpus/evidence schema, true raw/normalized BM25 plus exact BGE cosine search, RRF/compatibility/duplicate grouping, deterministic comparison/pattern/sensitivity services, signed anonymous identity/Origin checks, source-version lookup, shared typed contracts/marked fixtures, startup readiness and API composition.
@@ -78,4 +82,4 @@ docker compose --profile app up -d --build
 
 This is local infrastructure, not a public deployment. Before public release: integrate P2, configure DeepSeek API access, choose a host with enough RAM/storage and persistent PostgreSQL, use TLS/HTTPS and its exact origin, configure server secrets, package the pinned artifacts, verify SSE buffering/replay/restart and owner isolation, then run positive/refusal/citation browser checks on the real public URL. Production uploads need a persistent owner-scoped storage service chosen with P2. See `docs/p1/deployment-runbook.md`.
 
-No credentials, raw source datasets, private conversations or embeddings were committed. No remote repository, public deployment or submission was created. Source/reuse provenance is in `reference/hybrid-search/SOURCE_MANIFEST.json`; copied reference code stays unchanged.
+No credentials, raw source datasets, private conversations or embeddings were committed. No public deployment or submission was created. Person-one changes are published on their development branch for review; existing main-branch history and files are preserved. Source/reuse provenance is in `reference/hybrid-search/SOURCE_MANIFEST.json`; copied reference code stays unchanged.

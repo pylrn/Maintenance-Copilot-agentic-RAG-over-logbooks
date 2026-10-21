@@ -11,3 +11,7 @@
 - Created Docker/Compose, resolved locks, runbook and P2 handoff. Linux dependency resolution explicitly selects CPU PyTorch to avoid unused CUDA libraries.
 - Agent, evidence gate, durable workflow implementation, adapted UI, live DeepSeek test and public deployment remain integration work; no missing capability is represented as implemented.
 - Final native suite: 33 passed with a separate PostgreSQL test database; lint and source compilation passed. CPU Docker image built, non-root runtime verified, package compatibility check passed, and real aviation/facility/source endpoints passed from the container. The running backend is at http://localhost:8000; workflow/UI readiness remains false.
+
+## GitHub repository alignment
+
+User designated `pylrn/Maintenance-Copilot-agentic-RAG-over-logbooks` as the destination for all commits. Connected origin, incorporated its existing main history without dropping test.py/test1.py, and retained person-one ownership on its development branch. Main is not merged automatically.
