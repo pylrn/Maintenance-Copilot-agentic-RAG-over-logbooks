@@ -7,9 +7,9 @@ __pycache__/
 .pytest_cache/
 .ruff_cache/
 .DS_Store
-artifacts/
-data/
-models/
-uploads/
+/artifacts/
+/data/
+/models/
+/uploads/
 *.egg-info/
 .worktrees/
