@@ -1,0 +1,9 @@
+{
+  "freeze_stage": "before first real-model retrieval evaluation",
+  "labels": "provisional engineering checks; not organizer gold labels",
+  "files": {
+    "hard_negatives.jsonl": "bcc731e3ec43f4b0675b347293bb66f06ef391c7e44cbbd8a1a6a3954e55610e",
+    "heldout.jsonl": "56f1a87bca8603cfad60c48d8193a8f25005c608fd19099e9f07e0bdaac1204d",
+    "development.jsonl": "183d8bd04fda017b4185bac1d9138511b6f70affb4dc25c00a70636369c1e732"
+  }
+}

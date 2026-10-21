@@ -1,0 +1,818 @@
+{
+  "question_file": "eval/heldout.jsonl",
+  "query_sha256": "56f1a87bca8603cfad60c48d8193a8f25005c608fd19099e9f07e0bdaac1204d",
+  "label_status": "provisional engineering labels, human review pending; broader relevant cases may be unlabeled",
+  "model": {
+    "dimension": 384,
+    "model_id": "BAAI/bge-small-en-v1.5",
+    "normalized": true,
+    "query_prefix": "Represent this sentence for searching relevant passages: ",
+    "revision": "5c38ec7c405ec4b44b94cc5a9bb96e735b38267a"
+  },
+  "corpora": [
+    {
+      "corpus_id": "2795c1d6-a5f4-5c8d-a773-4ac724d10e99",
+      "domain": "aviation",
+      "sha256": "a70daa27ba9c44a68617d69be1352be7fde003145ca142cbe0b7b51e197c6c3a",
+      "source_url": "https://people.rit.edu/fa3019/technical/data/maintnet_aviation_dataset_deidentified.csv",
+      "terms_note": "MaintNet research release. Preserve attribution; confirm redistribution rights separately. Not approved maintenance documentation.",
+      "record_count": 6169,
+      "distinct_pairs": 5122,
+      "fields": [
+        "IDENT",
+        "PROBLEM",
+        "ACTION"
+      ],
+      "parser_version": "csv/v1",
+      "normalization_version": "reviewed/v1",
+      "catalog_revision": "unreviewed/no-visual-mapping",
+      "warnings": []
+    },
+    {
+      "corpus_id": "b5f9d886-1b2c-56cc-96fe-ae0488597043",
+      "domain": "facility",
+      "sha256": "cd3d17441f1066fed3a232646480a05848318f71f72c57a5e28dc2f96b345736",
+      "source_url": "https://people.rit.edu/fa3019/technical/data/Facility_Maintenance200.csv",
+      "terms_note": "MaintNet research release. Preserve attribution; confirm redistribution rights separately. Not approved maintenance documentation.",
+      "record_count": 200,
+      "distinct_pairs": 190,
+      "fields": [
+        "WORK_ID",
+        "SITE_ID",
+        "DATE_REQUESTED",
+        "PROB_TYPE",
+        "DATE_COMPLETED",
+        "DESCRIPTION"
+      ],
+      "parser_version": "csv/v1",
+      "normalization_version": "reviewed/v1",
+      "catalog_revision": "unreviewed/no-visual-mapping",
+      "warnings": []
+    }
+  ],
+  "configurations": [
+    {
+      "name": "raw_bm25",
+      "hit_at_5": 11,
+      "positive_questions": 15,
+      "p50_ms": 381.26,
+      "p95_ms": 468.32,
+      "details": [
+        {
+          "query_id": "heldout-01",
+          "hit": true,
+          "top5": [
+            "aviation:104935",
+            "aviation:104936",
+            "aviation:105478",
+            "aviation:101471",
+            "aviation:100001"
+          ],
+          "elapsed_ms": 439.26
+        },
+        {
+          "query_id": "heldout-02",
+          "hit": true,
+          "top5": [
+            "aviation:100004",
+            "aviation:103912",
+            "aviation:101428",
+            "aviation:101811",
+            "aviation:106086"
+          ],
+          "elapsed_ms": 297.61
+        },
+        {
+          "query_id": "heldout-03",
+          "hit": true,
+          "top5": [
+            "aviation:100006",
+            "aviation:100218",
+            "aviation:100553",
+            "aviation:103689",
+            "aviation:100017"
+          ],
+          "elapsed_ms": 403.61
+        },
+        {
+          "query_id": "heldout-04",
+          "hit": true,
+          "top5": [
+            "aviation:100235",
+            "aviation:100007",
+            "aviation:100013",
+            "aviation:105398",
+            "aviation:104333"
+          ],
+          "elapsed_ms": 395.29
+        },
+        {
+          "query_id": "heldout-05",
+          "hit": false,
+          "top5": [
+            "aviation:100188",
+            "aviation:100220",
+            "aviation:100375",
+            "aviation:101708",
+            "aviation:101803"
+          ],
+          "elapsed_ms": 378.79
+        },
+        {
+          "query_id": "heldout-06",
+          "hit": false,
+          "top5": [
+            "aviation:100096",
+            "aviation:100357",
+            "aviation:101444",
+            "aviation:102256",
+            "aviation:102824"
+          ],
+          "elapsed_ms": 394.01
+        },
+        {
+          "query_id": "heldout-07",
+          "hit": true,
+          "top5": [
+            "aviation:104069",
+            "aviation:100012",
+            "aviation:100802",
+            "aviation:102688",
+            "aviation:103761"
+          ],
+          "elapsed_ms": 315.64
+        },
+        {
+          "query_id": "heldout-08",
+          "hit": true,
+          "top5": [
+            "aviation:100027",
+            "aviation:101383",
+            "aviation:100322",
+            "aviation:103610",
+            "aviation:102286"
+          ],
+          "elapsed_ms": 381.26
+        },
+        {
+          "query_id": "heldout-09",
+          "hit": false,
+          "top5": [
+            "aviation:105923",
+            "aviation:105924",
+            "aviation:104127",
+            "aviation:104128",
+            "aviation:105110"
+          ],
+          "elapsed_ms": 377.05
+        },
+        {
+          "query_id": "heldout-10",
+          "hit": false,
+          "top5": [
+            "aviation:101786",
+            "aviation:101628",
+            "aviation:103092",
+            "aviation:103254",
+            "aviation:105436"
+          ],
+          "elapsed_ms": 326.99
+        },
+        {
+          "query_id": "heldout-11",
+          "hit": true,
+          "top5": [
+            "aviation:100038",
+            "aviation:100039",
+            "aviation:100040",
+            "aviation:100157",
+            "aviation:104772"
+          ],
+          "elapsed_ms": 433.41
+        },
+        {
+          "query_id": "heldout-12",
+          "hit": true,
+          "top5": [
+            "aviation:100044",
+            "aviation:105013",
+            "aviation:106068",
+            "aviation:101150",
+            "aviation:101055"
+          ],
+          "elapsed_ms": 373.63
+        },
+        {
+          "query_id": "heldout-13",
+          "hit": true,
+          "top5": [
+            "aviation:100045",
+            "aviation:101264",
+            "aviation:103953",
+            "aviation:100837",
+            "aviation:101151"
+          ],
+          "elapsed_ms": 394.48
+        },
+        {
+          "query_id": "heldout-14",
+          "hit": true,
+          "top5": [
+            "aviation:100046",
+            "aviation:102093",
+            "aviation:102109",
+            "aviation:103975",
+            "aviation:103270"
+          ],
+          "elapsed_ms": 316.49
+        },
+        {
+          "query_id": "heldout-15",
+          "hit": true,
+          "top5": [
+            "aviation:101281",
+            "aviation:100050",
+            "aviation:100526",
+            "aviation:103485",
+            "aviation:102233"
+          ],
+          "elapsed_ms": 536.12
+        }
+      ]
+    },
+    {
+      "name": "dense_only",
+      "hit_at_5": 12,
+      "positive_questions": 15,
+      "p50_ms": 419.38,
+      "p95_ms": 1259.24,
+      "details": [
+        {
+          "query_id": "heldout-01",
+          "hit": true,
+          "top5": [
+            "aviation:100001",
+            "aviation:100002",
+            "aviation:100003",
+            "aviation:101007",
+            "aviation:104981"
+          ],
+          "elapsed_ms": 3082.14
+        },
+        {
+          "query_id": "heldout-02",
+          "hit": true,
+          "top5": [
+            "aviation:100004",
+            "aviation:105476",
+            "aviation:104139",
+            "aviation:101756",
+            "aviation:102002"
+          ],
+          "elapsed_ms": 441.45
+        },
+        {
+          "query_id": "heldout-03",
+          "hit": true,
+          "top5": [
+            "aviation:100218",
+            "aviation:100553",
+            "aviation:100006",
+            "aviation:100755",
+            "aviation:100017"
+          ],
+          "elapsed_ms": 367.4
+        },
+        {
+          "query_id": "heldout-04",
+          "hit": true,
+          "top5": [
+            "aviation:100235",
+            "aviation:100013",
+            "aviation:100007",
+            "aviation:100269",
+            "aviation:100768"
+          ],
+          "elapsed_ms": 419.38
+        },
+        {
+          "query_id": "heldout-05",
+          "hit": false,
+          "top5": [
+            "aviation:100188",
+            "aviation:100220",
+            "aviation:100375",
+            "aviation:101708",
+            "aviation:101803"
+          ],
+          "elapsed_ms": 387.91
+        },
+        {
+          "query_id": "heldout-06",
+          "hit": false,
+          "top5": [
+            "aviation:100096",
+            "aviation:100357",
+            "aviation:101444",
+            "aviation:102256",
+            "aviation:102824"
+          ],
+          "elapsed_ms": 395.95
+        },
+        {
+          "query_id": "heldout-07",
+          "hit": true,
+          "top5": [
+            "aviation:102688",
+            "aviation:103800",
+            "aviation:100012",
+            "aviation:100802",
+            "aviation:102687"
+          ],
+          "elapsed_ms": 459.18
+        },
+        {
+          "query_id": "heldout-08",
+          "hit": true,
+          "top5": [
+            "aviation:100027",
+            "aviation:105835",
+            "aviation:103959",
+            "aviation:103960",
+            "aviation:103961"
+          ],
+          "elapsed_ms": 309.34
+        },
+        {
+          "query_id": "heldout-09",
+          "hit": false,
+          "top5": [
+            "aviation:105110",
+            "aviation:105836",
+            "aviation:105837",
+            "aviation:105910",
+            "aviation:105911"
+          ],
+          "elapsed_ms": 399.87
+        },
+        {
+          "query_id": "heldout-10",
+          "hit": true,
+          "top5": [
+            "aviation:100033",
+            "aviation:100764",
+            "aviation:103268",
+            "aviation:101397",
+            "aviation:101532"
+          ],
+          "elapsed_ms": 478.0
+        },
+        {
+          "query_id": "heldout-11",
+          "hit": true,
+          "top5": [
+            "aviation:100038",
+            "aviation:100039",
+            "aviation:100040",
+            "aviation:105243",
+            "aviation:105244"
+          ],
+          "elapsed_ms": 373.23
+        },
+        {
+          "query_id": "heldout-12",
+          "hit": true,
+          "top5": [
+            "aviation:100044",
+            "aviation:105013",
+            "aviation:101055",
+            "aviation:106068",
+            "aviation:101150"
+          ],
+          "elapsed_ms": 433.32
+        },
+        {
+          "query_id": "heldout-13",
+          "hit": true,
+          "top5": [
+            "aviation:100045",
+            "aviation:105394",
+            "aviation:105552",
+            "aviation:100382",
+            "aviation:103127"
+          ],
+          "elapsed_ms": 400.8
+        },
+        {
+          "query_id": "heldout-14",
+          "hit": true,
+          "top5": [
+            "aviation:100046",
+            "aviation:102343",
+            "aviation:102455",
+            "aviation:100750",
+            "aviation:102403"
+          ],
+          "elapsed_ms": 431.06
+        },
+        {
+          "query_id": "heldout-15",
+          "hit": true,
+          "top5": [
+            "aviation:100050",
+            "aviation:101281",
+            "aviation:100526",
+            "aviation:102233",
+            "aviation:102148"
+          ],
+          "elapsed_ms": 447.48
+        }
+      ]
+    },
+    {
+      "name": "hybrid_rrf",
+      "hit_at_5": 12,
+      "positive_questions": 15,
+      "p50_ms": 424.22,
+      "p95_ms": 461.26,
+      "details": [
+        {
+          "query_id": "heldout-01",
+          "hit": true,
+          "top5": [
+            "aviation:100001",
+            "aviation:100002",
+            "aviation:100003",
+            "aviation:104981",
+            "aviation:101471"
+          ],
+          "elapsed_ms": 464.61
+        },
+        {
+          "query_id": "heldout-02",
+          "hit": true,
+          "top5": [
+            "aviation:100004",
+            "aviation:101811",
+            "aviation:101428",
+            "aviation:105927",
+            "aviation:105928"
+          ],
+          "elapsed_ms": 321.87
+        },
+        {
+          "query_id": "heldout-03",
+          "hit": true,
+          "top5": [
+            "aviation:100218",
+            "aviation:100553",
+            "aviation:100006",
+            "aviation:100017",
+            "aviation:100755"
+          ],
+          "elapsed_ms": 449.47
+        },
+        {
+          "query_id": "heldout-04",
+          "hit": true,
+          "top5": [
+            "aviation:100235",
+            "aviation:100013",
+            "aviation:100007",
+            "aviation:100269",
+            "aviation:105398"
+          ],
+          "elapsed_ms": 439.29
+        },
+        {
+          "query_id": "heldout-05",
+          "hit": false,
+          "top5": [
+            "aviation:100188",
+            "aviation:100220",
+            "aviation:100375",
+            "aviation:101708",
+            "aviation:101803"
+          ],
+          "elapsed_ms": 298.66
+        },
+        {
+          "query_id": "heldout-06",
+          "hit": false,
+          "top5": [
+            "aviation:100096",
+            "aviation:100357",
+            "aviation:101444",
+            "aviation:102256",
+            "aviation:102824"
+          ],
+          "elapsed_ms": 409.84
+        },
+        {
+          "query_id": "heldout-07",
+          "hit": true,
+          "top5": [
+            "aviation:102688",
+            "aviation:100012",
+            "aviation:100802",
+            "aviation:104069",
+            "aviation:103800"
+          ],
+          "elapsed_ms": 433.52
+        },
+        {
+          "query_id": "heldout-08",
+          "hit": true,
+          "top5": [
+            "aviation:100027",
+            "aviation:101383",
+            "aviation:106067",
+            "aviation:103959",
+            "aviation:103960"
+          ],
+          "elapsed_ms": 406.57
+        },
+        {
+          "query_id": "heldout-09",
+          "hit": false,
+          "top5": [
+            "aviation:105110",
+            "aviation:105836",
+            "aviation:105837",
+            "aviation:104127",
+            "aviation:104128"
+          ],
+          "elapsed_ms": 300.64
+        },
+        {
+          "query_id": "heldout-10",
+          "hit": true,
+          "top5": [
+            "aviation:100033",
+            "aviation:100764",
+            "aviation:105069",
+            "aviation:103381",
+            "aviation:104231"
+          ],
+          "elapsed_ms": 438.37
+        },
+        {
+          "query_id": "heldout-11",
+          "hit": true,
+          "top5": [
+            "aviation:100038",
+            "aviation:100039",
+            "aviation:100040",
+            "aviation:100157",
+            "aviation:105927"
+          ],
+          "elapsed_ms": 459.83
+        },
+        {
+          "query_id": "heldout-12",
+          "hit": true,
+          "top5": [
+            "aviation:100044",
+            "aviation:105013",
+            "aviation:106068",
+            "aviation:101055",
+            "aviation:101150"
+          ],
+          "elapsed_ms": 406.94
+        },
+        {
+          "query_id": "heldout-13",
+          "hit": true,
+          "top5": [
+            "aviation:100045",
+            "aviation:105026",
+            "aviation:102105",
+            "aviation:100125",
+            "aviation:100860"
+          ],
+          "elapsed_ms": 311.13
+        },
+        {
+          "query_id": "heldout-14",
+          "hit": true,
+          "top5": [
+            "aviation:100046",
+            "aviation:102343",
+            "aviation:100750",
+            "aviation:102455",
+            "aviation:102403"
+          ],
+          "elapsed_ms": 424.22
+        },
+        {
+          "query_id": "heldout-15",
+          "hit": true,
+          "top5": [
+            "aviation:100050",
+            "aviation:101281",
+            "aviation:100526",
+            "aviation:102233",
+            "aviation:104198"
+          ],
+          "elapsed_ms": 444.01
+        }
+      ]
+    },
+    {
+      "name": "hybrid_compatibility",
+      "hit_at_5": 12,
+      "positive_questions": 15,
+      "p50_ms": 412.92,
+      "p95_ms": 514.64,
+      "details": [
+        {
+          "query_id": "heldout-01",
+          "hit": true,
+          "top5": [
+            "aviation:100001",
+            "aviation:100002",
+            "aviation:100003",
+            "aviation:104981",
+            "aviation:101471"
+          ],
+          "elapsed_ms": 449.6
+        },
+        {
+          "query_id": "heldout-02",
+          "hit": true,
+          "top5": [
+            "aviation:100004",
+            "aviation:101811",
+            "aviation:101428",
+            "aviation:105927",
+            "aviation:105928"
+          ],
+          "elapsed_ms": 311.9
+        },
+        {
+          "query_id": "heldout-03",
+          "hit": true,
+          "top5": [
+            "aviation:100218",
+            "aviation:100553",
+            "aviation:100006",
+            "aviation:100017",
+            "aviation:100755"
+          ],
+          "elapsed_ms": 422.12
+        },
+        {
+          "query_id": "heldout-04",
+          "hit": true,
+          "top5": [
+            "aviation:100235",
+            "aviation:100013",
+            "aviation:100007",
+            "aviation:104333",
+            "aviation:101467"
+          ],
+          "elapsed_ms": 412.73
+        },
+        {
+          "query_id": "heldout-05",
+          "hit": false,
+          "top5": [
+            "aviation:100188",
+            "aviation:100220",
+            "aviation:100375",
+            "aviation:101708",
+            "aviation:101803"
+          ],
+          "elapsed_ms": 395.97
+        },
+        {
+          "query_id": "heldout-06",
+          "hit": false,
+          "top5": [
+            "aviation:100096",
+            "aviation:100357",
+            "aviation:101444",
+            "aviation:102256",
+            "aviation:102824"
+          ],
+          "elapsed_ms": 625.2
+        },
+        {
+          "query_id": "heldout-07",
+          "hit": true,
+          "top5": [
+            "aviation:102688",
+            "aviation:100012",
+            "aviation:100802",
+            "aviation:104069",
+            "aviation:103800"
+          ],
+          "elapsed_ms": 354.23
+        },
+        {
+          "query_id": "heldout-08",
+          "hit": true,
+          "top5": [
+            "aviation:100027",
+            "aviation:106067",
+            "aviation:103959",
+            "aviation:103960",
+            "aviation:103961"
+          ],
+          "elapsed_ms": 452.28
+        },
+        {
+          "query_id": "heldout-09",
+          "hit": false,
+          "top5": [
+            "aviation:105110",
+            "aviation:105836",
+            "aviation:105837",
+            "aviation:104127",
+            "aviation:104128"
+          ],
+          "elapsed_ms": 414.69
+        },
+        {
+          "query_id": "heldout-10",
+          "hit": true,
+          "top5": [
+            "aviation:100033",
+            "aviation:101071",
+            "aviation:104453",
+            "aviation:104296",
+            "aviation:100764"
+          ],
+          "elapsed_ms": 356.65
+        },
+        {
+          "query_id": "heldout-11",
+          "hit": true,
+          "top5": [
+            "aviation:100038",
+            "aviation:100039",
+            "aviation:100040",
+            "aviation:106067",
+            "aviation:103637"
+          ],
+          "elapsed_ms": 467.26
+        },
+        {
+          "query_id": "heldout-12",
+          "hit": true,
+          "top5": [
+            "aviation:100044",
+            "aviation:105013",
+            "aviation:106068",
+            "aviation:101055",
+            "aviation:101150"
+          ],
+          "elapsed_ms": 395.33
+        },
+        {
+          "query_id": "heldout-13",
+          "hit": true,
+          "top5": [
+            "aviation:100045",
+            "aviation:105026",
+            "aviation:102105",
+            "aviation:100125",
+            "aviation:100860"
+          ],
+          "elapsed_ms": 412.92
+        },
+        {
+          "query_id": "heldout-14",
+          "hit": true,
+          "top5": [
+            "aviation:100046",
+            "aviation:102455",
+            "aviation:103975",
+            "aviation:102093",
+            "aviation:102109"
+          ],
+          "elapsed_ms": 447.84
+        },
+        {
+          "query_id": "heldout-15",
+          "hit": true,
+          "top5": [
+            "aviation:100050",
+            "aviation:101281",
+            "aviation:100526",
+            "aviation:102233",
+            "aviation:100669"
+          ],
+          "elapsed_ms": 342.85
+        }
+      ]
+    }
+  ],
+  "agent_metrics": {
+    "citation_precision": null,
+    "correct_refusal": null,
+    "false_refusal": null,
+    "tokens": null,
+    "reason": "Person two agent/evidence gate/provider not integrated."
+  }
+}

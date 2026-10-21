@@ -1,0 +1,1 @@
+ALTER TABLE sessions VALIDATE CONSTRAINT session_revision_nonnegative;

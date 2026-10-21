@@ -1,0 +1,33 @@
+{
+  "fixture_only": true,
+  "record": {
+    "corpus_id": "45c6b635-d603-5819-8d4e-75dd4552344c",
+    "record_id": "aviation:DEMO-1",
+    "source_id": "DEMO-1",
+    "domain": "aviation",
+    "csv_row": 2,
+    "original_fields": {
+      "IDENT": "DEMO-1",
+      "PROBLEM": "INTAKE LEAK",
+      "ACTION": "REPLACED GASKET"
+    },
+    "problem_raw": "INTAKE LEAK",
+    "action_raw": "REPLACED GASKET",
+    "problem_normalized": "intake leak",
+    "action_normalized": "replaced gasket",
+    "normalization_version": "reviewed/v1",
+    "annotations": {
+      "applicability": "unknown",
+      "possible_truncation_fields": [],
+      "truncation_flag_policy": "heuristic/v1; unpunctuated field >=50 characters, never reconstructed"
+    },
+    "duplicate_key": "277f302cdd46a3b402f3385355080baae62850a2310f7c4987cba6d2ddd3617c",
+    "source_file_sha256": "98553a11d27169ca9f31b3d7e89b123c738b172f6225278095baf0ff8aaf7d79",
+    "field_sha256": {
+      "PROBLEM": "6f0ca24d365b59fd3edd1ff047504ef58d77cfc8d2ab3c9cd402bd01febba4e5",
+      "ACTION": "d720137690a3c200ef86b00851d58dce0251da7df816614f4030f275d8943fec"
+    },
+    "source_model": null,
+    "applicability": "unknown"
+  }
+}

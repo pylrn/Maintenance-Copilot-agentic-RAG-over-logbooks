@@ -1,0 +1,272 @@
+{
+  "source_root": "/Users/kush/hybrid-search-recovered",
+  "registered_path_unavailable": "/Volumes/MAC/Projects_devolopment/hybrid search",
+  "commit": "bc29296bfa8675a2ff3356b5a905998d0a4e2c61",
+  "purpose": "Immutable reference snapshot for an implementation plan. Not a runnable maintenance application. No credentials, candidate data, environment files or dependencies copied.",
+  "files": [
+    {
+      "path": "api/static/talent.html",
+      "source": "/Users/kush/hybrid-search-recovered/api/static/talent.html",
+      "sha256": "f7938ede664398c7bdc1a02f6d03e7cf80ff0e6960359f7f69649832971e92ce",
+      "bytes": 14075
+    },
+    {
+      "path": "api/static/talent.css",
+      "source": "/Users/kush/hybrid-search-recovered/api/static/talent.css",
+      "sha256": "71f2427eaa3969085678b9aadb38f6624f91af5a48368777ea98a3a1bdf02eec",
+      "bytes": 48595
+    },
+    {
+      "path": "api/static/talent.js",
+      "source": "/Users/kush/hybrid-search-recovered/api/static/talent.js",
+      "sha256": "d8a4bc6c7c1d6dfd653c0363428c94f48b44ca3d27882dbe5ed42f64e0feab83",
+      "bytes": 116901
+    },
+    {
+      "path": "api/static/agent-panel.js",
+      "source": "/Users/kush/hybrid-search-recovered/api/static/agent-panel.js",
+      "sha256": "80cab4da044383e57dc307e5ab9a92b974019c060e0840821ca82b1605288738",
+      "bytes": 36550
+    },
+    {
+      "path": "api/static/talent-settings.html",
+      "source": "/Users/kush/hybrid-search-recovered/api/static/talent-settings.html",
+      "sha256": "cba0ee7fba253b034854d29bb4f68bacf5f33605e8995d96917453a93b576344",
+      "bytes": 8255
+    },
+    {
+      "path": "api/static/talent-settings.js",
+      "source": "/Users/kush/hybrid-search-recovered/api/static/talent-settings.js",
+      "sha256": "2cb6038abc2889c98a065e1193c5a097e814efd12f0b700c467abaefb7d70c8d",
+      "bytes": 13290
+    },
+    {
+      "path": "api/static/talent-tool-runner.html",
+      "source": "/Users/kush/hybrid-search-recovered/api/static/talent-tool-runner.html",
+      "sha256": "2ece5e49445e1d5f1a879e97ed49ffe3d29f3810c2b6d0f88158f38252a6d84c",
+      "bytes": 1488
+    },
+    {
+      "path": "api/static/talent-tool-runner.css",
+      "source": "/Users/kush/hybrid-search-recovered/api/static/talent-tool-runner.css",
+      "sha256": "772f63224a467812018dd16939515b91f9386ec4107628f7fe4007ce5243c12d",
+      "bytes": 3368
+    },
+    {
+      "path": "api/static/talent-tool-runner.js",
+      "source": "/Users/kush/hybrid-search-recovered/api/static/talent-tool-runner.js",
+      "sha256": "5010f4be9272c0ce32eed700b427e4439f917129733901fa078a127c8ff7d74a",
+      "bytes": 4720
+    },
+    {
+      "path": "api/main.py",
+      "source": "/Users/kush/hybrid-search-recovered/api/main.py",
+      "sha256": "7854376ffdb989a0e9ee5e10b693d70c3d47831ef3e1bc24cbffda799eaeeeca",
+      "bytes": 176494
+    },
+    {
+      "path": "pipeline/agent.py",
+      "source": "/Users/kush/hybrid-search-recovered/pipeline/agent.py",
+      "sha256": "36480e9516d110b6532f89015ab8004d66b81f78f2de230d453504ab42c92a52",
+      "bytes": 57717
+    },
+    {
+      "path": "pipeline/agent_tools.py",
+      "source": "/Users/kush/hybrid-search-recovered/pipeline/agent_tools.py",
+      "sha256": "69e4fa0298d0753b52589315781bbc033d7c0165eda046e58b8241b39c427973",
+      "bytes": 54756
+    },
+    {
+      "path": "pipeline/agent_run.py",
+      "source": "/Users/kush/hybrid-search-recovered/pipeline/agent_run.py",
+      "sha256": "8bcfbabe563d067cd90dec128b8e118cdcf5845cc82903b898ddb7fd8fb0ef57",
+      "bytes": 30943
+    },
+    {
+      "path": "pipeline/agent_session.py",
+      "source": "/Users/kush/hybrid-search-recovered/pipeline/agent_session.py",
+      "sha256": "b562231608673e58ebbb409ddfa60976af77dc6cb3c13585d7953bb24da4f828",
+      "bytes": 2779
+    },
+    {
+      "path": "pipeline/agent_stream.py",
+      "source": "/Users/kush/hybrid-search-recovered/pipeline/agent_stream.py",
+      "sha256": "405c125141cf3e33412048ba794a6a4cdafc9f3ac9e88408f8bcec2063baa018",
+      "bytes": 3216
+    },
+    {
+      "path": "pipeline/prompts.py",
+      "source": "/Users/kush/hybrid-search-recovered/pipeline/prompts.py",
+      "sha256": "54574132c704f4fd1676f063d3f469eb74fa2ed860df662275d77df9baba2364",
+      "bytes": 20615
+    },
+    {
+      "path": "pipeline/search.py",
+      "source": "/Users/kush/hybrid-search-recovered/pipeline/search.py",
+      "sha256": "ddf8eb70acff0b8cfaf746cb23337a8ce489492c4eb0d99e45adbf1dff076f1b",
+      "bytes": 82858
+    },
+    {
+      "path": "pipeline/fusion.py",
+      "source": "/Users/kush/hybrid-search-recovered/pipeline/fusion.py",
+      "sha256": "8fb3a887e6192a2782b2d8740274809a9cce596c8ea94a38e4fcd848bd5c0f7f",
+      "bytes": 2334
+    },
+    {
+      "path": "pipeline/retrieve_dense.py",
+      "source": "/Users/kush/hybrid-search-recovered/pipeline/retrieve_dense.py",
+      "sha256": "9b0e33556ff1e2480c45f22d5b63baa6c204f279fe41a3e7aa1484d0aa0efd79",
+      "bytes": 7191
+    },
+    {
+      "path": "pipeline/retrieve_bm25.py",
+      "source": "/Users/kush/hybrid-search-recovered/pipeline/retrieve_bm25.py",
+      "sha256": "0914a228587b9fc2ef7c31069adc256845d6e99d5b8e3a3ce8277cdb801068b5",
+      "bytes": 16763
+    },
+    {
+      "path": "pipeline/reranker.py",
+      "source": "/Users/kush/hybrid-search-recovered/pipeline/reranker.py",
+      "sha256": "0233774e59e4f3c046d9b5ba8f5359121c5473df65111d6e630014c098e81082",
+      "bytes": 4399
+    },
+    {
+      "path": "pipeline/embedder.py",
+      "source": "/Users/kush/hybrid-search-recovered/pipeline/embedder.py",
+      "sha256": "0416d64159e92c6489cd5c54f394454838ce80cb45307dd7a51fd1f5ce9a7922",
+      "bytes": 15399
+    },
+    {
+      "path": "pipeline/database.py",
+      "source": "/Users/kush/hybrid-search-recovered/pipeline/database.py",
+      "sha256": "02fc18da4a1d5f89947038ad3611f802d20257c4ed5dea587e8937b3439a3a86",
+      "bytes": 3687
+    },
+    {
+      "path": "pipeline/search_result.py",
+      "source": "/Users/kush/hybrid-search-recovered/pipeline/search_result.py",
+      "sha256": "a9289ee77fdb2a4bdfb5c4f9459eff178ae1ed28c4f4399ff8ec888c3fd5a24f",
+      "bytes": 3173
+    },
+    {
+      "path": "pipeline/spec.py",
+      "source": "/Users/kush/hybrid-search-recovered/pipeline/spec.py",
+      "sha256": "9d365fc1cd3d90c0fd6a5f78f78ce7b89198960416b1e2cbfd735492210ea8fa",
+      "bytes": 3142
+    },
+    {
+      "path": "pipeline/config.py",
+      "source": "/Users/kush/hybrid-search-recovered/pipeline/config.py",
+      "sha256": "d2b516e17e9c2a21c2f89495d74fb0d98de857dd3c434c0585425517f50060bf",
+      "bytes": 4488
+    },
+    {
+      "path": "pipeline/modes.py",
+      "source": "/Users/kush/hybrid-search-recovered/pipeline/modes.py",
+      "sha256": "daa3082e394b43d0aa643cce49890cf9d08a6439bfc8094fa05b6caa9d85efe3",
+      "bytes": 3838
+    },
+    {
+      "path": "pipeline/feature_ranker.py",
+      "source": "/Users/kush/hybrid-search-recovered/pipeline/feature_ranker.py",
+      "sha256": "d3e3150ab71d1d2ae19e863001679eae55a67cb19ebf2a88fa4f2d9124a16325",
+      "bytes": 9001
+    },
+    {
+      "path": "pipeline/explanation.py",
+      "source": "/Users/kush/hybrid-search-recovered/pipeline/explanation.py",
+      "sha256": "f18cca2adcf59cbaddd2797a7c226c902c08571fb87b31cb3dfe9167cfa07a58",
+      "bytes": 6295
+    },
+    {
+      "path": "pipeline/observability.py",
+      "source": "/Users/kush/hybrid-search-recovered/pipeline/observability.py",
+      "sha256": "a93871eb597a3c21c519c512bd420b2cb83a4b51d4b168a7f30d201f0c297a6b",
+      "bytes": 14802
+    },
+    {
+      "path": "pipeline/llm_models.py",
+      "source": "/Users/kush/hybrid-search-recovered/pipeline/llm_models.py",
+      "sha256": "e2c63734c4e21c866699537478beb16cba0d2a0aaa8d916abe9b38b19381efbd",
+      "bytes": 3532
+    },
+    {
+      "path": "pipeline/__init__.py",
+      "source": "/Users/kush/hybrid-search-recovered/pipeline/__init__.py",
+      "sha256": "bbc24e7b9f768b6691a3a525464dc1e2fb28fa125e776fc34073b9de18b36fd8",
+      "bytes": 7645
+    },
+    {
+      "path": "pyproject.toml",
+      "source": "/Users/kush/hybrid-search-recovered/pyproject.toml",
+      "sha256": "b0ba685b3e8008f0568ae6e73c767fb294a4757e8b259fa354176517f47abd9f",
+      "bytes": 1252
+    },
+    {
+      "path": "db/migrations/014_agent_chat_sessions.sql",
+      "source": "/Users/kush/hybrid-search-recovered/db/migrations/014_agent_chat_sessions.sql",
+      "sha256": "f12875ba29e711710db32ff48c753efa601f7a48f4c5899dd64f9242b95458bd",
+      "bytes": 671
+    },
+    {
+      "path": "db/migrations/010_search_history.sql",
+      "source": "/Users/kush/hybrid-search-recovered/db/migrations/010_search_history.sql",
+      "sha256": "25755295dc2f21b05dcd2547e76bf549af53e3102d4b7c67b3ca12e67c5b8b15",
+      "bytes": 980
+    },
+    {
+      "path": "db/migrations/016_paradedb_pg_search_bm25.sql",
+      "source": "/Users/kush/hybrid-search-recovered/db/migrations/016_paradedb_pg_search_bm25.sql",
+      "sha256": "d5d1f1e4d9b1f629c7b0b3060667b0f6a65eb5afdcb0f7d66b4344f594a865b4",
+      "bytes": 1237
+    },
+    {
+      "path": "tests/test_agent_endpoint.py",
+      "source": "/Users/kush/hybrid-search-recovered/tests/test_agent_endpoint.py",
+      "sha256": "dbdccd4445a4a09a5dfa99eb2e01351e79b080a458a7db095765ea98598392d1",
+      "bytes": 6683
+    },
+    {
+      "path": "tests/test_agent_stream.py",
+      "source": "/Users/kush/hybrid-search-recovered/tests/test_agent_stream.py",
+      "sha256": "ab783c5a5cb9a96331449ba3174ea06151ace375d14530255958d20a029e757c",
+      "bytes": 6900
+    },
+    {
+      "path": "tests/test_agent_session.py",
+      "source": "/Users/kush/hybrid-search-recovered/tests/test_agent_session.py",
+      "sha256": "f62b03ed942fc783b9d93684d25c9a61b1fd3c4d39de0b377e542232cb71c4f7",
+      "bytes": 1693
+    },
+    {
+      "path": "tests/test_agent_sessions_api.py",
+      "source": "/Users/kush/hybrid-search-recovered/tests/test_agent_sessions_api.py",
+      "sha256": "69b71d7dd93177b749b5fde14a8cc11beba04a2895128473aad714c8db5f5790",
+      "bytes": 3261
+    },
+    {
+      "path": "tests/test_talent_ui_contracts.py",
+      "source": "/Users/kush/hybrid-search-recovered/tests/test_talent_ui_contracts.py",
+      "sha256": "53ea5c031d6f3ea6f33ef574ba0a87ac225ce44bd5caa5d1be3572bec42b056b",
+      "bytes": 3313
+    },
+    {
+      "path": "tests/test_search_history.py",
+      "source": "/Users/kush/hybrid-search-recovered/tests/test_search_history.py",
+      "sha256": "d4d3943cfa5146244fd8fb412d1e53e45369c7ca34541308c20dbef6abbbeb68",
+      "bytes": 1759
+    },
+    {
+      "path": "README.md",
+      "source": "/Users/kush/hybrid-search-recovered/README.md",
+      "sha256": "7cc00420ee7bd8067b8afb7fb4d9fc7109378a51ade3ecdeee63835c60bb9b03",
+      "bytes": 7002
+    },
+    {
+      "path": "docs/search_logic_deep_dive.md",
+      "source": "/Users/kush/hybrid-search-recovered/docs/search_logic_deep_dive.md",
+      "sha256": "9b74354d0f4e507b660baf034a9b868f00fa6da3d07efcc4d3091a22e364127d",
+      "bytes": 12660
+    }
+  ]
+}

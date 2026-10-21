@@ -1,0 +1,6 @@
+{
+  "protocol_version": "maintenance/v1",
+  "status": "P1 implementation baseline; P2 schema review pending",
+  "schema_sha256": "e9d82030c40e21187f16e0d20961fa02d3d80af3d4c0ccf38565ac31c963fbf5",
+  "canonical_python": "maintenance/contracts.py"
+}

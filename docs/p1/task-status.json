@@ -1,0 +1,40 @@
+{
+  "date": "2026-10-22",
+  "scope": "Person one independent platform work",
+  "implemented": [
+    "source/checksum-preserving ingest",
+    "immutable versioned PostgreSQL schema",
+    "BGE offline embeddings and verified index artifacts",
+    "true BM25/exact dense/RRF/compatibility/duplicate retrieval",
+    "comparison/pattern/sensitivity computations",
+    "typed schemas and marked fixture services",
+    "auth/config/readiness/API composition",
+    "dependency locks and deployment configuration",
+    "engineering retrieval evaluation and P2 handoff"
+  ],
+  "integration_pending": [
+    "P2 contract/schema review",
+    "P2 provider smoke test and API key",
+    "P2 agent/evidence gate/session repository/SSE/UI/visual integration",
+    "human relevance/citation/refusal review",
+    "public deployment after host selection"
+  ],
+  "optional_not_enabled": [
+    "cross-encoder reranker",
+    "Langfuse",
+    "3D/telemetry/classifier training"
+  ],
+  "test_result": {
+    "full_suite_passed": 33,
+    "full_suite_skipped": 0
+  },
+  "public_deployment": false,
+  "container": {
+    "build": "passed",
+    "runtime_smoke": "passed",
+    "uid": 10001,
+    "torch": "2.14.1+cpu",
+    "api_url": "http://localhost:8000",
+    "workflows_ready": false
+  }
+}

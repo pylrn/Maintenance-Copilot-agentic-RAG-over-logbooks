@@ -1,0 +1,280 @@
+{
+  "search_id": "14e7746a-487a-4212-921e-cf006ec4cce2",
+  "protocol_version": "maintenance/v1",
+  "spec": {
+    "query_raw": "intake leak",
+    "query_normalized": "intake leak",
+    "domain": "aviation",
+    "corpus_ids": [
+      "45c6b635-d603-5819-8d4e-75dd4552344c"
+    ],
+    "intent": "fault",
+    "explicit_components": [
+      {
+        "value": "intake",
+        "text": "intake",
+        "start": 0,
+        "end": 6,
+        "kind": "component"
+      }
+    ],
+    "symptoms": [
+      {
+        "value": "leak",
+        "text": "leak",
+        "start": 7,
+        "end": 11,
+        "kind": "symptom"
+      }
+    ],
+    "location_mentions": [],
+    "number_mentions": [],
+    "negation_spans": [],
+    "ambiguous_terms": [],
+    "requested_fact_type": "historical_cases",
+    "aircraft_profile_revision": 0,
+    "filters": {
+      "component": null,
+      "symptom": null
+    },
+    "top_k": 6,
+    "quality_mode": false,
+    "collapse_duplicates": true
+  },
+  "hits": [
+    {
+      "corpus_id": "45c6b635-d603-5819-8d4e-75dd4552344c",
+      "record_id": "aviation:DEMO-1",
+      "rrf_score": 0.03278688524590164,
+      "channel_ranks": {
+        "bm25_raw": 1,
+        "bm25_normalized": 1,
+        "dense": 1
+      },
+      "channel_scores": {
+        "bm25_raw": 0.6369072662731182,
+        "bm25_normalized": 0.6369072662731182,
+        "dense": 1.0
+      },
+      "compatibility": {
+        "tier": "direct",
+        "facts": {
+          "component": "agreement",
+          "symptom": "agreement",
+          "laterality": "unknown",
+          "cylinder_number": "unknown",
+          "engine_number": "unknown",
+          "number": "unknown",
+          "number_context": "unknown",
+          "negation": "agreement"
+        },
+        "query_mentions": [
+          {
+            "value": "intake",
+            "text": "intake",
+            "start": 0,
+            "end": 6,
+            "kind": "component"
+          },
+          {
+            "value": "leak",
+            "text": "leak",
+            "start": 7,
+            "end": 11,
+            "kind": "symptom"
+          }
+        ],
+        "source_mentions": [
+          {
+            "value": "intake",
+            "text": "INTAKE",
+            "start": 0,
+            "end": 6,
+            "kind": "component"
+          },
+          {
+            "value": "leak",
+            "text": "LEAK",
+            "start": 7,
+            "end": 11,
+            "kind": "symptom"
+          }
+        ],
+        "limitations": [
+          "heuristic relevance; source aircraft applicability unknown"
+        ]
+      },
+      "duplicate_ids": [
+        "aviation:DEMO-1"
+      ],
+      "duplicate_count": 1,
+      "reranker_score": null
+    },
+    {
+      "corpus_id": "45c6b635-d603-5819-8d4e-75dd4552344c",
+      "record_id": "aviation:DEMO-2",
+      "rrf_score": 0.03225806451612903,
+      "channel_ranks": {
+        "bm25_raw": 2,
+        "bm25_normalized": 2,
+        "dense": 2
+      },
+      "channel_scores": {
+        "bm25_raw": 0.07543838325658091,
+        "bm25_normalized": 0.07543838325658091,
+        "dense": 0.0
+      },
+      "compatibility": {
+        "tier": "related",
+        "facts": {
+          "component": "difference",
+          "symptom": "agreement",
+          "laterality": "unknown",
+          "cylinder_number": "unknown",
+          "engine_number": "unknown",
+          "number": "unknown",
+          "number_context": "unknown",
+          "negation": "agreement"
+        },
+        "query_mentions": [
+          {
+            "value": "intake",
+            "text": "intake",
+            "start": 0,
+            "end": 6,
+            "kind": "component"
+          },
+          {
+            "value": "leak",
+            "text": "leak",
+            "start": 7,
+            "end": 11,
+            "kind": "symptom"
+          }
+        ],
+        "source_mentions": [
+          {
+            "value": "rocker_cover",
+            "text": "ROCKER COVER",
+            "start": 0,
+            "end": 12,
+            "kind": "component"
+          },
+          {
+            "value": "leak",
+            "text": "LEAK",
+            "start": 13,
+            "end": 17,
+            "kind": "symptom"
+          }
+        ],
+        "limitations": [
+          "heuristic relevance; source aircraft applicability unknown"
+        ]
+      },
+      "duplicate_ids": [
+        "aviation:DEMO-2"
+      ],
+      "duplicate_count": 1,
+      "reranker_score": null
+    },
+    {
+      "corpus_id": "45c6b635-d603-5819-8d4e-75dd4552344c",
+      "record_id": "aviation:DEMO-3",
+      "rrf_score": 0.015873015873015872,
+      "channel_ranks": {
+        "dense": 3
+      },
+      "channel_scores": {
+        "dense": 0.0
+      },
+      "compatibility": {
+        "tier": "tangential",
+        "facts": {
+          "component": "difference",
+          "symptom": "difference",
+          "laterality": "unknown",
+          "cylinder_number": "unknown",
+          "engine_number": "unknown",
+          "number": "unknown",
+          "number_context": "unknown",
+          "negation": "unknown"
+        },
+        "query_mentions": [
+          {
+            "value": "intake",
+            "text": "intake",
+            "start": 0,
+            "end": 6,
+            "kind": "component"
+          },
+          {
+            "value": "leak",
+            "text": "leak",
+            "start": 7,
+            "end": 11,
+            "kind": "symptom"
+          }
+        ],
+        "source_mentions": [
+          {
+            "value": "battery",
+            "text": "BATTERY",
+            "start": 0,
+            "end": 7,
+            "kind": "component"
+          },
+          {
+            "value": "flat",
+            "text": "FLAT",
+            "start": 8,
+            "end": 12,
+            "kind": "symptom"
+          }
+        ],
+        "limitations": [
+          "heuristic relevance; source aircraft applicability unknown"
+        ]
+      },
+      "duplicate_ids": [
+        "aviation:DEMO-3"
+      ],
+      "duplicate_count": 1,
+      "reranker_score": null
+    }
+  ],
+  "channels": {
+    "bm25_raw": [
+      "aviation:DEMO-1",
+      "aviation:DEMO-2"
+    ],
+    "bm25_normalized": [
+      "aviation:DEMO-1",
+      "aviation:DEMO-2"
+    ],
+    "dense": [
+      "aviation:DEMO-1",
+      "aviation:DEMO-2",
+      "aviation:DEMO-3"
+    ]
+  },
+  "versions": {
+    "pipeline": "hybrid/v1",
+    "normalizer": "reviewed/v1",
+    "embedding_model": "fixture-only",
+    "embedding_revision": "fixture-only",
+    "representation": "problem",
+    "corpora": "45c6b635-d603-5819-8d4e-75dd4552344c"
+  },
+  "timings_ms": {
+    "embedding": 2.6678330032154918,
+    "total": 6.3918750020093285
+  },
+  "degraded_branches": [],
+  "limitations": [
+    "Historical model applicability and repair outcome are unspecified.",
+    "Ranking scores are relevance signals, not diagnostic probabilities.",
+    "SYNTHETIC FIXTURE: not real maintenance evidence."
+  ],
+  "fixture_only": true
+}
