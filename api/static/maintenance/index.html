@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Maintenance Atlas — evidence copilot</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500;600&family=Newsreader:ital,wght@1,500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="./talent-base.css"><link rel="stylesheet" href="./maintenance.css">
+</head>
+<body>
+  <div class="talent-shell" id="shell">
+    <header class="topbar"><div class="topbar-inner">
+      <a class="brand" href="./" aria-label="Maintenance Atlas home"><span class="brand-main">MAINTENANCE</span><span class="brand-rule"></span><span class="brand-sub">ATLAS</span></a>
+      <nav class="top-actions" aria-label="Main navigation">
+        <button class="shortlist-pill" id="pinsBtn"><span class="status-dot"></span>Pinned · <span id="pinCount">0</span></button>
+        <button class="top-link" id="storyBtn">How it works</button><button class="top-link" id="explorerBtn">Record explorer</button><button class="top-link" id="settingsBtn">Settings</button>
+      </nav>
+    </div></header>
+    <main>
+      <section class="hero">
+        <div class="hero-kicker">AVIATION MAINTENANCE COPILOT</div>
+        <h1>Maintenance history. <em>Explained.</em></h1>
+        <p class="hero-copy">Describe a fault in plain language — the copilot searches recorded cases and explains what the evidence supports. Keep investigating with every source in view.</p>
+        <form class="ai-search" id="heroForm"><label class="sr-only" for="heroInput">Describe the reported fault</label><span class="ai-mark" aria-hidden="true">✻</span><input class="ai-input" id="heroInput" autocomplete="off" placeholder="Cylinder #2 intake leaking — find similar recorded cases…" required maxlength="8000"><button class="send-round" aria-label="Investigate fault">→</button></form>
+        <div class="feature-grid">
+          <article class="feature-card"><div class="feature-bar"></div><div class="feature-title">Cited historical evidence</div><div class="feature-copy">Every finding opens the exact log field that supports it.</div></article>
+          <article class="feature-card"><div class="feature-bar"></div><div class="feature-title">Compare and investigate</div><div class="feature-copy">Challenge, distinguish and refine with a persistent history.</div></article>
+          <article class="feature-card"><div class="feature-bar"></div><div class="feature-title">Source coverage</div><div class="feature-copy" id="coverage">Connecting to the source catalogue…</div></article>
+        </div>
+        <div class="toggle-row">
+          <button class="toggle-pill" data-drawer="queryDrawer" aria-expanded="false">Direct log search <span class="chev">▼</span></button>
+          <button class="toggle-pill" data-drawer="reportDrawer" aria-expanded="false">Paste fault report <span class="chev">▼</span></button>
+          <button class="toggle-pill" data-drawer="advancedDrawer" aria-expanded="false">Advanced options <span class="chev">▼</span></button>
+        </div>
+        <section class="drawer" id="queryDrawer" hidden><div class="section-label">Direct log search</div><p class="helper">Retrieve source records without generating an answer.</p><label class="sr-only" for="queryText">Search complaint</label><textarea class="textarea" id="queryText" placeholder="Describe a component and symptom…" maxlength="8000"></textarea><div class="drawer-actions"><span class="helper">Uses the same source filters as the copilot.</span><button class="primary-btn" id="searchBtn">Search records</button></div></section>
+        <section class="drawer" id="reportDrawer" hidden><div class="section-label">User-reported context</div><p class="helper">A pasted report is a user observation. It does not become a historical database record.</p><label class="form-label">Aircraft / engine, if known<input class="field" id="aircraftInput" maxlength="160" placeholder="Unknown — specify if available"></label><label class="sr-only" for="reportText">Fault report</label><textarea class="textarea" id="reportText" placeholder="Paste the complaint and observations…" maxlength="8000"></textarea><div class="drawer-actions"><span></span><button class="primary-btn" id="reportBtn">Investigate report</button></div></section>
+        <section class="drawer" id="advancedDrawer" hidden><div class="section-label">Retrieval options</div><div class="form-grid maintenance-filters">
+          <label class="form-label">Domain<select class="select" id="domainSelect"></select></label>
+          <label class="form-label">Top K<input class="field" type="number" min="1" max="20" value="5" id="topK"></label>
+          <label class="form-label">Quality<select class="select" id="qualitySelect"><option value="hybrid">Hybrid</option><option value="rerank">Hybrid + rerank</option></select></label>
+          <label class="form-label">Duplicate view<select class="select" id="duplicatesSelect"><option value="grouped">Group repeats</option><option value="raw">All source rows</option></select></label>
+        </div><p class="helper">Changing a filter applies to the next run. Unknown aircraft applicability remains unknown.</p></section>
+      </section>
+      <div id="notice" role="status" hidden></div>
+      <section class="chat-wrap" id="chatSection"><div class="chat-panel">
+        <div class="chat-top"><span class="ready-indicator" id="readyDot"></span><span class="copilot-status" id="chatStatus" role="status">connecting to copilot…</span><span class="toolbar-spacer"></span><div class="chat-toolbar">
+          <label class="sr-only" for="agentModelSelect">Model for the next run</label><select class="toolbar-select" id="agentModelSelect" disabled></select>
+          <button class="mini-btn" id="historyBtn">history</button><button class="mini-btn" id="uploadBtn">upload</button><button class="mini-btn" id="stopBtn" hidden>stop · esc</button><button class="mini-btn" id="resumeBtn" hidden>resume stream</button><button class="mini-btn" id="newSessionBtn">new session</button>
+        </div></div>
+        <div class="live-spec-card" id="liveSpecCard" hidden></div>
+        <div class="investigation-layout" id="workspace"><div class="conversation" id="thread" tabindex="0" aria-label="Investigation conversation"></div><aside class="evidence-workspace" id="evidenceWorkspace" aria-label="Evidence and investigation state" hidden><div class="workspace-tabs" role="group" aria-label="Investigation panels"><button class="chip active" data-tab="evidence">Evidence</button><button class="chip" data-tab="board">Known / reported / missing</button></div><div id="evidencePanel"></div><div id="boardPanel" hidden></div></aside></div>
+        <form class="chat-input-row" id="chatForm"><label class="sr-only" for="chatInput">Ask a follow-up</label><input class="chat-input" id="chatInput" placeholder="Refine the complaint, compare cases, or ask what is missing…" autocomplete="off" maxlength="8000" required><button class="send-round" id="chatSubmit" aria-label="Send follow-up" type="submit">→</button></form>
+      </div></section>
+      <section class="results-section"><div class="starter" id="starterBlock"><div class="starter-title">Try asking</div><div class="starter-row" id="starters"></div></div><div id="directResults"></div></section>
+    </main>
+    <footer class="footer"><div class="footer-inner"><span class="footer-brand">MAINTENANCE ATLAS</span><span>Historical evidence, with its limits in view.</span><span class="footer-mono" id="environmentLabel"></span></div></footer>
+  </div>
+  <dialog id="panelDialog" aria-labelledby="panelTitle"><div class="drawer-panel-head"><div><div class="results-eyebrow" id="panelEyebrow"></div><h2 id="panelTitle"></h2></div><button class="mini-btn" id="panelCloseBtn">close</button></div><div class="panel-body" id="panelBody"></div></dialog>
+  <input type="file" id="fileInput" accept=".txt,.md,.pdf" hidden>
+  <!-- One controller only. Never load talent.js or agent-panel.js alongside this. -->
+  <script type="module" src="./maintenance-ui.mjs"></script>
+</body></html>

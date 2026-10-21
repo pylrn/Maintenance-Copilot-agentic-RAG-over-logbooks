@@ -1,0 +1,41 @@
+{
+  "mappings_version": "1.0",
+  "asset_id": "engine-concept.svg",
+  "mappings": [
+    {
+      "component_id": "cylinder_assembly",
+      "node_id": "node-cylinder",
+      "mapping_kind": "region",
+      "label": "Cylinder Assembly",
+      "reviewer": "person-2"
+    },
+    {
+      "component_id": "intake_manifold",
+      "node_id": "node-intake",
+      "mapping_kind": "region",
+      "label": "Intake Manifold & Gasket",
+      "reviewer": "person-2"
+    },
+    {
+      "component_id": "rocker_cover",
+      "node_id": "node-rocker",
+      "mapping_kind": "region",
+      "label": "Rocker Box Cover & Gasket",
+      "reviewer": "person-2"
+    },
+    {
+      "component_id": "exhaust_manifold",
+      "node_id": "node-exhaust",
+      "mapping_kind": "region",
+      "label": "Exhaust Manifold & Riser",
+      "reviewer": "person-2"
+    },
+    {
+      "component_id": "baffle_cooling",
+      "node_id": "node-baffle",
+      "mapping_kind": "region",
+      "label": "Cooling Baffle & Air Deflector",
+      "reviewer": "person-2"
+    }
+  ]
+}
