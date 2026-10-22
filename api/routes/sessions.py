@@ -124,7 +124,10 @@ async def post_message(
     ] if engine else []
 
     provider = getattr(request.app.state, "provider", None)
-    model_id = provider.model_name if (provider and provider.is_configured) else "extractive/v1"
+    if payload.model and payload.model in (request.app.state.settings.model_allowlist + ["extractive/v1"]):
+        model_id = payload.model
+    else:
+        model_id = provider.model_name if (provider and provider.is_configured) else "extractive/v1"
 
     try:
         run_id, is_new = await repo.create_run(

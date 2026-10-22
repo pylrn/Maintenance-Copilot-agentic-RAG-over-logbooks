@@ -322,6 +322,9 @@ class MessageRequest(Contract):
     text: str = Field(min_length=1, max_length=10000)
     idempotency_key: UUID
     expected_revision: int = Field(ge=0)
+    model: str | None = None
+    parameters: dict[str, Any] = Field(default_factory=dict)
+    corpus_version: str | None = None
 
 
 class ActionRequest(Contract):
