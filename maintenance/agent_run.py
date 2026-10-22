@@ -15,6 +15,7 @@ from maintenance.contracts import (
     DraftAnswer,
     ServiceScope,
 )
+from maintenance.evidence_sufficiency import supporting_evidence
 from maintenance.events import EventBus
 from maintenance.ingest.annotate import mentions
 from maintenance.models.provider import LLMProvider
@@ -401,13 +402,17 @@ class AgentRunner:
                         logger.warning("LLM generation/validation fallback to extractive: %s", type(exc).__name__)
 
                 if answer is None:
+                    answer_evidence = (
+                        supporting_evidence(query_text, deps.fetched_evidence)
+                        if deps.mode == "EVIDENCE" else deps.fetched_evidence
+                    )
                     lm_summary = ""
                     lm_can: list[str] = []
                     lm_cannot: list[str] = []
-                    if run_provider and run_provider.is_configured and deps.fetched_evidence:
+                    if run_provider and run_provider.is_configured and answer_evidence:
                         try:
                             lm_summary, lm_can, lm_cannot = await self.synthesize_conclusions(
-                                run_provider, query_text, deps.fetched_evidence
+                                run_provider, query_text, answer_evidence
                             )
                         except Exception as exc:
                             logger.warning("LM conclusion synthesis failed: %s", exc)
@@ -416,10 +421,14 @@ class AgentRunner:
                         run_id=deps.run_id,
                         mode=deps.mode,  # type: ignore
                         query_raw=query_text,
-                        fetched_evidence=deps.fetched_evidence,
+                        fetched_evidence=answer_evidence,
                         state_revision=deps.state_revision,
-                        status="insufficient_evidence" if not deps.fetched_evidence else None,
-                        summary=lm_summary or None,
+                        status="insufficient_evidence" if not answer_evidence else None,
+                        summary=lm_summary or (
+                            "Insufficient evidence: retrieved candidates do not establish a matching complaint in the authorized records. "
+                            "This does not prove that the fault is absent or identify a repair."
+                            if not answer_evidence else None
+                        ),
                         what_can_be_concluded=lm_can or None,
                         what_cannot_be_concluded=lm_cannot or None,
                     )

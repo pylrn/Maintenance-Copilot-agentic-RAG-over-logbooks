@@ -86,8 +86,8 @@ def render_extractive_answer(
     ]
     missing = missing or []
 
-    # If no evidence was fetched, return insufficient_evidence or clarification_needed
-    if not fetched_evidence:
+    # An explicit abstention must not be overridden merely because candidates exist.
+    if not fetched_evidence or status == "insufficient_evidence":
         final_status: AnswerStatus = status or "insufficient_evidence"
         headline = (
             "No historical maintenance records found matching this fault complaint."
