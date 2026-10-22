@@ -23,6 +23,74 @@
         <h1>Maintenance history. <em>Explained.</em></h1>
         <p class="hero-copy">Describe a fault in plain language — the copilot searches recorded cases and explains what the evidence supports. Keep investigating with every source in view.</p>
         <form class="ai-search" id="heroForm"><label class="sr-only" for="heroInput">Describe the reported fault</label><span class="ai-mark" aria-hidden="true">✻</span><input class="ai-input" id="heroInput" autocomplete="off" placeholder="Cylinder #2 intake leaking — find similar recorded cases…" required maxlength="8000"><button class="send-round" aria-label="Investigate fault">→</button></form>
+        
+        <!-- Top-down 2D Plane Silhouette Workspace / Locator -->
+        <div class="plane-diagnostic-wrap" id="planeDiagnosticWrap">
+          <div class="plane-diagnostic-card">
+            <div class="plane-card-header">
+              <div class="plane-card-title">
+                <span class="plane-status-dot" id="planeStatusDot"></span>
+                <span>AIRCRAFT COMPONENT LOCATOR · 2D AIRFRAME SCHEMATIC</span>
+              </div>
+              <div class="plane-active-highlight" id="planeActiveHighlight">All systems nominal · awaiting fault input</div>
+            </div>
+            <div class="plane-svg-container" id="planeSvgContainer">
+              <!-- Inline Aircraft Silhouette SVG -->
+              <svg id="planeSvg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 500" width="100%" height="100%" preserveAspectRatio="xMidYMid meet">
+                <defs>
+                  <filter id="glow-orange" x="-20%" y="-20%" width="140%" height="140%">
+                    <feGaussianBlur stdDeviation="3" result="blur" />
+                    <feComposite in="SourceGraphic" in2="blur" operator="over" />
+                  </filter>
+                </defs>
+                <!-- Central alignment guide line -->
+                <line x1="300" y1="20" x2="300" y2="480" class="plane-line" />
+                <!-- 1. Radome / Nose Cone -->
+                <path id="seg-nose" data-name="Radome / Nose" class="plane-seg" d="M 285,55 Q 300,20 315,55 L 315,75 L 285,75 Z" />
+                <!-- 2. Cockpit / Forward Fuselage -->
+                <path id="seg-cockpit" data-name="Cockpit & Avionics" class="plane-seg" d="M 285,75 L 315,75 L 318,125 L 282,125 Z" />
+                <!-- 3. Mid Fuselage / Center Cabin -->
+                <path id="seg-fuselage-mid" data-name="Center Fuselage & Keel" class="plane-seg" d="M 282,125 L 318,125 L 320,270 L 280,270 Z" />
+                <!-- 4. Aft Fuselage -->
+                <path id="seg-fuselage-aft" data-name="Aft Fuselage Section" class="plane-seg" d="M 280,270 L 320,270 L 312,390 L 288,390 Z" />
+                <!-- 5. Left Wing - Inboard / Slat -->
+                <path id="seg-wing-l-inboard" data-name="Left Inboard Wing & Root" class="plane-seg" d="M 282,150 L 190,210 L 190,265 L 280,225 Z" />
+                <!-- 6. Left Wing - Outboard / Aileron -->
+                <path id="seg-wing-l-outboard" data-name="Left Outboard Wing & Tip" class="plane-seg" d="M 190,210 L 50,290 L 60,315 L 190,265 Z" />
+                <!-- 7. Right Wing - Inboard / Slat -->
+                <path id="seg-wing-r-inboard" data-name="Right Inboard Wing & Root" class="plane-seg" d="M 318,150 L 410,210 L 410,265 L 320,225 Z" />
+                <!-- 8. Right Wing - Outboard / Aileron -->
+                <path id="seg-wing-r-outboard" data-name="Right Outboard Wing & Tip" class="plane-seg" d="M 410,210 L 550,290 L 540,315 L 410,265 Z" />
+                <!-- 9. Left Engine / Pylon -->
+                <g id="seg-engine-l" data-name="Engine #1 (Left Powerplant)" class="plane-seg">
+                  <rect x="200" y="155" width="28" height="75" rx="10" />
+                  <ellipse cx="214" cy="158" rx="11" ry="5" fill="#0f2540" stroke="currentColor" stroke-width="1" />
+                </g>
+                <!-- 10. Right Engine / Pylon -->
+                <g id="seg-engine-r" data-name="Engine #2 (Right Powerplant)" class="plane-seg">
+                  <rect x="372" y="155" width="28" height="75" rx="10" />
+                  <ellipse cx="386" cy="158" rx="11" ry="5" fill="#0f2540" stroke="currentColor" stroke-width="1" />
+                </g>
+                <!-- 11. Left Horizontal Stabilizer / Elevator -->
+                <path id="seg-tail-l" data-name="Left Horizontal Stabilizer" class="plane-seg" d="M 288,380 L 180,430 L 185,455 L 292,425 Z" />
+                <!-- 12. Right Horizontal Stabilizer / Elevator -->
+                <path id="seg-tail-r" data-name="Right Horizontal Stabilizer" class="plane-seg" d="M 312,380 L 420,430 L 415,455 L 308,425 Z" />
+                <!-- 13. Vertical Fin & Rudder -->
+                <path id="seg-rudder" data-name="Vertical Stabilizer & Rudder" class="plane-seg" d="M 296,365 L 304,365 L 303,455 L 297,455 Z" />
+                <!-- 14. APU / Tail Cone -->
+                <path id="seg-apu" data-name="APU Compartment & Tail Cone" class="plane-seg" d="M 292,435 L 308,435 L 303,468 L 297,468 Z" />
+                <!-- Labels -->
+                <text x="300" y="45" class="plane-label">NOSE</text>
+                <text x="300" y="105" class="plane-label">COCKPIT</text>
+                <text x="214" y="248" class="plane-label">ENG 1</text>
+                <text x="386" y="248" class="plane-label">ENG 2</text>
+                <text x="120" y="275" class="plane-label">L WING</text>
+                <text x="480" y="275" class="plane-label">R WING</text>
+                <text x="300" y="482" class="plane-label">APU / TAIL</text>
+              </svg>
+            </div>
+          </div>
+        </div>
         <div class="feature-grid">
           <article class="feature-card"><div class="feature-bar"></div><div class="feature-title">Cited historical evidence</div><div class="feature-copy">Every finding opens the exact log field that supports it.</div></article>
           <article class="feature-card"><div class="feature-bar"></div><div class="feature-title">Compare and investigate</div><div class="feature-copy">Challenge, distinguish and refine with a persistent history.</div></article>
@@ -49,7 +117,22 @@
           <button class="mini-btn" id="historyBtn">history</button><button class="mini-btn" id="uploadBtn">upload</button><button class="mini-btn" id="stopBtn" hidden>stop · esc</button><button class="mini-btn" id="resumeBtn" hidden>resume stream</button><button class="mini-btn" id="newSessionBtn">new session</button>
         </div></div>
         <div class="live-spec-card" id="liveSpecCard" hidden></div>
-        <div class="investigation-layout" id="workspace"><div class="conversation" id="thread" tabindex="0" aria-label="Investigation conversation"></div><aside class="evidence-workspace" id="evidenceWorkspace" aria-label="Evidence and investigation state" hidden><div class="workspace-tabs" role="group" aria-label="Investigation panels"><button class="chip active" data-tab="evidence">Evidence</button><button class="chip" data-tab="board">Known / reported / missing</button></div><div id="evidencePanel"></div><div id="boardPanel" hidden></div></aside></div>
+        <div class="investigation-layout" id="workspace">
+          <div class="conversation" id="thread" tabindex="0" aria-label="Investigation conversation"></div>
+          <aside class="evidence-workspace" id="evidenceWorkspace" aria-label="Evidence and investigation state" hidden>
+            <div class="workspace-tabs" role="group" aria-label="Investigation panels">
+              <button class="chip active" data-tab="evidence">Evidence</button>
+              <button class="chip" data-tab="board">Known / reported / missing</button>
+              <button class="chip" data-tab="airframe">Airframe Visual</button>
+            </div>
+            <div id="evidencePanel"></div>
+            <div id="boardPanel" hidden></div>
+            <div id="airframePanel" hidden>
+              <div class="panel-airframe-note" id="panelAirframeNote">Inspecting detected component on airframe</div>
+              <div class="panel-airframe-svg-wrap" id="panelAirframeSvgWrap"></div>
+            </div>
+          </aside>
+        </div>
         <form class="chat-input-row" id="chatForm"><label class="sr-only" for="chatInput">Ask a follow-up</label><input class="chat-input" id="chatInput" placeholder="Refine the complaint, compare cases, or ask what is missing…" autocomplete="off" maxlength="8000" required><button class="send-round" id="chatSubmit" aria-label="Send follow-up" type="submit">→</button></form>
       </div></section>
       <section class="results-section"><div class="starter" id="starterBlock"><div class="starter-title">Try asking</div><div class="starter-row" id="starters"></div></div><div id="directResults"></div></section>

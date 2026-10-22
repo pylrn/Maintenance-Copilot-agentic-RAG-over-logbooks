@@ -6,6 +6,76 @@ const $ = id => document.getElementById(id);
 const state = { session: null, capabilities: null, busy: false, run: null, cursor: 0, controller: null, records: [], turn: null };
 const storageKey = `maintenance-atlas-${demo ? 'demo' : 'live'}-session-pointer`;
 const labels = { CHALLENGE: 'Challenge answer', DISTINGUISH: 'Distinguish cases', SENSITIVITY: 'Search sensitivity', HYPOTHESIS: 'Possible solutions — unverified' };
+
+// Map problem/query keywords to 2D aircraft schematic SVG segments
+function detectAirframeSegments(text) {
+  const query = (text || '').toLowerCase();
+  const hits = [];
+  if (/cylinder|intake|engine|powerplant|manifold|gasket|prop|rocker|carburetor|fuel pump|spark plug/i.test(query)) {
+    if (/left|l\/h|#1|#3|engine 1/i.test(query)) hits.push({ id: 'seg-engine-l', name: 'Engine #1 (Left Powerplant)' });
+    else hits.push({ id: 'seg-engine-r', name: 'Engine #2 (Right Powerplant)' });
+  }
+  if (/wing|slat|flap|aileron|spoiler|fuel tank/i.test(query)) {
+    if (/left|l\/h/i.test(query)) hits.push({ id: 'seg-wing-l-inboard', name: 'Left Inboard Wing' });
+    else hits.push({ id: 'seg-wing-r-inboard', name: 'Right Inboard Wing' });
+  }
+  if (/cockpit|avionics|windshield|instrument|mfd|pfd|pedal/i.test(query)) {
+    hits.push({ id: 'seg-cockpit', name: 'Cockpit & Forward Avionics' });
+  }
+  if (/nose|radome|radar|nose gear|steer/i.test(query)) {
+    hits.push({ id: 'seg-nose', name: 'Radome / Nose Cone' });
+  }
+  if (/tail|rudder|vertical fin|fin/i.test(query)) {
+    hits.push({ id: 'seg-rudder', name: 'Vertical Stabilizer & Rudder' });
+  }
+  if (/elevator|stabilizer|horizontal/i.test(query)) {
+    hits.push({ id: 'seg-tail-r', name: 'Right Horizontal Stabilizer' });
+  }
+  if (/apu|tail cone/i.test(query)) {
+    hits.push({ id: 'seg-apu', name: 'APU & Tail Cone' });
+  }
+  if (/fuselage|cabin|door|window|keel/i.test(query)) {
+    hits.push({ id: 'seg-fuselage-mid', name: 'Center Fuselage Section' });
+  }
+  return hits;
+}
+
+function updateAirframeHighlight(text) {
+  const allSegs = document.querySelectorAll('.plane-seg');
+  allSegs.forEach(el => el.classList.remove('highlight-alert', 'highlight-warn'));
+  
+  const dot = $('planeStatusDot');
+  const label = $('planeActiveHighlight');
+  const detected = detectAirframeSegments(text);
+
+  if (detected.length > 0) {
+    detected.forEach(hit => {
+      const el = document.getElementById(hit.id);
+      if (el) el.classList.add('highlight-alert');
+    });
+    if (dot) dot.classList.add('active');
+    if (label) {
+      label.textContent = `ALERT: Fault localized to ${detected.map(d => d.name).join(', ')}`;
+      label.classList.add('alert');
+    }
+  } else if (text && text.trim().length > 0) {
+    // Generic advisory highlight on engine / airframe
+    const fallback = document.getElementById('seg-engine-r');
+    if (fallback) fallback.classList.add('highlight-warn');
+    if (dot) dot.classList.add('active');
+    if (label) {
+      label.textContent = `General airframe search active: ${text.slice(0, 45)}...`;
+      label.classList.add('alert');
+    }
+  } else {
+    if (dot) dot.classList.remove('active');
+    if (label) {
+      label.textContent = 'All systems nominal · awaiting fault input';
+      label.classList.remove('alert');
+    }
+  }
+}
+
 function node(tag, className = '', text = '') { const element = document.createElement(tag); element.className = className; element.textContent = text; return element; }
 function button(text, onClick, className = 'chip') { const value = node('button', className, text); value.type = 'button'; value.addEventListener('click', () => protect(onClick)); return value; }
 function notice(text = '') { $('notice').textContent = text; $('notice').hidden = !text; }
@@ -170,7 +240,11 @@ async function receive(event) {
   const keepFollowing = nearBottom(); const data = event.data || {};
   switch (event.type) {
     case 'run_started': status(demo ? 'demo · playing simulated activity…' : 'copilot investigating…'); break;
-    case 'query_interpreted': $('liveSpecCard').hidden = false; $('liveSpecCard').textContent = `Search: ${data.query || ''} · domain: ${data.domain || 'unknown'} · aircraft applicability: ${data.applicability || 'unknown'}`; break;
+    case 'query_interpreted': 
+      $('liveSpecCard').hidden = false; 
+      $('liveSpecCard').textContent = `Search: ${data.query || ''} · domain: ${data.domain || 'unknown'} · aircraft applicability: ${data.applicability || 'unknown'}`; 
+      updateAirframeHighlight(data.query || '');
+      break;
     case 'search_started': status('searching source records…'); break;
     case 'search_completed': status('source retrieval complete…'); break;
     case 'tool_started': toolStart(data); break;
@@ -280,7 +354,16 @@ document.querySelectorAll('[data-drawer]').forEach(toggle => toggle.addEventList
   $(toggle.dataset.drawer).hidden = open; toggle.setAttribute('aria-expanded', String(!open));
 }));
 document.querySelectorAll('[data-tab]').forEach(tab => tab.addEventListener('click', () => {
-  $('evidencePanel').hidden = tab.dataset.tab !== 'evidence'; $('boardPanel').hidden = tab.dataset.tab !== 'board';
+  $('evidencePanel').hidden = tab.dataset.tab !== 'evidence'; 
+  $('boardPanel').hidden = tab.dataset.tab !== 'board';
+  if ($('airframePanel')) {
+    $('airframePanel').hidden = tab.dataset.tab !== 'airframe';
+    if (tab.dataset.tab === 'airframe' && !$('panelAirframeSvgWrap').hasChildNodes()) {
+      const clone = $('planeSvg').cloneNode(true);
+      clone.id = 'planeSvgSidePanel';
+      $('panelAirframeSvgWrap').appendChild(clone);
+    }
+  }
   document.querySelectorAll('[data-tab]').forEach(x => x.classList.toggle('active', x === tab));
 }));
 $('historyBtn').addEventListener('click', () => protect(async () => {
