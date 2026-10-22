@@ -1,0 +1,318 @@
+[
+  {
+    "query": "intake leak",
+    "model": "gemini-3.5-flash-lite",
+    "expected": "supported_historical",
+    "actual": "supported_historical",
+    "claims": 11,
+    "duration_seconds": 2.531,
+    "run_id": "62c67112-d269-4a64-93d2-0cb1d2ab4e42",
+    "session_id": "2be7c944-ebb6-4d33-a5f7-7a1cd50bd86e",
+    "summary": "Authoritative records indicate multiple instances of intake leaks across cylinders #2, #3, and #4, which technicians addressed by removing, cleaning, or replacing gaskets and inspecting the affected areas.",
+    "quoted_evidence": [
+      {
+        "record_id": "aviation:102838",
+        "quote": "#2 INTAKE HAS LEAK."
+      },
+      {
+        "record_id": "aviation:103510",
+        "quote": "#2 INTAKE SLIGHT LEAK."
+      },
+      {
+        "record_id": "aviation:106087",
+        "quote": "INTAKE #3 LEAKING."
+      },
+      {
+        "record_id": "aviation:104952",
+        "quote": "#4 INTAKE OIL LEAK."
+      },
+      {
+        "record_id": "aviation:106090",
+        "quote": "#3 INTAKE LEAKS."
+      },
+      {
+        "record_id": "aviation:100081",
+        "quote": "#2 INTAKE LEAKS."
+      },
+      {
+        "record_id": "aviation:102838",
+        "quote": "REMOVED & REPLACED INTAKE GASKET."
+      },
+      {
+        "record_id": "aviation:103510",
+        "quote": "INSTALLED NEW INTAKE GASKET."
+      },
+      {
+        "record_id": "aviation:106087",
+        "quote": "REMOVED & REPLACED GASKET."
+      },
+      {
+        "record_id": "aviation:104952",
+        "quote": "INSPECTED & FOUND OIL LEAK TO BE RESIDUAL. CLEANED AREA"
+      },
+      {
+        "record_id": "aviation:106090",
+        "quote": "REPLACED GASKET."
+      },
+      {
+        "record_id": "aviation:100081",
+        "quote": "REPLACED GASKET."
+      }
+    ]
+  },
+  {
+    "query": "baffle crack",
+    "model": "gemini-3.5-flash-lite",
+    "expected": "supported_historical",
+    "actual": "supported_historical",
+    "claims": 7,
+    "duration_seconds": 12.136,
+    "run_id": "49042d7e-2855-4ddf-83ab-a44090db9c23",
+    "session_id": "42619f69-f016-47c7-9282-bdbdc85b2cd9",
+    "summary": "Based on 6 distinct matching log record(s), historical complaints report \"CRACK IN RIGHT FRONT BAFFLE.\" with recorded corrective actions such as \"STOP DRILLED CRACK.\".",
+    "quoted_evidence": [
+      {
+        "record_id": "aviation:100614",
+        "quote": "CRACK IN RIGHT FRONT BAFFLE."
+      },
+      {
+        "record_id": "aviation:100043",
+        "quote": "TOP L/H BAFFLE HAS A CRACK."
+      },
+      {
+        "record_id": "aviation:100903",
+        "quote": "BACK L/H BAFFLE HAS A CRACK."
+      },
+      {
+        "record_id": "aviation:101544",
+        "quote": "L/H BACK BAFFLE HAS A CRACK."
+      },
+      {
+        "record_id": "aviation:104469",
+        "quote": "CRACK ON L/H UPPER BAFFLE."
+      },
+      {
+        "record_id": "aviation:101844",
+        "quote": "CRACK IN FWD BAFFLE CENTER."
+      },
+      {
+        "record_id": "aviation:100614",
+        "quote": "STOP DRILLED CRACK."
+      },
+      {
+        "record_id": "aviation:100043",
+        "quote": "STOP DRILLED CRACK."
+      },
+      {
+        "record_id": "aviation:100903",
+        "quote": "STOP DRILLED CRACK."
+      },
+      {
+        "record_id": "aviation:101544",
+        "quote": "STOP DRILLED CRACK."
+      },
+      {
+        "record_id": "aviation:104469",
+        "quote": "STOP DRILLED CRACK."
+      },
+      {
+        "record_id": "aviation:101844",
+        "quote": "STOP DRILLED CRACK."
+      }
+    ]
+  },
+  {
+    "query": "Right main gear brake pedal feels soft and spongy",
+    "model": "gemini-3.5-flash-lite",
+    "expected": "insufficient_evidence",
+    "actual": "insufficient_evidence",
+    "claims": 0,
+    "duration_seconds": 0.209,
+    "run_id": "d5049c6c-a57d-4b92-894d-6acc85b89edb",
+    "session_id": "2db97425-07bf-4978-9bc8-15e75c28fc0a",
+    "summary": "Insufficient evidence: retrieved candidates do not establish a matching complaint in the authorized records. This does not prove that the fault is absent or identify a repair.",
+    "quoted_evidence": []
+  },
+  {
+    "query": "CYL #99 intake leak",
+    "model": "gemini-3.5-flash-lite",
+    "expected": "insufficient_evidence",
+    "actual": "insufficient_evidence",
+    "claims": 0,
+    "duration_seconds": 0.106,
+    "run_id": "e2db116c-8913-44ce-b272-b900fcdcd6e2",
+    "session_id": "9c503ce7-86a5-4f79-b604-7d5aa664e022",
+    "summary": "Insufficient evidence: retrieved candidates do not establish a matching complaint in the authorized records. This does not prove that the fault is absent or identify a repair.",
+    "quoted_evidence": []
+  },
+  {
+    "query": "What is the approved torque specification in ft-lbs for the intake flange?",
+    "model": "gemini-3.5-flash-lite",
+    "expected": "insufficient_evidence",
+    "actual": "insufficient_evidence",
+    "claims": 0,
+    "duration_seconds": 0.173,
+    "run_id": "0ddc064e-5f7e-4d80-b108-8d8d5ec76d1a",
+    "session_id": "2b0ce737-4707-4ee0-b448-d340d83ebc53",
+    "summary": "No historical maintenance records found matching this fault complaint.",
+    "quoted_evidence": []
+  },
+  {
+    "query": "intake leak",
+    "model": "extractive/v1",
+    "expected": "supported_historical",
+    "actual": "supported_historical",
+    "claims": 11,
+    "duration_seconds": 0.117,
+    "run_id": "891e93fe-8822-4a03-ae86-343ba4c4526c",
+    "session_id": "9d61c756-bb61-4bb8-8f66-7b3e28ed2579",
+    "summary": "Based on 6 distinct matching log record(s), historical complaints report \"#2 INTAKE HAS LEAK.\" with recorded corrective actions such as \"REMOVED & REPLACED INTAKE GASKET.\".",
+    "quoted_evidence": [
+      {
+        "record_id": "aviation:102838",
+        "quote": "#2 INTAKE HAS LEAK."
+      },
+      {
+        "record_id": "aviation:103510",
+        "quote": "#2 INTAKE SLIGHT LEAK."
+      },
+      {
+        "record_id": "aviation:106087",
+        "quote": "INTAKE #3 LEAKING."
+      },
+      {
+        "record_id": "aviation:104952",
+        "quote": "#4 INTAKE OIL LEAK."
+      },
+      {
+        "record_id": "aviation:106090",
+        "quote": "#3 INTAKE LEAKS."
+      },
+      {
+        "record_id": "aviation:100081",
+        "quote": "#2 INTAKE LEAKS."
+      },
+      {
+        "record_id": "aviation:102838",
+        "quote": "REMOVED & REPLACED INTAKE GASKET."
+      },
+      {
+        "record_id": "aviation:103510",
+        "quote": "INSTALLED NEW INTAKE GASKET."
+      },
+      {
+        "record_id": "aviation:106087",
+        "quote": "REMOVED & REPLACED GASKET."
+      },
+      {
+        "record_id": "aviation:104952",
+        "quote": "INSPECTED & FOUND OIL LEAK TO BE RESIDUAL. CLEANED AREA"
+      },
+      {
+        "record_id": "aviation:106090",
+        "quote": "REPLACED GASKET."
+      },
+      {
+        "record_id": "aviation:100081",
+        "quote": "REPLACED GASKET."
+      }
+    ]
+  },
+  {
+    "query": "baffle crack",
+    "model": "extractive/v1",
+    "expected": "supported_historical",
+    "actual": "supported_historical",
+    "claims": 7,
+    "duration_seconds": 0.105,
+    "run_id": "b1a6e559-a39e-498e-ada2-2fb886ecb2f4",
+    "session_id": "488e6bc5-96d0-4f95-872e-a20580768c07",
+    "summary": "Based on 6 distinct matching log record(s), historical complaints report \"CRACK IN RIGHT FRONT BAFFLE.\" with recorded corrective actions such as \"STOP DRILLED CRACK.\".",
+    "quoted_evidence": [
+      {
+        "record_id": "aviation:100614",
+        "quote": "CRACK IN RIGHT FRONT BAFFLE."
+      },
+      {
+        "record_id": "aviation:100043",
+        "quote": "TOP L/H BAFFLE HAS A CRACK."
+      },
+      {
+        "record_id": "aviation:100903",
+        "quote": "BACK L/H BAFFLE HAS A CRACK."
+      },
+      {
+        "record_id": "aviation:101544",
+        "quote": "L/H BACK BAFFLE HAS A CRACK."
+      },
+      {
+        "record_id": "aviation:104469",
+        "quote": "CRACK ON L/H UPPER BAFFLE."
+      },
+      {
+        "record_id": "aviation:101844",
+        "quote": "CRACK IN FWD BAFFLE CENTER."
+      },
+      {
+        "record_id": "aviation:100614",
+        "quote": "STOP DRILLED CRACK."
+      },
+      {
+        "record_id": "aviation:100043",
+        "quote": "STOP DRILLED CRACK."
+      },
+      {
+        "record_id": "aviation:100903",
+        "quote": "STOP DRILLED CRACK."
+      },
+      {
+        "record_id": "aviation:101544",
+        "quote": "STOP DRILLED CRACK."
+      },
+      {
+        "record_id": "aviation:104469",
+        "quote": "STOP DRILLED CRACK."
+      },
+      {
+        "record_id": "aviation:101844",
+        "quote": "STOP DRILLED CRACK."
+      }
+    ]
+  },
+  {
+    "query": "Right main gear brake pedal feels soft and spongy",
+    "model": "extractive/v1",
+    "expected": "insufficient_evidence",
+    "actual": "insufficient_evidence",
+    "claims": 0,
+    "duration_seconds": 0.07,
+    "run_id": "80aefe5b-595e-4988-99b8-2780f71fd48b",
+    "session_id": "15718d41-b168-42db-a6ab-5019500f0619",
+    "summary": "Insufficient evidence: retrieved candidates do not establish a matching complaint in the authorized records. This does not prove that the fault is absent or identify a repair.",
+    "quoted_evidence": []
+  },
+  {
+    "query": "CYL #99 intake leak",
+    "model": "extractive/v1",
+    "expected": "insufficient_evidence",
+    "actual": "insufficient_evidence",
+    "claims": 0,
+    "duration_seconds": 0.099,
+    "run_id": "936560bf-bc10-4ce7-bbdd-3009cbad7765",
+    "session_id": "757eb076-6260-464f-ae00-40b64f18de47",
+    "summary": "Insufficient evidence: retrieved candidates do not establish a matching complaint in the authorized records. This does not prove that the fault is absent or identify a repair.",
+    "quoted_evidence": []
+  },
+  {
+    "query": "What is the approved torque specification in ft-lbs for the intake flange?",
+    "model": "extractive/v1",
+    "expected": "insufficient_evidence",
+    "actual": "insufficient_evidence",
+    "claims": 0,
+    "duration_seconds": 0.063,
+    "run_id": "cfc17dbb-81f6-4ab4-b683-f587ea2c81d6",
+    "session_id": "a4c5106a-6621-4b06-ac3e-b0a9e4fcc93c",
+    "summary": "No historical maintenance records found matching this fault complaint.",
+    "quoted_evidence": []
+  }
+]

@@ -51,6 +51,7 @@ def test_metadata_allowlist_drops_raw_inputs_and_secret_shaped_values():
 
 @pytest.mark.asyncio
 async def test_actual_sdk_async_thread_parentage_and_no_exception_content(monkeypatch):
+    pytest.importorskip("langfuse")
     from langfuse import Langfuse
     from opentelemetry.sdk.trace import TracerProvider
     from opentelemetry.sdk.trace.export.in_memory_span_exporter import InMemorySpanExporter

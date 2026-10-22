@@ -260,6 +260,9 @@ class AnswerEnvelope(Contract):
     what_can_be_concluded: list[str] = Field(default_factory=list)
     what_cannot_be_concluded: list[str] = Field(default_factory=list)
 
+    synthesis_evidence_ids: list[UUID] = Field(default_factory=list)
+    generation: dict[str, Any] = Field(default_factory=dict)
+
 
 class HypothesisDraft(Contract):
     possible_explanations: list[str]

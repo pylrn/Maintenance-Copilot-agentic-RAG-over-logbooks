@@ -13,6 +13,7 @@ from maintenance.contracts import (
     SupportSpan,
 )
 from maintenance.telemetry import observed
+from maintenance.synthesis import EvidenceSelection, render_synthesis, selection_from_ids
 
 FORBIDDEN_CAUSAL_PHRASES = [
     "permanently resolved",
@@ -219,7 +220,7 @@ def validate_draft(
     return ValidationResult(is_valid=(len(all_errors) == 0), errors=all_errors)
 
 
-@observed("validation.answer", "guardrail", result_metadata=lambda r: {"valid": r.is_valid, "validation_scope": "claims_and_source_spans_not_free_synthesis"})
+@observed("validation.answer", "guardrail", result_metadata=lambda r: {"valid": r.is_valid, "validation_scope": "claims_source_spans_and_evidence_synthesis"})
 def validate_answer(
     answer: AnswerEnvelope,
     fetched_evidence: dict[UUID, dict[str, Any]],
@@ -233,5 +234,19 @@ def validate_answer(
 
     if answer.claims and not fetched_evidence and not computed_receipts:
         all_errors.append("claims_present_without_fetched_evidence")
+
+    if mode == "EVIDENCE":
+        try:
+            selection = (selection_from_ids(answer.synthesis_evidence_ids, fetched_evidence)
+                         if answer.status == "supported_historical"
+                         else EvidenceSelection(decision="insufficient_evidence", records=[]))
+            if answer.status == "supported_historical" and not selection.records:
+                raise ValueError("supported synthesis requires source fields")
+            expected = render_synthesis(selection, fetched_evidence)
+            actual = (answer.summary, answer.what_can_be_concluded, answer.what_cannot_be_concluded)
+            if actual != expected:
+                all_errors.append("unsupported_synthesis_content")
+        except (ValueError, KeyError, TypeError):
+            all_errors.append("invalid_synthesis_sources")
 
     return ValidationResult(is_valid=(len(all_errors) == 0), errors=all_errors)
