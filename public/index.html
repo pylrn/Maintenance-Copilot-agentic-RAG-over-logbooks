@@ -2,12 +2,20 @@
 <html lang="en">
 <head>
   <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-  <base href="/maintenance/">
+  <script>
+    if (location.pathname.includes('/Maintenance-Copilot-agentic-RAG-over-logbooks')) {
+      document.write('<base href="/Maintenance-Copilot-agentic-RAG-over-logbooks/">');
+    } else if (location.pathname.startsWith('/maintenance')) {
+      document.write('<base href="/maintenance/">');
+    } else {
+      document.write('<base href="./">');
+    }
+  </script>
   <title>Maintenance Atlas — evidence copilot</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500;600&family=Newsreader:ital,wght@1,500&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="/maintenance/talent-base.css"><link rel="stylesheet" href="/maintenance/maintenance.css"><link rel="stylesheet" href="/maintenance/atlas-workspace.css">
+  <link rel="stylesheet" href="./talent-base.css"><link rel="stylesheet" href="./maintenance.css"><link rel="stylesheet" href="./atlas-workspace.css">
 </head>
 <body>
   <div class="talent-shell" id="shell">

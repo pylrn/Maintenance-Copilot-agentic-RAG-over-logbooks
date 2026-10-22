@@ -517,7 +517,12 @@ function renderAnswer(rawAnswer, container) {
   );
 
   claimList('Contrasting Cases & Differences', answer.contrasting_cases || answer.differences, el);
-  if (answer.mode === 'HYPOTHESIS') textList('Unverified reasoning', answer.hypotheses || answer.claims, el);
+  if (answer.mode === 'HYPOTHESIS') {
+    textList('Unverified reasoning & possible explanations', answer.hypotheses || answer.claims, el);
+    if (answer.basis?.length) textList('Engineering basis', answer.basis, el);
+    if (answer.assumptions?.length) textList('Assumptions', answer.assumptions, el);
+    if (answer.what_would_weaken_this?.length) textList('What would weaken this', answer.what_would_weaken_this, el);
+  }
   textList('Evidence limits', answer.limitations, el);
   textList('Still missing', answer.missing, el);
   if (answer.clarification) el.append(node('p', '', answer.clarification));
@@ -733,6 +738,7 @@ async function performAction(action, answer, parameters = {}) {
           renderBoard(fresh.board);
         }
       } catch { /* board refresh best-effort */ }
+      finishTurn();
       setBusy(false);
       return;
     }
