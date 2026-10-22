@@ -1,3 +1,5 @@
+> **Latest integration context (22 October 2026):** Read [INTEGRATION_HANDOVER.md](INTEGRATION_HANDOVER.md) first. It records the approved current UI, frontend/backend contract mismatches, verified demo behavior, and remaining integration work. The material below is an older project snapshot.
+
 # NexAI Hackathon 2026: Maintenance Copilot (Problem Statement 1.3)
 ## Master Project Handover & Agent Onboarding Guide
 
