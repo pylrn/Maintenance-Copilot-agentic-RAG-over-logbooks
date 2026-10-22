@@ -27,8 +27,8 @@ class SessionRepository:
         aircraft_profile: dict[str, Any] | None = None,
     ) -> SessionSnapshot:
         session_id = uuid4()
-        profile_json = json.dumps(aircraft_profile or {})
-        board_json = json.dumps({"known": [], "reported": [], "missing": []})
+        profile_data = aircraft_profile or {}
+        board_data = {"known": [], "reported": [], "missing": []}
 
         async with self.pool.acquire() as conn:
             await conn.execute(
@@ -40,8 +40,8 @@ class SessionRepository:
                 owner_id,
                 title,
                 domain,
-                profile_json,
-                board_json,
+                profile_data,
+                board_data,
             )
 
         return SessionSnapshot(
@@ -215,7 +215,7 @@ class SessionRepository:
                 params: list[Any] = [session_id, owner_id, new_rev]
 
                 if aircraft_profile is not None:
-                    params.append(json.dumps(aircraft_profile))
+                    params.append(aircraft_profile)
                     updates.append(f"aircraft_profile = ${len(params)}::jsonb")
                 if title is not None:
                     params.append(title)
@@ -328,7 +328,7 @@ class SessionRepository:
                     idempotency_key,
                     req_hash,
                     expected_revision,
-                    json.dumps([str(cid) for cid in corpus_ids]),
+                    [str(cid) for cid in corpus_ids],
                     prompt_version,
                     model_id,
                     lease_expires,
@@ -349,7 +349,7 @@ class SessionRepository:
                     session_id,
                     run_id,
                     next_seq,
-                    json.dumps({"text": request_text}),
+                    {"text": request_text},
                 )
 
                 return run_id, True
@@ -430,8 +430,8 @@ class SessionRepository:
                     answer_id,
                     run_id,
                     mode_str,
-                    answer.model_dump_json(),
-                    json.dumps(validation_report),
+                    answer.model_dump(mode="json"),
+                    validation_report,
                 )
 
                 # 2. Insert claim supports if evidence answer
@@ -466,7 +466,7 @@ class SessionRepository:
                                     idx,
                                     sup.kind,
                                     sup.receipt_id,
-                                    json.dumps(sup.result_keys),
+                                    sup.result_keys,
                                 )
 
                 # 3. Mark run completed
@@ -483,7 +483,7 @@ class SessionRepository:
                 curr_rev = s_row["state_revision"]
                 new_rev = curr_rev + 1
 
-                board_json = json.dumps([b.model_dump(mode="json") for b in new_board_items])
+                board_data = [b.model_dump(mode="json") for b in new_board_items]
                 await conn.execute(
                     """
                     UPDATE sessions
@@ -492,7 +492,7 @@ class SessionRepository:
                     """,
                     session_id,
                     new_rev,
-                    board_json,
+                    board_data,
                 )
 
                 # 5. Insert assistant message into messages table
@@ -510,7 +510,7 @@ class SessionRepository:
                     session_id,
                     run_id,
                     next_seq,
-                    answer.model_dump_json(),
+                    answer.model_dump(mode="json"),
                 )
 
                 return new_rev
