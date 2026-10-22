@@ -173,7 +173,7 @@ class LLMProvider:
             effective_model = getattr(response, "model", None) or kwargs.get("model")
             span.update(model=effective_model,
                 usage={"input": usage.prompt_tokens, "output": usage.completion_tokens} if usage else None,
-                metadata={"effective_model": effective_model, "fallback": effective_model != self.model_name})
+                metadata={"effective_model": effective_model, "fallback": kwargs.get("model") != self.model_name})
             return response
 
     async def roundtrip_tool_loop(
