@@ -469,11 +469,14 @@ class SessionRepository:
                                     sup.result_keys,
                                 )
 
-                # 3. Mark run completed
-                await conn.execute(
-                    "UPDATE runs SET status = 'completed', completed_at = now() WHERE run_id = $1",
+                # 3. Mark run completed if not cancelled
+                res = await conn.execute(
+                    "UPDATE runs SET status = 'completed', completed_at = now() WHERE run_id = $1 AND status != 'cancelled'",
                     run_id,
                 )
+                if "UPDATE 0" in res:
+                    # Run was cancelled; do not advance state revision or overwrite cancellation
+                    return -1
 
                 # 4. Advance session state revision and update board
                 s_row = await conn.fetchrow(

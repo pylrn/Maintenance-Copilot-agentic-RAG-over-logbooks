@@ -46,9 +46,16 @@ async def cancel_run(
 
     cancelled = await repo.cancel_run(run_id, owner_id)
     if cancelled:
+        # Cancel background task if tracked
+        active_tasks = getattr(request.app.state, "active_tasks", {})
+        task = active_tasks.get(run_id)
+        if task and not task.done():
+            task.cancel()
+
+        next_seq = await event_bus.get_next_sequence(run_id)
         await event_bus.emit(
             run_id,
-            sequence=999999,
+            sequence=next_seq,
             event_type="run_cancelled",
             data={"run_id": str(run_id), "cancelled": True},
         )

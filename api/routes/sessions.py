@@ -163,7 +163,11 @@ async def post_message(
             computed_receipts={},
             tool_events=[],
         )
-        asyncio.create_task(runner.execute_run(deps, payload.text, domain=session_snap.domain))
+        task = asyncio.create_task(runner.execute_run(deps, payload.text, domain=session_snap.domain))
+        if not hasattr(request.app.state, "active_tasks"):
+            request.app.state.active_tasks = {}
+        request.app.state.active_tasks[run_id] = task
+        task.add_done_callback(lambda t: request.app.state.active_tasks.pop(run_id, None))
 
     return {
         "run_id": str(run_id),

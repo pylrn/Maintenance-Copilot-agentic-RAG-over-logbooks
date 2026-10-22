@@ -56,6 +56,16 @@ class EventBus:
 
         return event
 
+    async def get_next_sequence(self, run_id: UUID) -> int:
+        if self.pool:
+            async with self.pool.acquire() as conn:
+                row = await conn.fetchrow(
+                    "SELECT COALESCE(MAX(sequence), 0) + 1 AS next_seq FROM run_events WHERE run_id = $1",
+                    run_id,
+                )
+                return row["next_seq"] if row else 1
+        return 1
+
     async def subscribe(
         self,
         run_id: UUID,
@@ -98,6 +108,8 @@ class EventBus:
                         )
                         last_seq = max(last_seq, ev.sequence)
                         yield f"id: {ev.sequence}\nevent: {ev.type}\ndata: {ev.model_dump_json()}\n\n"
+                        if ev.type in {"done", "run_cancelled", "run_failed"}:
+                            return
 
             # 2. Stream new live events
             while True:
