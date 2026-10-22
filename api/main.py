@@ -42,6 +42,10 @@ def create_app(settings=None, search_engine=None):
                     settings.database_url.get_secret_value(),
                     settings.db_pool_min,
                     settings.db_pool_max,
+                    schema=settings.database_schema,
+                    vector_schema=settings.vector_schema,
+                    ssl_root_cert=settings.database_ssl_root_cert,
+                    statement_cache_size=settings.statement_cache_size,
                 )
                 await db.open()
                 app.state.db = db
@@ -102,6 +106,9 @@ def create_app(settings=None, search_engine=None):
     app.state.settings = settings
     app.state.search_engine = search_engine
     app.state.workflows_ready = False
+    app.state.workflow_capabilities = {}
+    app.state.db = None
+    app.state.startup_errors = []
     secret = (
         settings.session_signing_secret.get_secret_value()
         if settings.session_signing_secret
@@ -159,6 +166,11 @@ def create_app(settings=None, search_engine=None):
         return JSONResponse(
             {
                 "ready": ready,
+                "app_ready": bool(
+                    ready
+                    and app.state.workflows_ready
+                    and app.state.workflow_capabilities.get("agent_ready", False)
+                ),
                 "retrieval_ready": retrieval,
                 "database_ready": db_ready,
                 "workflows_ready": app.state.workflows_ready,
@@ -170,6 +182,22 @@ def create_app(settings=None, search_engine=None):
     @app.get(PREFIX + "/capabilities")
     async def capabilities():
         engine = app.state.search_engine
+        provider = getattr(app.state, "provider", None)
+        if provider is not None:
+            is_provider_configured = provider.is_configured
+        elif settings.llm_provider == "gemini":
+            is_provider_configured = bool(
+                settings.gemini_api_key
+                and settings.gemini_api_key.get_secret_value()
+                and not settings.gemini_api_key.get_secret_value().startswith("REPLACE")
+            )
+        else:
+            is_provider_configured = bool(
+                settings.deepseek_api_key
+                and settings.deepseek_api_key.get_secret_value()
+                and not settings.deepseek_api_key.get_secret_value().startswith("REPLACE")
+            )
+
         return {
             "protocol_version": "maintenance/v1",
             "workflows_ready": app.state.workflows_ready,
@@ -180,16 +208,25 @@ def create_app(settings=None, search_engine=None):
             if engine
             else [],
             "configured_models": settings.model_allowlist,
-            "provider_configured": bool(settings.deepseek_api_key),
-            "enabled_modes": [],
-            "visuals_available": False,
+            "provider_configured": is_provider_configured,
+            "enabled_modes": list(app.state.workflow_capabilities.get("enabled_modes", []))
+            if app.state.workflows_ready
+            else [],
+            "visuals_available": bool(
+                app.state.workflows_ready
+                and app.state.workflow_capabilities.get("visuals_available", False)
+            ),
+            "agent_ready": bool(
+                app.state.workflows_ready
+                and app.state.workflow_capabilities.get("agent_ready", False)
+            ),
             "reranker_available": bool(engine and engine.reranker),
         }
 
     @app.get("/maintenance")
     async def product():
         path = ROOT / "api/static/maintenance.html"
-        if not path.exists():
+        if not path.exists() or not app.state.workflows_ready:
             raise HTTPException(503, "person_two_ui_pending")
         return FileResponse(path)
 

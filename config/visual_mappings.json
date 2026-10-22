@@ -1,0 +1,82 @@
+{
+  "asset_id": "engine_concept_piston_2d",
+  "license": "CC-BY-4.0",
+  "attribution": "Maintenance Atlas reviewed schematic visual model",
+  "applicability": {
+    "engine_type": "reciprocating_opposed_piston",
+    "illustrative": true,
+    "model_bound": false
+  },
+  "mappings": [
+    {
+      "component_id": "cylinder_assembly",
+      "hotspot_id": "node-cylinder-bank",
+      "mapping_kind": "region",
+      "source": "FAA-H-8083-32B",
+      "reviewer": "human_reviewed"
+    },
+    {
+      "component_id": "intake_system",
+      "hotspot_id": "node-intake-manifold",
+      "mapping_kind": "region",
+      "source": "FAA-H-8083-32B",
+      "reviewer": "human_reviewed"
+    },
+    {
+      "component_id": "intake_gasket",
+      "hotspot_id": "node-intake-gasket",
+      "mapping_kind": "hotspot",
+      "source": "FAA-H-8083-32B",
+      "reviewer": "human_reviewed"
+    },
+    {
+      "component_id": "intake_pipe",
+      "hotspot_id": "node-intake-pipe",
+      "mapping_kind": "hotspot",
+      "source": "FAA-H-8083-32B",
+      "reviewer": "human_reviewed"
+    },
+    {
+      "component_id": "rocker_cover",
+      "hotspot_id": "node-rocker-cover",
+      "mapping_kind": "region",
+      "source": "FAA-H-8083-32B",
+      "reviewer": "human_reviewed"
+    },
+    {
+      "component_id": "exhaust_system",
+      "hotspot_id": "node-exhaust-manifold",
+      "mapping_kind": "region",
+      "source": "FAA-H-8083-32B",
+      "reviewer": "human_reviewed"
+    },
+    {
+      "component_id": "crankcase",
+      "hotspot_id": "node-crankcase",
+      "mapping_kind": "region",
+      "source": "FAA-H-8083-32B",
+      "reviewer": "human_reviewed"
+    },
+    {
+      "component_id": "baffle_assembly",
+      "hotspot_id": "node-cooling-baffles",
+      "mapping_kind": "region",
+      "source": "FAA-H-8083-32B",
+      "reviewer": "human_reviewed"
+    },
+    {
+      "component_id": "fuel_system",
+      "hotspot_id": "node-fuel-injector",
+      "mapping_kind": "hotspot",
+      "source": "FAA-H-8083-32B",
+      "reviewer": "human_reviewed"
+    },
+    {
+      "component_id": "oil_system",
+      "hotspot_id": "node-oil-system",
+      "mapping_kind": "region",
+      "source": "FAA-H-8083-32B",
+      "reviewer": "human_reviewed"
+    }
+  ]
+}

@@ -26,6 +26,7 @@ class RetrievalEngine:
         self.matrices = {}
         self.indexes = {}
         self._cpu = asyncio.Semaphore(1)
+        self._reranker_busy = False
         for cid, corpus in self.corpora.items():
             for representation in ["problem", "problem_action"]:
                 key = cid if representation == "problem" else cid + ":problem_action"
@@ -108,6 +109,8 @@ class RetrievalEngine:
             if spec.quality_mode:
                 if self.reranker is None:
                     result.degraded_branches.append("reranker_unavailable")
+                elif self._reranker_busy:
+                    result.degraded_branches.append("reranker_busy")
                 else:
                     pool = result.hits[:20]
                     rows = {f"{r.corpus_id}/{r.record_id}": r for r in self.scoped_records(scope)}
@@ -115,14 +118,31 @@ class RetrievalEngine:
                         (spec.query_raw, rows[f"{h.corpus_id}/{h.record_id}"].problem_raw)
                         for h in pool
                     ]
-                    scores = await asyncio.to_thread(self.reranker.score, pairs)
-                    for h, score in zip(pool, scores, strict=True):
-                        h.reranker_score = float(score)
-                    order = {"direct": 0, "related": 1, "tangential": 2}
-                    result.hits = sorted(
-                        pool,
-                        key=lambda h: (order[h.compatibility.tier], -h.reranker_score, h.record_id),
-                    )
+                    self._reranker_busy = True
+                    loop = asyncio.get_running_loop()
+                    fut = loop.run_in_executor(None, self.reranker.score, pairs)
+
+                    def _done_cb(f):
+                        self._reranker_busy = False
+                        try:
+                            f.exception()
+                        except Exception:
+                            pass
+
+                    fut.add_done_callback(_done_cb)
+                    try:
+                        scores = await asyncio.wait_for(asyncio.shield(fut), timeout=1.5)
+                        for h, score in zip(pool, scores, strict=True):
+                            h.reranker_score = float(score)
+                        order = {"direct": 0, "related": 1, "tangential": 2}
+                        result.hits = sorted(
+                            pool,
+                            key=lambda h: (order[h.compatibility.tier], -h.reranker_score, h.record_id),
+                        )
+                    except asyncio.TimeoutError:
+                        result.degraded_branches.append("reranker_timeout")
+                    except Exception:
+                        result.degraded_branches.append("reranker_error")
         result.hits = result.hits[: spec.top_k]
         result.timings_ms = {
             "embedding": embedding_ms,

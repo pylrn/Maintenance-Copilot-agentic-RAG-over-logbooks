@@ -30,7 +30,7 @@ def model_metadata(encoder):
     }
 
 
-def save_bundle(directory, corpora, encoder):
+def save_bundle(directory, corpora, encoder, publish=True):
     directory = Path(directory)
     directory.mkdir(parents=True, exist_ok=True)
     arrays = {}
@@ -69,13 +69,20 @@ def save_bundle(directory, corpora, encoder):
     }
     tmp = directory / f".manifest-{token}.json"
     tmp.write_text(json.dumps(metadata, sort_keys=True, indent=2))
-    os.replace(tmp, directory / "manifest.json")
-    return metadata
+
+    def _publish():
+        os.replace(tmp, directory / "manifest.json")
+
+    if publish:
+        _publish()
+        return metadata
+    return metadata, _publish
 
 
-def load_bundle(directory, corpora, encoder):
+def load_bundle(directory, corpora, encoder, meta=None):
     directory = Path(directory)
-    meta = json.loads((directory / "manifest.json").read_text())
+    if meta is None:
+        meta = json.loads((directory / "manifest.json").read_text())
     if meta["index_version"] != "index/v1" or meta["model"] != model_metadata(encoder):
         raise ValueError("index model configuration mismatch")
     name = meta["arrays_file"]
@@ -88,6 +95,8 @@ def load_bundle(directory, corpora, encoder):
     matrices = {}
     with np.load(directory / name, allow_pickle=False) as archive:
         for e in meta["entries"]:
+            if e["representation"] not in {"problem", "problem_action"}:
+                raise ValueError(f"unknown index representation: {e['representation']}")
             c = source.get(e["corpus_id"])
             if (
                 c is None
@@ -110,4 +119,7 @@ def load_bundle(directory, corpora, encoder):
             matrices[key] = matrix
     if set(source) != {e["corpus_id"] for e in meta["entries"]}:
         raise ValueError("missing indexed corpus")
+    for cid in source:
+        if cid not in matrices or f"{cid}:problem_action" not in matrices:
+            raise ValueError(f"missing index representation for corpus {cid}")
     return matrices, meta

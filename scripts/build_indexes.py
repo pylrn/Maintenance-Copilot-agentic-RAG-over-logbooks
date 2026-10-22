@@ -25,7 +25,13 @@ async def run(args):
         settings.embedding_query_prefix,
         local_only=not args.download,
     )
-    db = Database(settings.database_url.get_secret_value())
+    db = Database(
+        settings.database_url.get_secret_value(),
+        schema=settings.database_schema,
+        vector_schema=settings.vector_schema,
+        ssl_root_cert=settings.database_ssl_root_cert,
+        statement_cache_size=settings.statement_cache_size,
+    )
     await db.open()
     try:
         corpora = await db.load_corpora(
@@ -36,8 +42,10 @@ async def run(args):
         domains = [c.manifest.domain for c in corpora]
         if len(set(domains)) != len(domains):
             raise SystemExit("select one active corpus per domain using --corpus-id")
-        meta = await asyncio.to_thread(save_bundle, settings.artifact_dir, corpora, encoder)
-        matrices, _ = load_bundle(settings.artifact_dir, corpora, encoder)
+        meta, publish_manifest = await asyncio.to_thread(
+            save_bundle, settings.artifact_dir, corpora, encoder, False
+        )
+        matrices, _ = load_bundle(settings.artifact_dir, corpora, encoder, meta=meta)
         for c in corpora:
             for representation in ["problem", "problem_action"]:
                 e = next(
@@ -57,6 +65,8 @@ async def run(args):
                     revision,
                     e["document_hashes"],
                 )
+        # Publish active manifest and model pin ONLY after all database vectors succeed
+        await asyncio.to_thread(publish_manifest)
         (Path(settings.artifact_dir) / "model-pin.json").write_text(
             json.dumps(meta["model"], indent=2)
         )
