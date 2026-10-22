@@ -2,12 +2,19 @@
 import { createApi, uid } from './api-client.mjs';
 import { detectAirframeSegments } from './airframe-mapping.mjs';
 import { renderComponentExplorer } from './component-explorer.mjs';
+import { adaptCapabilities, adaptSessionSnapshot, adaptSearchResult, adaptAnswerEnvelope } from './maintenance-view-model.mjs';
 const demo = new URLSearchParams(location.search).get('demo') === '1';
 const api = demo ? (await import('./demo-adapter.mjs')).createDemoApi() : createApi();
 const $ = id => document.getElementById(id);
 const state = { session: null, capabilities: null, busy: false, run: null, cursor: 0, controller: null, records: [], turn: null };
 const storageKey = `maintenance-atlas-${demo ? 'demo' : 'live'}-session-pointer`;
-const labels = { CHALLENGE: 'Challenge answer', DISTINGUISH: 'Distinguish cases', SENSITIVITY: 'Search sensitivity', HYPOTHESIS: 'Possible solutions — unverified' };
+const labels = {
+  CHALLENGE: 'Challenge answer',
+  DISTINGUISH: 'Distinguish cases',
+  SENSITIVITY: 'Search sensitivity',
+  HYPOTHESIS: 'Possible solutions — unverified',
+  HANDOVER: 'Export handover',
+};
 
 let activeDetectedHits = [];
 let currentFaultContext = '';
@@ -101,7 +108,18 @@ function setBusy(value) {
   $('chatSubmit').disabled = value;
   $('stopBtn').hidden = !value; $('resumeBtn').hidden = true;
 }
-function searchSpec(query) { return { query, domain: $('domainSelect').value || 'aviation', top_k: Math.max(1, Math.min(20, Number($('topK').value) || 5)), quality: $('qualitySelect').value, duplicate_policy: $('duplicatesSelect').value }; }
+function searchSpec(query) {
+  if (demo) {
+    return { query, domain: $('domainSelect').value || 'aviation', top_k: Math.max(1, Math.min(20, Number($('topK').value) || 5)), quality: $('qualitySelect').value, duplicate_policy: $('duplicatesSelect').value };
+  }
+  return {
+    query_raw: query,
+    domain: $('domainSelect').value || 'aviation',
+    top_k: Math.max(1, Math.min(10, Number($('topK').value) || 5)),
+    quality_mode: $('qualitySelect').value === 'rerank' ? 'quality' : 'speed',
+    collapse_duplicates: $('duplicatesSelect').value !== 'raw',
+  };
+}
 function activate() {
   // Keep the aircraft component locator visible in the workspace
   // $('shell').classList.add('chat-active');
@@ -156,8 +174,12 @@ async function openSupport(value) {
 }
 async function openRecord(record, highlight) {
   const body = panel(record.source_id, record.source_type === 'simulated' ? 'SIMULATED SOURCE · NOT MAINTNET' : 'Original source record');
-  body.append(node('p', 'provenance', `${record.domain} · corpus ${record.corpus_version} · aircraft applicability: ${record.applicability || 'unknown'}`));
-  for (const [field, raw] of Object.entries(record.fields || {})) {
+  body.append(node('p', 'provenance', `${record.domain} · corpus ${record.corpus_id || record.corpus_version || 'unknown'} · aircraft applicability: ${record.applicability || 'unknown'}`));
+  const fields = record.original_fields && Object.keys(record.original_fields).length ? record.original_fields : (record.fields || {
+    ...(record.problem_raw ? { PROBLEM: record.problem_raw } : {}),
+    ...(record.action_raw ? { ACTION: record.action_raw } : {}),
+  });
+  for (const [field, raw] of Object.entries(fields)) {
     body.append(node('h3', '', field)); const pre = node('pre'); const chars = Array.from(String(raw ?? ''));
     if (highlight?.field === field && Number.isInteger(highlight.start) && Number.isInteger(highlight.end) &&
         highlight.start >= 0 && highlight.end <= chars.length && highlight.end > highlight.start &&
@@ -168,7 +190,8 @@ async function openRecord(record, highlight) {
     } else pre.textContent = String(raw ?? '');
     body.append(pre);
   }
-  body.append(node('p', 'provenance', `SHA-256: ${record.source_sha256 || 'not available (simulated UI fixture)'}`));
+  const sha = record.source_sha256 || record.text_sha256 || record.field_sha256?.[highlight?.field] || 'not available';
+  body.append(node('p', 'provenance', `SHA-256: ${sha}`));
 }
 function claimList(title, claims, container) {
   if (!claims?.length) return;
@@ -176,7 +199,9 @@ function claimList(title, claims, container) {
   for (const claim of claims) {
     const item = node('li', '', claim.text); const refs = node('span', 'citations');
     for (const support of claim.supports || []) {
-      const ref = canonicalRef(support); refs.append(button(`${ref.source_id || support.receipt_id || 'receipt'}${ref.field ? ' · ' + ref.field : ''}`, () => openSupport(support), 'citation'));
+      const ref = canonicalRef(support);
+      const isVerified = Boolean(support.source_sha256);
+      refs.append(button(`${ref.source_id || support.receipt_id || 'receipt'}${ref.field ? ' · ' + ref.field : ''}${isVerified ? ' ✓' : ''}`, () => openSupport(support), 'citation' + (isVerified ? ' verified' : '')));
     }
     item.append(refs); list.append(item);
   }
@@ -187,20 +212,24 @@ function textList(title, values, container) {
   container.append(node('h4', '', title)); const list = node('ul');
   values.forEach(value => list.append(node('li', '', typeof value === 'string' ? value : value.text))); container.append(list);
 }
-function renderAnswer(answer, container) {
+function renderAnswer(rawAnswer, container) {
+  if (!rawAnswer) return;
+  const answer = adaptAnswerEnvelope(rawAnswer) || rawAnswer;
+  if (!answer.answer_id) return;
   if (container.querySelector(`[data-answer-id="${CSS.escape(answer.answer_id)}"]`)) return;
   const el = node('article', 'answer' + (answer.mode === 'HYPOTHESIS' ? ' hypothesis' : '')); el.dataset.answerId = answer.answer_id;
-  el.append(node('div', 'answer-meta', `${answer.simulated ? 'SIMULATED · ' : ''}${answer.mode} · ${answer.status.replaceAll('_', ' ')}`), node('h3', '', answer.headline));
+  el.append(node('div', 'answer-meta', `${answer.simulated ? 'SIMULATED · ' : ''}${answer.mode} · ${(answer.status || '').replaceAll('_', ' ')}`), node('h3', '', answer.headline));
   claimList('What these cases describe', answer.findings, el); claimList('What was recorded next', answer.historical_actions, el);
-  claimList('Contrasting cases', answer.contrasting_cases, el);
+  claimList('Contrasting cases', answer.contrasting_cases || answer.differences, el);
   // Hypotheses are rendered only inside a server-authorized HYPOTHESIS envelope.
-  if (answer.mode === 'HYPOTHESIS') textList('Unverified reasoning', answer.hypotheses, el);
+  if (answer.mode === 'HYPOTHESIS') textList('Unverified reasoning', answer.hypotheses || answer.claims, el);
   textList('Evidence limits', answer.limitations, el); textList('Still missing', answer.missing, el);
   if (answer.clarification) el.append(node('p', '', answer.clarification));
   const actions = node('div', 'answer-actions');
   for (const entry of answer.allowed_actions || []) {
-    const kind = typeof entry === 'string' ? entry : entry.type;
-    if (labels[kind]) actions.append(button(labels[kind], () => performAction(kind, answer)));
+    const kind = typeof entry === 'string' ? entry : (entry.action || entry.type || '');
+    const upperKind = kind.toUpperCase();
+    if (labels[upperKind]) actions.append(button(labels[upperKind], () => performAction(kind, answer)));
   }
   if (answer.visual_refs?.length) actions.append(button('Explain component', () => showVisuals(answer.visual_refs)));
   actions.append(button('Export handover', exportHandover));
@@ -221,18 +250,21 @@ function showVisuals(refs) {
 }
 function renderRecords(records, target = $('evidencePanel')) {
   target.replaceChildren();
-  if (!records.length) { target.append(node('p', 'empty', 'No supporting records were returned for this search.')); return; }
+  if (!records || !records.length) { target.append(node('p', 'empty', 'No supporting records were returned for this search.')); return; }
   for (const record of records) {
     const card = node('article', 'record-card');
     card.append(node('div', 'source-label', record.source_type === 'simulated' ? 'Simulated UI fixture' : 'Historical source'), node('h3', '', record.source_id),
-      node('p', '', record.fields?.PROBLEM || record.summary || 'Open the source to inspect its fields.'),
-      node('div', 'provenance', `${record.domain} · ${record.corpus_version} · model ${record.aircraft_model || 'unknown'}`));
+      node('p', '', record.problem_raw || record.fields?.PROBLEM || record.summary || 'Open the source to inspect its fields.'),
+      node('div', 'provenance', `${record.domain} · ${record.corpus_id || record.corpus_version || 'verified corpus'} · aircraft applicability: unknown`));
     const actions = node('div', 'record-actions'); actions.append(button('Original record', async () => openRecord(await api.record(record))));
-    const pinned = state.session?.pins?.some(x => x.source_id === record.source_id && x.domain === record.domain && x.corpus_version === record.corpus_version);
+    const pinned = state.session?.pins?.some(x => (x.source_id === record.source_id || x.record_id === `${record.domain}:${record.source_id}`) && x.domain === record.domain);
     actions.append(button(pinned ? 'Unpin' : 'Pin evidence', async () => {
       if (state.busy) return;
       await api.pin(state.session.session_id, record, !pinned, state.session.revision);
-      state.session = await api.session(state.session.session_id); renderPins(); renderRecords(state.records);
+      if (!demo) {
+        try { state.session.pins = await api.pins(state.session.session_id); } catch { /* ignore */ }
+      }
+      renderPins(); renderRecords(state.records);
       if (target !== $('evidencePanel')) renderRecords(records, target);
     }));
     card.append(actions); target.append(card);
@@ -256,29 +288,48 @@ async function receive(event) {
     case 'run_started': status(demo ? 'demo · playing simulated activity…' : 'copilot investigating…'); break;
     case 'query_interpreted':
       $('liveSpecCard').hidden = false;
-      $('liveSpecCard').textContent = `Search: ${data.query || ''} · domain: ${data.domain || 'unknown'} · aircraft applicability: ${data.applicability || 'unknown'}`;
-      updateAirframeHighlight(data.query || '');
+      const qText = data.query_raw || data.query || '';
+      $('liveSpecCard').textContent = `Search: ${qText} · domain: ${data.domain || 'unknown'} · aircraft applicability: ${data.applicability || data.aircraft_applicability || 'unknown'}`;
+      updateAirframeHighlight(qText);
       break;
     case 'search_started': status('searching source records…'); break;
     case 'search_completed': status('source retrieval complete…'); break;
     case 'tool_started': toolStart(data); break;
     case 'tool_completed': toolEnd(data); break;
-    case 'evidence_ready': showEvidence(data.records || []); break;
-    case 'board_updated': renderBoard(data.board); break;
+    case 'evidence_ready':
+      showEvidence(data.records || []);
+      break;
+    case 'board_updated':
+      renderBoard(data.board);
+      break;
     case 'validation_started': status(demo ? 'demo · fixture release step…' : 'checking claims against retrieved evidence…'); break;
-    case 'answer_validated': renderAnswer(data.answer, state.turn.element); break;
-    case 'run_failed': state.turn.terminal = true; state.turn.element.append(node('p', 'empty', data.message || 'The run failed. This does not mean there are no matching faults.')); break;
-    case 'run_cancelled': state.turn.terminal = true; state.turn.element.append(node('p', 'empty', 'Run cancelled by user.')); break;
-    case 'done': state.turn.terminal = true; break;
+    case 'answer_validated':
+      renderAnswer(data.answer, state.turn.element);
+      break;
+    case 'run_failed':
+      state.turn.terminal = true;
+      state.turn.element.append(node('p', 'empty', data.message || 'The run failed. This does not mean there are no matching faults.'));
+      break;
+    case 'run_cancelled':
+      state.turn.terminal = true;
+      state.turn.element.append(node('p', 'empty', 'Run cancelled by user.'));
+      break;
+    case 'done':
+      state.turn.terminal = true;
+      break;
     default: break; // Unknown event types cannot render answer text.
   }
-  state.cursor = event.sequence; follow(state.turn.element, keepFollowing);
+  state.cursor = event.sequence;
+  follow(state.turn.element, keepFollowing);
 }
 async function watchRun(runId, after = 0) {
   state.run = runId; state.cursor = after; state.controller = new AbortController(); setBusy(true);
   try {
     await api.subscribe(runId, receive, { after, signal: state.controller.signal, onRetry: () => status('reconnecting to the same run…') });
-    state.session = await api.session(state.session.session_id); state.run = null; renderPins();
+    const fresh = adaptSessionSnapshot(await api.session(state.session.session_id));
+    if (fresh) state.session = fresh;
+    state.run = null;
+    renderPins();
     status(demo ? 'demo · ready — simulated records only' : 'copilot ready — keep investigating');
   } catch (error) {
     if (error.name !== 'AbortError') { notice(error.message + ' The run may still be active; resume its stream.'); status('connection interrupted'); }
@@ -287,7 +338,7 @@ async function watchRun(runId, after = 0) {
     // While disconnected, prevent a second message from creating a competing run.
     if (state.run) {
       for (const id of ['chatSubmit', 'chatInput', 'uploadBtn', 'searchBtn', 'reportBtn']) $(id).disabled = true;
-       $('stopBtn').hidden = false;
+      $('stopBtn').hidden = false;
       document.querySelectorAll('.answer-actions button,.record-actions button').forEach(value => { value.disabled = true; });
     }
   }
@@ -298,17 +349,28 @@ async function sendMessage(text) {
   notice(); activate(); setBusy(true);
   updateAirframeHighlight(text);
   try {
-    const run = await api.message(state.session.session_id, { message: text, model: $('agentModelSelect').value,
-      search_spec: searchSpec(text), idempotency_key: uid(), expected_revision: state.session.revision });
-    state.session.revision = run.session_revision; $('chatSection').scrollIntoView({ behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'instant' : 'smooth', block: 'start' }); userMessage(text); state.turn = newTurn(); $('chatInput').value = '';
+    const spec = searchSpec(text);
+    const run = await api.message(state.session.session_id, {
+      text,
+      model: $('agentModelSelect').value || 'extractive/v1',
+      parameters: { search_spec: spec },
+      idempotency_key: uid(),
+      expected_revision: state.session.revision ?? state.session.state_revision ?? 0,
+    });
+    state.session.revision = run.session_revision ?? run.state_revision ?? state.session.revision;
+    $('chatSection').scrollIntoView({ behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'instant' : 'smooth', block: 'start' });
+    userMessage(text);
+    state.turn = newTurn();
+    $('chatInput').value = '';
     await watchRun(run.run_id);
   } catch (error) {
     setBusy(false);
     // A lost POST response can still mean the server accepted the message.
     // Read session state before permitting another run; never auto-POST a retry.
     try {
-      const fresh = await api.session(state.session.session_id);
-      if (fresh.active_run) { await restore(fresh.session_id); return; }
+      const freshRaw = await api.session(state.session.session_id);
+      const fresh = adaptSessionSnapshot(freshRaw);
+      if (fresh?.active_run_id) { await restore(fresh.session_id); return; }
       state.session = fresh;
     } catch { /* preserve the original error and user's input */ }
     throw error;
@@ -316,37 +378,152 @@ async function sendMessage(text) {
 }
 async function performAction(action, answer, parameters = {}) {
   if (state.busy || state.run) return;
-  if (action === 'SENSITIVITY' && !parameters.alternative_query) {
+  const normAction = (action || '').toLowerCase();
+  const upperAction = (action || '').toUpperCase();
+
+  if (normAction === 'sensitivity' && !parameters.alternative_query) {
     const body = panel('Preview a sensitivity comparison', 'One query change; same source scope');
     body.append(node('p', 'helper', 'Edit the wording of one aspect. The server must reject changes to multiple dimensions and return a computed comparison receipt.'));
     const input = node('textarea', 'textarea'); input.value = $('queryText').value || state.session.last_query || ''; input.maxLength = 8000; input.setAttribute('aria-label', 'Alternative query');
-    body.append(input, button('Compare this alternative', async () => { const alternative = input.value.trim(); if (!alternative) throw new Error('Enter an alternative query.'); $('panelDialog').close(); await performAction(action, answer, { alternative_query: alternative, change_kind: 'wording' }); }, 'primary-btn')); return;
+    body.append(input, button('Compare this alternative', async () => { const alternative = input.value.trim(); if (!alternative) throw new Error('Enter an alternative query.'); $('panelDialog').close(); await performAction('sensitivity', answer, { alternative_query: alternative, change_kind: 'wording' }); }, 'primary-btn')); return;
   }
   notice(); setBusy(true);
   try {
-    const run = await api.action(state.session.session_id, { action, parent_answer_id: answer.answer_id,
-      expected_revision: state.session.revision, idempotency_key: uid(), parameters });
-    state.session.revision = run.session_revision; userMessage(labels[action]); state.turn = newTurn(); await watchRun(run.run_id);
+    const result = await api.action(state.session.session_id, {
+      action: normAction,
+      parent_answer_id: answer.answer_id,
+      expected_revision: state.session.revision ?? state.session.state_revision ?? 0,
+      idempotency_key: uid(),
+      parameters,
+    });
+
+    if (result.state_revision !== undefined) {
+      state.session.revision = result.state_revision;
+    }
+
+    if (result.envelope) {
+      userMessage(labels[upperAction] || normAction);
+      state.turn = newTurn();
+      const adapted = adaptAnswerEnvelope(result.envelope) || result.envelope;
+      renderAnswer(adapted, state.turn.element);
+      try {
+        const fresh = adaptSessionSnapshot(await api.session(state.session.session_id));
+        if (fresh) {
+          state.session = fresh;
+          renderBoard(fresh.board);
+        }
+      } catch { /* board refresh best-effort */ }
+      setBusy(false);
+      return;
+    }
+
+    if (result.comparison) {
+      const body = panel('Distinguish records', 'Side-by-side comparison receipt');
+      body.append(node('pre', '', JSON.stringify(result.comparison, null, 2)));
+      setBusy(false);
+      return;
+    }
+
+    if (result.result && normAction === 'challenge') {
+      const body = panel('Challenge baseline', 'Alternative search findings receipt');
+      body.append(node('pre', '', JSON.stringify(result.result, null, 2)));
+      setBusy(false);
+      return;
+    }
+
+    if (result.result && normAction === 'sensitivity') {
+      const body = panel('Search sensitivity', 'Query variation comparison receipt');
+      body.append(node('pre', '', JSON.stringify(result.result, null, 2)));
+      setBusy(false);
+      return;
+    }
+
+    if (result.markdown && normAction === 'handover') {
+      const url = URL.createObjectURL(new Blob([result.markdown], { type: 'text/markdown;charset=utf-8' }));
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = `${demo ? 'SIMULATED-' : ''}maintenance-handover.md`;
+      link.click();
+      setTimeout(() => URL.revokeObjectURL(url), 1000);
+      setBusy(false);
+      return;
+    }
+
+    if (result.run_id) {
+      userMessage(labels[upperAction] || normAction);
+      state.turn = newTurn();
+      await watchRun(result.run_id);
+    } else {
+      setBusy(false);
+    }
   } catch (error) { setBusy(false); throw error; }
 }
 async function restore(id) {
-  if (state.busy) return; notice(); const value = await api.session(id);
-  state.controller?.abort(); state.run = null; state.session = value; localStorage.setItem(storageKey, id);
-  $('thread').replaceChildren(); $('shell').classList.toggle('chat-active', value.messages.length > 0);
-  for (const message of value.messages) { if (message.kind === 'user') userMessage(message.text); if (message.kind === 'answer') renderAnswer(message.answer, $('thread')); }
+  if (state.busy) return;
+  notice();
+  const raw = await api.session(id);
+  const value = adaptSessionSnapshot(raw);
+  state.controller?.abort();
+  state.run = null;
+  state.session = value;
+  localStorage.setItem(storageKey, id);
+
+  try {
+    const pins = await api.pins(id);
+    if (Array.isArray(pins)) state.session.pins = pins;
+  } catch { /* pins endpoint optional */ }
+
+  $('thread').replaceChildren();
+  const hasMessages = Boolean(value.messages && value.messages.length);
+  $('shell').classList.toggle('chat-active', hasMessages);
+
+  for (const message of value.messages || []) {
+    if (message.kind === 'user' || message.role === 'user') {
+      userMessage(typeof message.content === 'string' ? message.content : (message.text || ''));
+    } else if (message.kind === 'answer' || message.role === 'assistant') {
+      renderAnswer(message.answer || message.content, $('thread'));
+    }
+  }
+  for (const answer of value.answers || []) {
+    renderAnswer(answer, $('thread'));
+  }
+
   updateAirframeHighlight(value.last_query || '');
-  state.records = value.records || []; $('evidenceWorkspace').hidden = !value.messages.length; $('workspace').classList.toggle('has-evidence', Boolean(value.messages.length));
-  renderRecords(state.records); renderBoard(value.board); renderPins(); $('panelDialog').close();
-  $('liveSpecCard').hidden = true; setBusy(false); status(demo ? 'demo · ready — simulated records only' : 'copilot ready — keep investigating');
-  if (value.active_run) { state.turn = newTurn(); await watchRun(value.active_run.run_id, 0); }
+  state.records = value.records || [];
+  $('evidenceWorkspace').hidden = !hasMessages;
+  $('workspace').classList.toggle('has-evidence', hasMessages);
+  renderRecords(state.records);
+  renderBoard(value.board);
+  renderPins();
+  $('panelDialog').close();
+  $('liveSpecCard').hidden = true;
+  setBusy(false);
+  status(demo ? 'demo · ready — simulated records only' : 'copilot ready — keep investigating');
+  if (value.active_run_id) {
+    state.turn = newTurn();
+    await watchRun(value.active_run_id, 0);
+  }
 }
 async function newSession() { if (state.busy) return; const value = await api.createSession($('domainSelect').value || 'aviation'); await restore(value.session_id); $('directResults').replaceChildren(); $('chatInput').focus(); }
 async function directSearch() {
-  if (state.busy || state.run) return; const query = $('queryText').value.trim(); if (!query) throw new Error('Enter a search complaint.');
-  setBusy(true); status('searching records without an LLM answer…'); notice();
+  if (state.busy || state.run) return;
+  const query = $('queryText').value.trim();
+  if (!query) throw new Error('Enter a search complaint.');
+  setBusy(true);
+  status('searching records without an LLM answer…');
+  notice();
   updateAirframeHighlight(query);
-  try { const result = await api.search(searchSpec(query)); $('directResults').append(node('h2', 'results-title', 'Retrieved records')); renderRecords(result.records || [], $('directResults')); $('directResults').scrollIntoView({ block: 'nearest' }); }
-  finally { setBusy(false); status(demo ? 'demo · ready — simulated records only' : 'copilot ready — keep investigating'); }
+  try {
+    const rawResult = await api.search(searchSpec(query));
+    const result = adaptSearchResult(rawResult);
+    $('directResults').replaceChildren();
+    $('directResults').append(node('h2', 'results-title', 'Retrieved records'));
+    renderRecords(result.hits || [], $('directResults'));
+    $('directResults').scrollIntoView({ block: 'nearest' });
+  } finally {
+    setBusy(false);
+    status(demo ? 'demo · ready — simulated records only' : 'copilot ready — keep investigating');
+  }
 }
 async function exportHandover() {
   const text = await api.handover(state.session.session_id); const url = URL.createObjectURL(new Blob([text], { type: 'text/markdown;charset=utf-8' }));
@@ -416,19 +593,46 @@ $('fileInput').addEventListener('change', () => protect(async () => {
 async function boot() {
   $('environmentLabel').textContent = demo ? 'SIMULATED UI DEMO · NOT LIVE DATA' : 'LIVE API MODE';
   try {
-    state.capabilities = await api.capabilities(); const capabilities = state.capabilities;
+    const rawCap = await api.capabilities();
+    state.capabilities = adaptCapabilities(rawCap);
+    const capabilities = state.capabilities;
     $('coverage').textContent = capabilities.corpus_summary || 'Source metadata unavailable';
-    for (const model of capabilities.models || []) { const option = node('option', '', model.label || model.id); option.value = model.id; $('agentModelSelect').append(option); }
-    for (const domain of capabilities.domains || []) { const option = node('option', '', domain); option.value = domain; $('domainSelect').append(option); }
-    $('qualitySelect').querySelector('[value="rerank"]').disabled = !capabilities.rerank_available;
-    $('agentModelSelect').disabled = !capabilities.models?.length;
-    if (!capabilities.models?.length || !capabilities.domains?.length) throw new Error('The service has no configured model or source domain.');
+    $('agentModelSelect').replaceChildren();
+    for (const model of capabilities.models || []) {
+      const option = node('option', '', model.label || model.id);
+      option.value = model.id;
+      $('agentModelSelect').append(option);
+    }
+    if (!capabilities.models?.length) {
+      const fallbackOpt = node('option', '', 'extractive/v1 (deterministic)');
+      fallbackOpt.value = 'extractive/v1';
+      $('agentModelSelect').append(fallbackOpt);
+    }
+    $('domainSelect').replaceChildren();
+    for (const domain of capabilities.domains || []) {
+      const option = node('option', '', domain);
+      option.value = domain;
+      $('domainSelect').append(option);
+    }
+    const rerankEl = $('qualitySelect')?.querySelector('[value="rerank"]');
+    if (rerankEl) rerankEl.disabled = !capabilities.rerank_available;
+    $('agentModelSelect').disabled = false;
+
     const saved = localStorage.getItem(storageKey);
-    if (saved) { try { await restore(saved); } catch (error) { if (error.status === 404 || demo) await newSession(); else throw error; } }
-    else await newSession();
+    if (saved) {
+      try {
+        await restore(saved);
+      } catch (error) {
+        if (error.status === 404 || demo) await newSession();
+        else throw error;
+      }
+    } else {
+      await newSession();
+    }
     initAirframeInteractions();
   } catch (error) {
-    status('backend unavailable'); $('coverage').textContent = 'Source catalogue unavailable';
+    status('backend unavailable');
+    $('coverage').textContent = 'Source catalogue unavailable';
     notice(error.message + ' For the labeled simulated preview, open this URL with ?demo=1. Live mode never falls back to fixtures.');
   }
 }

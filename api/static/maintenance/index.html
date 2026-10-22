@@ -11,13 +11,13 @@
 <body>
   <div class="talent-shell" id="shell">
     <aside class="atlas-sidebar" aria-label="Workspace navigation">
-      <a class="atlas-logo" href="?demo=1"><span class="logo-icon">✳</span><span>atlas<span class="logo-caption">MAINTENANCE COPILOT</span></span></a>
+      <a class="atlas-logo" id="atlasLogo" href="./"><span class="logo-icon">✳</span><span>atlas<span class="logo-caption">MAINTENANCE COPILOT</span></span></a>
       <div class="sidebar-label">WORKSPACE</div>
       <nav class="atlas-navigation">
         <button class="nav-item active" data-destination="home" aria-current="page"><span>⌂</span> Overview</button>
         <button class="nav-item" data-destination="issue"><span>＋</span> Investigate an issue</button>
         <button class="nav-item" data-destination="airframe"><span>✈</span> Aircraft explorer</button>
-        <button class="nav-item" id="explorerBtn"><span>▤</span> Search demo records</button>
+        <button class="nav-item" id="explorerBtn"><span>▤</span> <span id="explorerNavLabel">Search records</span></button>
         <button class="nav-item" id="historyBtn"><span>◷</span> Investigation history</button>
         <button class="nav-item" id="pinsBtn"><span>◇</span> Saved evidence <span class="nav-count" id="pinCount">0</span></button>
       </nav>
@@ -28,9 +28,9 @@
         <button class="nav-item" id="storyBtn"><span>ⓘ</span> How it works</button>
         <button class="nav-item" id="settingsBtn"><span>⚙</span> Settings</button>
       </nav>
-      <div class="sidebar-bottom"><div class="demo-pill"><i></i> Demo workspace</div><p>Explore with sample issues.<br>No live aircraft data connected.</p><div class="profile-avatar">VA</div><span>Vansh's workspace<small>NexAI Hackathon 2026</small></span></div>
+      <div class="sidebar-bottom" id="sidebarBottom"><div class="demo-pill" id="workspacePill"><i></i> Live workspace</div><p id="workspaceSubtext">Connected to live database.<br>6,369 verified records.</p><div class="profile-avatar" id="workspaceAvatar">MA</div><span id="workspaceIdentity">Maintenance Atlas<small>NexAI 2026</small></span></div>
     </aside>
-    <header class="topbar"><div class="topbar-inner"><div class="breadcrumb">Workspace <span>/</span> <strong id="viewName">Overview</strong></div><div class="top-actions"><span class="preview-label">DEMO PREVIEW</span><button class="primary-btn" id="newSessionBtn">＋ New investigation</button></div></div></header>
+    <header class="topbar"><div class="topbar-inner"><div class="breadcrumb">Workspace <span>/</span> <strong id="viewName">Overview</strong></div><div class="top-actions"><span class="preview-label" id="previewBadge">LIVE COPILOT</span><button class="primary-btn" id="newSessionBtn">＋ New investigation</button></div></div></header>
     <main>
       <section class="hero">
         <div class="hero-kicker"><span></span> MAINTENANCE WORKSPACE</div>
