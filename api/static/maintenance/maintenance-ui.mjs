@@ -453,7 +453,7 @@ function renderAnswer(rawAnswer, container) {
     node('h3', 'answer-headline', answer.headline || (isHypothesis ? 'Troubleshooting & Physical Mechanisms' : 'Investigation Findings'))
   );
 
-  if (answer.generation) {
+  if (answer.generation && Object.keys(answer.generation).length) {
     const g = answer.generation;
     const selected = g.requested_model || 'extractive/v1';
     const effective = g.effective_model || (g.status === 'not_requested' ? 'not invoked' : 'no model response');

@@ -282,15 +282,18 @@ class AgentRunner:
                     state_revision=deps.state_revision,
                     status="insufficient_evidence",
                     limitations=[
-                        "Requested procedure/torque specification is absent from historical maintenance logs.",
+                        "Historical logs do not establish approved specifications, repair instructions, or operational clearance.",
                         "Refer to official FAA-approved Aircraft Maintenance Manuals (AMM) for certified specifications.",
                     ],
                     missing=[
-                        "Approved torque specification / procedural steps not present in dataset.",
+                        "Applicable approved documentation and qualified operational assessment are not present in these historical records.",
                     ],
                     clarification=None,
                 )
-                answer.headline = "Requested procedural specification absent from historical logs."
+                answer.headline = "Requested specification or operational guarantee is not established by historical logs."
+                answer.generation = {"status": "not_requested", "requested_model": getattr(deps, "model_id", None),
+                                     "effective_model": None, "fallback_reason": "outside_log_authority",
+                                     "prompt_version": PROMPT_VERSION}
             else:
                 answer = None
                 run_provider = self._resolve_provider_for_run(getattr(deps, "model_id", None))
@@ -430,6 +433,7 @@ class AgentRunner:
             snapshots_list = list(deps.fetched_evidence.values())
             if not val_res.is_valid:
                 logger.error("Released answer failed deterministic validation gate: %s", val_res.errors)
+                rejected_generation = dict(answer.generation)
                 # Fallback to insufficient evidence answer with unverified claims stripped
                 answer = render_extractive_answer(
                     run_id=deps.run_id,
@@ -440,8 +444,8 @@ class AgentRunner:
                     status="insufficient_evidence",
                     limitations=["Evidence validation gate rejected unsupported or corrupted claim citations."],
                 )
-                answer.generation = {"status": "extractive_fallback", "fallback_reason": "source_validation_failed",
-                                     "requested_model": getattr(deps, "model_id", None), "effective_model": None}
+                answer.generation = {**rejected_generation, "status": "extractive_fallback", "fallback_reason": "source_validation_failed",
+                                     "requested_model": getattr(deps, "model_id", None)}
                 val_report = {
                     "valid": False,
                     "errors": val_res.errors,
