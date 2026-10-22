@@ -264,27 +264,7 @@ class AgentRunner:
                         state_revision=deps.state_revision,
                     )
 
-            # 7. Update board
-            session_snap = await self.repository.get_session(deps.session_id, deps.owner_id)
-            current_board = session_snap.board if session_snap else []
-            new_board = BoardManager.update_from_answer(current_board, answer, deps.state_revision)
-
-            await self.event_bus.emit(
-                deps.run_id,
-                seq,
-                "board_updated",
-                {
-                    "board_items_count": len(new_board),
-                    "columns": {
-                        "known": sum(1 for b in new_board if b.column == "known"),
-                        "reported": sum(1 for b in new_board if b.column == "reported"),
-                        "missing": sum(1 for b in new_board if b.column == "missing"),
-                    },
-                },
-            )
-            seq += 1
-
-            # 8. Deterministic validation gate applied to ALL released answers
+            # 7. Deterministic validation gate applied to ALL candidate answers BEFORE board update
             val_res = validate_answer(answer, deps.fetched_evidence, deps.computed_receipts, deps.mode)
             snapshots_list = list(deps.fetched_evidence.values())
             if not val_res.is_valid:
@@ -314,6 +294,11 @@ class AgentRunner:
                     "errors": [],
                 }
 
+            # 8. Update board from verified released answer only
+            session_snap = await self.repository.get_session(deps.session_id, deps.owner_id)
+            current_board = session_snap.board if session_snap else []
+            new_board = BoardManager.update_from_answer(current_board, answer, deps.state_revision)
+
             await self.repository.save_evidence_snapshots(deps.run_id, snapshots_list)
 
             new_rev = await self.repository.commit_answer_and_state(
@@ -324,7 +309,28 @@ class AgentRunner:
                 new_board_items=new_board,
             )
 
-            # 9. answer_validated
+            # If run was cancelled concurrently, stop immediately without emitting answer_validated
+            if new_rev < 0:
+                logger.info("Run %s was cancelled before commit; suppressing answer release", deps.run_id)
+                return answer
+
+            # 9. board_updated (after successful commit)
+            await self.event_bus.emit(
+                deps.run_id,
+                seq,
+                "board_updated",
+                {
+                    "board_items_count": len(new_board),
+                    "columns": {
+                        "known": sum(1 for b in new_board if b.column == "known"),
+                        "reported": sum(1 for b in new_board if b.column == "reported"),
+                        "missing": sum(1 for b in new_board if b.column == "missing"),
+                    },
+                },
+            )
+            seq += 1
+
+            # 10. answer_validated
             await self.event_bus.emit(
                 deps.run_id,
                 seq,
@@ -340,7 +346,7 @@ class AgentRunner:
             )
             seq += 1
 
-            # 10. done
+            # 11. done
             await self.event_bus.emit(
                 deps.run_id,
                 seq,

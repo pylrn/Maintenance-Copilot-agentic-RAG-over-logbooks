@@ -72,3 +72,35 @@ def test_unsupported_torque_request_renders_insufficient_evidence():
     assert ans.status == "insufficient_evidence"
     assert len(ans.claims) == 0
     assert "Torque specifications absent" in ans.limitations[0]
+
+
+def test_board_construction_with_fallback_answer():
+    from maintenance.board import BoardManager
+    from maintenance.contracts import BoardItem
+
+    current_board = [
+        BoardItem(
+            item_id=uuid4(),
+            column="known",
+            text="Initial complaint",
+            origin="user_report",
+            origin_ref="user",
+            created_revision=0,
+            verification_status="user_reported",
+        )
+    ]
+    # Fallback answer has 0 claims
+    ans = render_extractive_answer(
+        run_id=uuid4(),
+        mode="EVIDENCE",
+        query_raw="unsupported fault",
+        fetched_evidence={},
+        state_revision=1,
+        status="insufficient_evidence",
+        limitations=["Rejected unsupported draft"],
+    )
+    new_board = BoardManager.update_from_answer(current_board, ans, state_revision=1)
+    # The board must not have fabricated reported claims from unverified draft
+    reported = [b for b in new_board if b.column == "reported"]
+    assert len(reported) == 0
+    assert any(b.column == "known" for b in new_board)
