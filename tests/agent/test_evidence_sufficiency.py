@@ -16,6 +16,7 @@ def evidence(*problems):
 @pytest.mark.parametrize('query,problem', [
     ('CYL #2 intake leak', 'CYL #2 INTAKE LEAKING.'),
     ('baffle crack', 'BAFFLE CRACKED.'),
+    ('baffle cracking', 'BAFFLE CRACKED.'),
     ('battery flat', 'BATTERY FLAT.'),
 ])
 def test_direct_problem_matches_keep_paired_actions(query, problem):

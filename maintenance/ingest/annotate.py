@@ -19,7 +19,7 @@ COMPONENTS = {
 }
 SYMPTOMS = {
     "leak": r"\bleak(?:s|ing)?\b",
-    "crack": r"\bcrack(?:s|ed)?\b",
+    "crack": r"\bcrack(?:s|ed|ing)?\b",
     "loose": r"\bloose\b",
     "rough": r"\brough\b",
     "torn": r"\btorn\b",

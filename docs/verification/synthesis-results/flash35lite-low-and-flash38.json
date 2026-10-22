@@ -1,0 +1,311 @@
+{
+  "prompt_version": "evidence-selection/v2",
+  "scope": "fixed synthetic evidence; not end-to-end retrieval accuracy",
+  "limits": {
+    "global_rpm": 4,
+    "flash_rpm": 2,
+    "lite_rpm": 4,
+    "tpm_conservative_ceiling": 45000,
+    "one_inflight": true,
+    "retry_on_429": false,
+    "warmup_seconds": 65
+  },
+  "results": [
+    {
+      "case": "intake-paired-action",
+      "model": "gemini-3.8-flash",
+      "prompt_version": "evidence-selection/v2",
+      "requested_model": "gemini-3.8-flash",
+      "effective_model": null,
+      "reasoning_effort": "low",
+      "status": "extractive_fallback",
+      "fallback_reason": "rate_limited",
+      "error_type": "RateLimitError",
+      "latency_ms": 830.83,
+      "expected_decision": "supported_historical",
+      "actual_decision": null,
+      "model_quality_pass": false,
+      "release_validation_pass": true,
+      "source_selection_ids": [],
+      "released_summary": "Historical record aviation:1 reports: \"#2 INTAKE LEAKS.\". Its recorded action is: \"REPLACED INTAKE GASKET.\".",
+      "released_can": [
+        "Historical record aviation:1 reports: &quot;#2 INTAKE LEAKS.&quot;. Its recorded action is: &quot;REPLACED INTAKE GASKET.&quot;."
+      ],
+      "released_cannot": [
+        "These historical records do not establish the cause, repair effectiveness, aircraft identity, or applicability to your aircraft.",
+        "They do not supply approved maintenance instructions, operational clearance, or proof that the aircraft is safe to fly."
+      ]
+    },
+    {
+      "case": "intake-paired-action",
+      "model": "gemini-3.5-flash-lite",
+      "prompt_version": "evidence-selection/v2",
+      "requested_model": "gemini-3.5-flash-lite",
+      "effective_model": "gemini-3.5-flash-lite",
+      "reasoning_effort": "low",
+      "status": "validated_selection",
+      "fallback_reason": null,
+      "usage": {
+        "prompt_tokens": 919,
+        "completion_tokens": 92,
+        "reasoning_tokens": null
+      },
+      "decision": "supported_historical",
+      "latency_ms": 4381.59,
+      "expected_decision": "supported_historical",
+      "actual_decision": "supported_historical",
+      "model_quality_pass": true,
+      "release_validation_pass": true,
+      "source_selection_ids": [
+        "7e4e82d7-55cb-5685-92d7-0f604f2c48ec",
+        "e1fa7e66-6a58-5b03-b24c-bd7760b7f487"
+      ],
+      "released_summary": "Historical record aviation:1 reports: \"#2 INTAKE LEAKS.\". Its recorded action is: \"REPLACED INTAKE GASKET.\".",
+      "released_can": [
+        "Historical record aviation:1 reports: &quot;#2 INTAKE LEAKS.&quot;. Its recorded action is: &quot;REPLACED INTAKE GASKET.&quot;."
+      ],
+      "released_cannot": [
+        "These historical records do not establish the cause, repair effectiveness, aircraft identity, or applicability to your aircraft.",
+        "They do not supply approved maintenance instructions, operational clearance, or proof that the aircraft is safe to fly."
+      ]
+    },
+    {
+      "case": "crack-is-not-check",
+      "model": "gemini-3.8-flash",
+      "status": "skipped_after_rate_limit"
+    },
+    {
+      "case": "crack-is-not-check",
+      "model": "gemini-3.5-flash-lite",
+      "prompt_version": "evidence-selection/v2",
+      "requested_model": "gemini-3.5-flash-lite",
+      "effective_model": "gemini-3.5-flash-lite",
+      "reasoning_effort": "low",
+      "status": "validated_selection",
+      "fallback_reason": null,
+      "usage": {
+        "prompt_tokens": 914,
+        "completion_tokens": 122,
+        "reasoning_tokens": null
+      },
+      "decision": "supported_historical",
+      "latency_ms": 3713.49,
+      "expected_decision": "supported_historical",
+      "actual_decision": "supported_historical",
+      "model_quality_pass": true,
+      "release_validation_pass": true,
+      "source_selection_ids": [
+        "cd800f23-cce0-5001-824a-1b1e0c7a9252",
+        "6d4a0136-c39b-5ccc-81f2-69728bcc7b86"
+      ],
+      "released_summary": "Historical record aviation:2 reports: \"BAFFLE CRACKED.\". Its recorded action is: \"STOP DRILLED CRACK.\".",
+      "released_can": [
+        "Historical record aviation:2 reports: &quot;BAFFLE CRACKED.&quot;. Its recorded action is: &quot;STOP DRILLED CRACK.&quot;."
+      ],
+      "released_cannot": [
+        "These historical records do not establish the cause, repair effectiveness, aircraft identity, or applicability to your aircraft.",
+        "They do not supply approved maintenance instructions, operational clearance, or proof that the aircraft is safe to fly."
+      ]
+    },
+    {
+      "case": "wrong-side-brake",
+      "model": "gemini-3.8-flash",
+      "status": "skipped_after_rate_limit"
+    },
+    {
+      "case": "wrong-side-brake",
+      "model": "gemini-3.5-flash-lite",
+      "prompt_version": "evidence-selection/v2",
+      "requested_model": "gemini-3.5-flash-lite",
+      "effective_model": null,
+      "reasoning_effort": "low",
+      "status": "extractive_fallback",
+      "fallback_reason": "timeout",
+      "error_type": "TimeoutError",
+      "latency_ms": 12006.37,
+      "expected_decision": "insufficient_evidence",
+      "actual_decision": null,
+      "model_quality_pass": false,
+      "release_validation_pass": true,
+      "source_selection_ids": [],
+      "released_summary": "Historical record aviation:3 reports: \"LEFT BRAKE LININGS WORN.\". Its recorded action is: \"REPLACED LEFT BRAKE LININGS.\".",
+      "released_can": [
+        "Historical record aviation:3 reports: &quot;LEFT BRAKE LININGS WORN.&quot;. Its recorded action is: &quot;REPLACED LEFT BRAKE LININGS.&quot;."
+      ],
+      "released_cannot": [
+        "These historical records do not establish the cause, repair effectiveness, aircraft identity, or applicability to your aircraft.",
+        "They do not supply approved maintenance instructions, operational clearance, or proof that the aircraft is safe to fly."
+      ]
+    },
+    {
+      "case": "wrong-cylinder",
+      "model": "gemini-3.8-flash",
+      "status": "skipped_after_rate_limit"
+    },
+    {
+      "case": "wrong-cylinder",
+      "model": "gemini-3.5-flash-lite",
+      "prompt_version": "evidence-selection/v2",
+      "requested_model": "gemini-3.5-flash-lite",
+      "effective_model": null,
+      "reasoning_effort": "low",
+      "status": "extractive_fallback",
+      "fallback_reason": "timeout",
+      "error_type": "TimeoutError",
+      "latency_ms": 12010.62,
+      "expected_decision": "insufficient_evidence",
+      "actual_decision": null,
+      "model_quality_pass": false,
+      "release_validation_pass": true,
+      "source_selection_ids": [],
+      "released_summary": "Historical record aviation:4 reports: \"CYL #2 INTAKE LEAKS.\". Its recorded action is: \"REPLACED GASKET.\".",
+      "released_can": [
+        "Historical record aviation:4 reports: &quot;CYL #2 INTAKE LEAKS.&quot;. Its recorded action is: &quot;REPLACED GASKET.&quot;."
+      ],
+      "released_cannot": [
+        "These historical records do not establish the cause, repair effectiveness, aircraft identity, or applicability to your aircraft.",
+        "They do not supply approved maintenance instructions, operational clearance, or proof that the aircraft is safe to fly."
+      ]
+    },
+    {
+      "case": "unknown-clause",
+      "model": "gemini-3.8-flash",
+      "status": "skipped_after_rate_limit"
+    },
+    {
+      "case": "unknown-clause",
+      "model": "gemini-3.5-flash-lite",
+      "prompt_version": "evidence-selection/v2",
+      "requested_model": "gemini-3.5-flash-lite",
+      "effective_model": "gemini-3.5-flash-lite",
+      "reasoning_effort": "low",
+      "status": "validated_selection",
+      "fallback_reason": null,
+      "usage": {
+        "prompt_tokens": 917,
+        "completion_tokens": 11,
+        "reasoning_tokens": null
+      },
+      "decision": "insufficient_evidence",
+      "latency_ms": 2187.33,
+      "expected_decision": "insufficient_evidence",
+      "actual_decision": "insufficient_evidence",
+      "model_quality_pass": true,
+      "release_validation_pass": true,
+      "source_selection_ids": [],
+      "released_summary": "Insufficient evidence: retrieved candidates do not establish a matching complaint in the authorized records. This does not prove that the fault is absent or identify a repair.",
+      "released_can": [
+        "No evidence found for this complaint in the historical records."
+      ],
+      "released_cannot": [
+        "These historical records do not establish the cause, repair effectiveness, aircraft identity, or applicability to your aircraft.",
+        "They do not supply approved maintenance instructions, operational clearance, or proof that the aircraft is safe to fly."
+      ]
+    },
+    {
+      "case": "no-operational-clearance",
+      "model": "gemini-3.8-flash",
+      "status": "skipped_after_rate_limit"
+    },
+    {
+      "case": "no-operational-clearance",
+      "model": "gemini-3.5-flash-lite",
+      "prompt_version": "evidence-selection/v2",
+      "requested_model": "gemini-3.5-flash-lite",
+      "effective_model": null,
+      "reasoning_effort": "low",
+      "status": "extractive_fallback",
+      "fallback_reason": "timeout",
+      "error_type": "TimeoutError",
+      "latency_ms": 12005.04,
+      "expected_decision": "insufficient_evidence",
+      "actual_decision": null,
+      "model_quality_pass": false,
+      "release_validation_pass": true,
+      "source_selection_ids": [],
+      "released_summary": "Historical record aviation:6 reports: \"INTAKE LEAKS.\". Its recorded action is: \"REPLACED GASKET.\".",
+      "released_can": [
+        "Historical record aviation:6 reports: &quot;INTAKE LEAKS.&quot;. Its recorded action is: &quot;REPLACED GASKET.&quot;."
+      ],
+      "released_cannot": [
+        "These historical records do not establish the cause, repair effectiveness, aircraft identity, or applicability to your aircraft.",
+        "They do not supply approved maintenance instructions, operational clearance, or proof that the aircraft is safe to fly."
+      ]
+    },
+    {
+      "case": "distinct-records-not-recurrence",
+      "model": "gemini-3.8-flash",
+      "status": "skipped_after_rate_limit"
+    },
+    {
+      "case": "distinct-records-not-recurrence",
+      "model": "gemini-3.5-flash-lite",
+      "prompt_version": "evidence-selection/v2",
+      "requested_model": "gemini-3.5-flash-lite",
+      "effective_model": "gemini-3.5-flash-lite",
+      "reasoning_effort": "low",
+      "status": "validated_selection",
+      "fallback_reason": null,
+      "usage": {
+        "prompt_tokens": 1052,
+        "completion_tokens": 91,
+        "reasoning_tokens": null
+      },
+      "decision": "supported_historical",
+      "latency_ms": 8655.17,
+      "expected_decision": "supported_historical",
+      "actual_decision": "supported_historical",
+      "model_quality_pass": true,
+      "release_validation_pass": true,
+      "source_selection_ids": [
+        "86c11f2a-466b-5c3d-a924-3704841a1586",
+        "0aee51b2-b7bf-56b2-87a3-4ee8cfe450f1"
+      ],
+      "released_summary": "Historical record aviation:7 reports: \"LEFT INTAKE LEAK.\". Its recorded action is: \"REPLACED GASKET.\".",
+      "released_can": [
+        "Historical record aviation:7 reports: &quot;LEFT INTAKE LEAK.&quot;. Its recorded action is: &quot;REPLACED GASKET.&quot;."
+      ],
+      "released_cannot": [
+        "These historical records do not establish the cause, repair effectiveness, aircraft identity, or applicability to your aircraft.",
+        "They do not supply approved maintenance instructions, operational clearance, or proof that the aircraft is safe to fly."
+      ]
+    },
+    {
+      "case": "facility-description-only",
+      "model": "gemini-3.8-flash",
+      "status": "skipped_after_rate_limit"
+    },
+    {
+      "case": "facility-description-only",
+      "model": "gemini-3.5-flash-lite",
+      "prompt_version": "evidence-selection/v2",
+      "requested_model": "gemini-3.5-flash-lite",
+      "effective_model": "gemini-3.5-flash-lite",
+      "reasoning_effort": "low",
+      "status": "validated_selection",
+      "fallback_reason": null,
+      "usage": {
+        "prompt_tokens": 850,
+        "completion_tokens": 58,
+        "reasoning_tokens": null
+      },
+      "decision": "supported_historical",
+      "latency_ms": 11153.55,
+      "expected_decision": "supported_historical",
+      "actual_decision": "supported_historical",
+      "model_quality_pass": true,
+      "release_validation_pass": true,
+      "source_selection_ids": [
+        "730869f5-408d-502f-992a-03148ea2aa1a"
+      ],
+      "released_summary": "Historical record facility:9 reports: \"WATER LEAK IN OFFICE. REQUEST REPAIR.\". No separate corrective-action field was selected for this record.",
+      "released_can": [
+        "Historical record facility:9 reports: &quot;WATER LEAK IN OFFICE. REQUEST REPAIR.&quot;. No separate corrective-action field was selected for this record."
+      ],
+      "released_cannot": [
+        "These historical records do not establish the cause, repair effectiveness, aircraft identity, or applicability to your aircraft.",
+        "They do not supply approved maintenance instructions, operational clearance, or proof that the aircraft is safe to fly."
+      ]
+    }
+  ]
+}

@@ -1,0 +1,3755 @@
+[
+  {
+    "repeat": 1,
+    "query": "intake leak",
+    "expected": "supported_historical",
+    "answer": {
+      "answer_id": "20c826ae-4814-4ed3-864b-857467259e1b",
+      "run_id": "83c5dd81-3625-4887-b09f-534cb74f86ca",
+      "mode": "EVIDENCE",
+      "status": "supported_historical",
+      "headline": "Found 6 relevant historical maintenance record(s) matching complaint.",
+      "claims": [
+        {
+          "claim_id": "claim-prob-1",
+          "text": "Record aviation:102838 records problem: \"#2 INTAKE HAS LEAK.\"",
+          "claim_type": "historical_problem",
+          "supports": [
+            {
+              "corpus_id": "2795c1d6-a5f4-5c8d-a773-4ac724d10e99",
+              "record_id": "aviation:102838",
+              "field": "PROBLEM",
+              "start": 0,
+              "end": 19,
+              "quote": "#2 INTAKE HAS LEAK.",
+              "source_sha256": "eb25320a6a2be1851a5cc8e09516dc7376c953582b96b11db112c37b02130a67",
+              "kind": "log_span",
+              "evidence_id": "9099f629-ed4c-4c30-befc-c5a5f4db90f8",
+              "support_kind": "direct_quote"
+            }
+          ]
+        },
+        {
+          "claim_id": "claim-prob-2",
+          "text": "Record aviation:103510 records problem: \"#2 INTAKE SLIGHT LEAK.\"",
+          "claim_type": "historical_problem",
+          "supports": [
+            {
+              "corpus_id": "2795c1d6-a5f4-5c8d-a773-4ac724d10e99",
+              "record_id": "aviation:103510",
+              "field": "PROBLEM",
+              "start": 0,
+              "end": 22,
+              "quote": "#2 INTAKE SLIGHT LEAK.",
+              "source_sha256": "5f447d02c962d2153c0dbafbd25e8b638f9b46446a97eaddd6ca27cc8aec4cca",
+              "kind": "log_span",
+              "evidence_id": "b3476117-4edb-4ff8-bc3d-36210ea524de",
+              "support_kind": "direct_quote"
+            }
+          ]
+        },
+        {
+          "claim_id": "claim-prob-3",
+          "text": "Record aviation:106087 records problem: \"INTAKE #3 LEAKING.\"",
+          "claim_type": "historical_problem",
+          "supports": [
+            {
+              "corpus_id": "2795c1d6-a5f4-5c8d-a773-4ac724d10e99",
+              "record_id": "aviation:106087",
+              "field": "PROBLEM",
+              "start": 0,
+              "end": 18,
+              "quote": "INTAKE #3 LEAKING.",
+              "source_sha256": "7e35ab448b1c39abe485ca3b64d5b1f1a184ada962aae3b546d9472bf803a60c",
+              "kind": "log_span",
+              "evidence_id": "e7f33088-3ea3-4e13-8d1e-28331ee9b299",
+              "support_kind": "direct_quote"
+            }
+          ]
+        },
+        {
+          "claim_id": "claim-prob-4",
+          "text": "Record aviation:104952 records problem: \"#4 INTAKE OIL LEAK.\"",
+          "claim_type": "historical_problem",
+          "supports": [
+            {
+              "corpus_id": "2795c1d6-a5f4-5c8d-a773-4ac724d10e99",
+              "record_id": "aviation:104952",
+              "field": "PROBLEM",
+              "start": 0,
+              "end": 19,
+              "quote": "#4 INTAKE OIL LEAK.",
+              "source_sha256": "7686c72f69b8b3d24e807db11a50e9694d3db944a6bdf37a4b312e22eef860bb",
+              "kind": "log_span",
+              "evidence_id": "3ea0329f-763f-43ed-9d28-42452c4c5164",
+              "support_kind": "direct_quote"
+            }
+          ]
+        },
+        {
+          "claim_id": "claim-prob-5",
+          "text": "Record aviation:106090 records problem: \"#3 INTAKE LEAKS.\"",
+          "claim_type": "historical_problem",
+          "supports": [
+            {
+              "corpus_id": "2795c1d6-a5f4-5c8d-a773-4ac724d10e99",
+              "record_id": "aviation:106090",
+              "field": "PROBLEM",
+              "start": 0,
+              "end": 16,
+              "quote": "#3 INTAKE LEAKS.",
+              "source_sha256": "46ffc7ea27b6003f52a8db5d29cfd488ff602b4a171f8557da0e835d1a79b32b",
+              "kind": "log_span",
+              "evidence_id": "7530c03b-31fc-4e00-b269-ce699aaf0352",
+              "support_kind": "direct_quote"
+            }
+          ]
+        },
+        {
+          "claim_id": "claim-prob-6",
+          "text": "Record aviation:100081 records problem: \"#2 INTAKE LEAKS.\"",
+          "claim_type": "historical_problem",
+          "supports": [
+            {
+              "corpus_id": "2795c1d6-a5f4-5c8d-a773-4ac724d10e99",
+              "record_id": "aviation:100081",
+              "field": "PROBLEM",
+              "start": 0,
+              "end": 16,
+              "quote": "#2 INTAKE LEAKS.",
+              "source_sha256": "de88c88426b9e528b5ae6c99db82fc047bd5a88207a65ad89cdaea87d434a8ea",
+              "kind": "log_span",
+              "evidence_id": "0bcf228f-b187-4bdd-86e2-7bff888efd00",
+              "support_kind": "direct_quote"
+            }
+          ]
+        },
+        {
+          "claim_id": "claim-act-7",
+          "text": "Record aviation:102838 records corrective action: \"REMOVED & REPLACED INTAKE GASKET.\"",
+          "claim_type": "historical_action",
+          "supports": [
+            {
+              "corpus_id": "2795c1d6-a5f4-5c8d-a773-4ac724d10e99",
+              "record_id": "aviation:102838",
+              "field": "ACTION",
+              "start": 0,
+              "end": 33,
+              "quote": "REMOVED & REPLACED INTAKE GASKET.",
+              "source_sha256": "8593a794818aac2ac13d677c454065cb73f7b0548be4ed5c6c434e9d3981e17e",
+              "kind": "log_span",
+              "evidence_id": "217fdd13-b3b7-4ffe-8cc9-02509bf4d9b1",
+              "support_kind": "direct_quote"
+            }
+          ]
+        },
+        {
+          "claim_id": "claim-act-8",
+          "text": "Record aviation:103510 records corrective action: \"INSTALLED NEW INTAKE GASKET.\"",
+          "claim_type": "historical_action",
+          "supports": [
+            {
+              "corpus_id": "2795c1d6-a5f4-5c8d-a773-4ac724d10e99",
+              "record_id": "aviation:103510",
+              "field": "ACTION",
+              "start": 0,
+              "end": 28,
+              "quote": "INSTALLED NEW INTAKE GASKET.",
+              "source_sha256": "36b4514d54d29c1a16b92ae18bc617beb514b572797b66a13b0352fa94863a96",
+              "kind": "log_span",
+              "evidence_id": "e142c0dd-51ba-48a1-a831-906d8977a990",
+              "support_kind": "direct_quote"
+            }
+          ]
+        },
+        {
+          "claim_id": "claim-act-9",
+          "text": "Record aviation:106087 records corrective action: \"REMOVED & REPLACED GASKET.\"",
+          "claim_type": "historical_action",
+          "supports": [
+            {
+              "corpus_id": "2795c1d6-a5f4-5c8d-a773-4ac724d10e99",
+              "record_id": "aviation:106087",
+              "field": "ACTION",
+              "start": 0,
+              "end": 26,
+              "quote": "REMOVED & REPLACED GASKET.",
+              "source_sha256": "a9add81fc8579b1962cbdae090ac3fd0e589cb7dec4e11787b901051b280e235",
+              "kind": "log_span",
+              "evidence_id": "2a35b015-341d-4525-ae95-afc21d4b2ada",
+              "support_kind": "direct_quote"
+            }
+          ]
+        },
+        {
+          "claim_id": "claim-act-10",
+          "text": "Record aviation:104952 records corrective action: \"INSPECTED & FOUND OIL LEAK TO BE RESIDUAL. CLEANED AREA\"",
+          "claim_type": "historical_action",
+          "supports": [
+            {
+              "corpus_id": "2795c1d6-a5f4-5c8d-a773-4ac724d10e99",
+              "record_id": "aviation:104952",
+              "field": "ACTION",
+              "start": 0,
+              "end": 55,
+              "quote": "INSPECTED & FOUND OIL LEAK TO BE RESIDUAL. CLEANED AREA",
+              "source_sha256": "7b3356ffa42500b2f597924597ebe55c34c4f446639327e34aa86a6e10bd96fc",
+              "kind": "log_span",
+              "evidence_id": "856f26d9-dfc2-4a5a-b9c3-807ec450eafc",
+              "support_kind": "direct_quote"
+            }
+          ]
+        },
+        {
+          "claim_id": "claim-act-11",
+          "text": "Record aviation:106090 records corrective action: \"REPLACED GASKET.\"",
+          "claim_type": "historical_action",
+          "supports": [
+            {
+              "corpus_id": "2795c1d6-a5f4-5c8d-a773-4ac724d10e99",
+              "record_id": "aviation:106090",
+              "field": "ACTION",
+              "start": 0,
+              "end": 16,
+              "quote": "REPLACED GASKET.",
+              "source_sha256": "2a955acab4496675864f9792fc507d398abd53e646357b0a33e6ea4335c363a1",
+              "kind": "log_span",
+              "evidence_id": "26c6673d-ffaa-4afe-a4f0-dd55923c95c7",
+              "support_kind": "direct_quote"
+            },
+            {
+              "corpus_id": "2795c1d6-a5f4-5c8d-a773-4ac724d10e99",
+              "record_id": "aviation:100081",
+              "field": "ACTION",
+              "start": 0,
+              "end": 16,
+              "quote": "REPLACED GASKET.",
+              "source_sha256": "2a955acab4496675864f9792fc507d398abd53e646357b0a33e6ea4335c363a1",
+              "kind": "log_span",
+              "evidence_id": "40583a33-a9cb-46db-9d94-5e17e39253a9",
+              "support_kind": "direct_quote"
+            }
+          ]
+        }
+      ],
+      "limitations": [
+        "Historical maintenance records lack operational context and model identity; applicability to your aircraft is not certified.",
+        "Maintenance records report historical actions as written and do not guarantee repair success or approved procedure."
+      ],
+      "missing": [],
+      "clarification": null,
+      "visual_refs": [
+        "intake_system",
+        "intake_gasket"
+      ],
+      "allowed_actions": [
+        {
+          "action": "hypothesis",
+          "parent_answer_id": "20c826ae-4814-4ed3-864b-857467259e1b",
+          "state_revision": 0
+        },
+        {
+          "action": "challenge",
+          "parent_answer_id": "20c826ae-4814-4ed3-864b-857467259e1b",
+          "state_revision": 0
+        },
+        {
+          "action": "sensitivity",
+          "parent_answer_id": "20c826ae-4814-4ed3-864b-857467259e1b",
+          "state_revision": 0
+        },
+        {
+          "action": "handover",
+          "parent_answer_id": "20c826ae-4814-4ed3-864b-857467259e1b",
+          "state_revision": 0
+        },
+        {
+          "action": "distinguish",
+          "parent_answer_id": "20c826ae-4814-4ed3-864b-857467259e1b",
+          "state_revision": 0
+        }
+      ],
+      "summary": "Historical record aviation:102838 reports: \"#2 INTAKE HAS LEAK.\". Its recorded action is: \"REMOVED & REPLACED INTAKE GASKET.\".",
+      "what_can_be_concluded": [
+        "Historical record aviation:102838 reports: &quot;#2 INTAKE HAS LEAK.&quot;. Its recorded action is: &quot;REMOVED &amp; REPLACED INTAKE GASKET.&quot;.",
+        "Historical record aviation:103510 reports: &quot;#2 INTAKE SLIGHT LEAK.&quot;. Its recorded action is: &quot;INSTALLED NEW INTAKE GASKET.&quot;."
+      ],
+      "what_cannot_be_concluded": [
+        "These historical records do not establish the cause, repair effectiveness, aircraft identity, or applicability to your aircraft.",
+        "They do not supply approved maintenance instructions, operational clearance, or proof that the aircraft is safe to fly."
+      ],
+      "synthesis_evidence_ids": [
+        "9099f629-ed4c-4c30-befc-c5a5f4db90f8",
+        "217fdd13-b3b7-4ffe-8cc9-02509bf4d9b1",
+        "b3476117-4edb-4ff8-bc3d-36210ea524de",
+        "e142c0dd-51ba-48a1-a831-906d8977a990"
+      ],
+      "generation": {
+        "status": "not_requested",
+        "prompt_version": "evidence-selection/v2",
+        "effective_model": null,
+        "fallback_reason": "extractive_selected",
+        "requested_model": "extractive/v1"
+      }
+    },
+    "run_id": "83c5dd81-3625-4887-b09f-534cb74f86ca"
+  },
+  {
+    "repeat": 1,
+    "query": "baffle crack",
+    "expected": "supported_historical",
+    "answer": {
+      "answer_id": "8071f754-8805-4d62-80dc-dd6100061f77",
+      "run_id": "5b1271f1-4121-4cb0-9ff5-0615e6df5fa0",
+      "mode": "EVIDENCE",
+      "status": "supported_historical",
+      "headline": "Found 6 relevant historical maintenance record(s) matching complaint.",
+      "claims": [
+        {
+          "claim_id": "claim-prob-1",
+          "text": "Record aviation:100614 records problem: \"CRACK IN RIGHT FRONT BAFFLE.\"",
+          "claim_type": "historical_problem",
+          "supports": [
+            {
+              "corpus_id": "2795c1d6-a5f4-5c8d-a773-4ac724d10e99",
+              "record_id": "aviation:100614",
+              "field": "PROBLEM",
+              "start": 0,
+              "end": 28,
+              "quote": "CRACK IN RIGHT FRONT BAFFLE.",
+              "source_sha256": "ce79f60a2ff691d32657a2e950dee5d9ed509a4200d1049b66197327ad8661ee",
+              "kind": "log_span",
+              "evidence_id": "109f6f45-09ae-4489-a8a4-d557d576069a",
+              "support_kind": "direct_quote"
+            }
+          ]
+        },
+        {
+          "claim_id": "claim-prob-2",
+          "text": "Record aviation:100043 records problem: \"TOP L/H BAFFLE HAS A CRACK.\"",
+          "claim_type": "historical_problem",
+          "supports": [
+            {
+              "corpus_id": "2795c1d6-a5f4-5c8d-a773-4ac724d10e99",
+              "record_id": "aviation:100043",
+              "field": "PROBLEM",
+              "start": 0,
+              "end": 27,
+              "quote": "TOP L/H BAFFLE HAS A CRACK.",
+              "source_sha256": "c3789be654b3d9cc910064baea428e863b3d3a4b47313ea84f22d875513cd024",
+              "kind": "log_span",
+              "evidence_id": "f96a96f7-05ab-4565-a340-525080df6eb0",
+              "support_kind": "direct_quote"
+            }
+          ]
+        },
+        {
+          "claim_id": "claim-prob-3",
+          "text": "Record aviation:100903 records problem: \"BACK L/H BAFFLE HAS A CRACK.\"",
+          "claim_type": "historical_problem",
+          "supports": [
+            {
+              "corpus_id": "2795c1d6-a5f4-5c8d-a773-4ac724d10e99",
+              "record_id": "aviation:100903",
+              "field": "PROBLEM",
+              "start": 0,
+              "end": 28,
+              "quote": "BACK L/H BAFFLE HAS A CRACK.",
+              "source_sha256": "8365c13957cc92a5450cabcfa76bd39f55ff3eb125f0bee070b9eca1ff687d4f",
+              "kind": "log_span",
+              "evidence_id": "4fd8c7d8-ad7e-443c-a985-987cefa6233c",
+              "support_kind": "direct_quote"
+            }
+          ]
+        },
+        {
+          "claim_id": "claim-prob-4",
+          "text": "Record aviation:101544 records problem: \"L/H BACK BAFFLE HAS A CRACK.\"",
+          "claim_type": "historical_problem",
+          "supports": [
+            {
+              "corpus_id": "2795c1d6-a5f4-5c8d-a773-4ac724d10e99",
+              "record_id": "aviation:101544",
+              "field": "PROBLEM",
+              "start": 0,
+              "end": 28,
+              "quote": "L/H BACK BAFFLE HAS A CRACK.",
+              "source_sha256": "ac16f1bad6d39383c1c69ce7510044b776b0407af76e02a5573fe33d2337f311",
+              "kind": "log_span",
+              "evidence_id": "1941fbfc-869a-4a6e-8aee-1510ee22685c",
+              "support_kind": "direct_quote"
+            }
+          ]
+        },
+        {
+          "claim_id": "claim-prob-5",
+          "text": "Record aviation:104469 records problem: \"CRACK ON L/H UPPER BAFFLE.\"",
+          "claim_type": "historical_problem",
+          "supports": [
+            {
+              "corpus_id": "2795c1d6-a5f4-5c8d-a773-4ac724d10e99",
+              "record_id": "aviation:104469",
+              "field": "PROBLEM",
+              "start": 0,
+              "end": 26,
+              "quote": "CRACK ON L/H UPPER BAFFLE.",
+              "source_sha256": "fd9ec95c535396df75383c3c7b5ac6a33b5ef5f3ca34bcc0ab577cc38ccb73bb",
+              "kind": "log_span",
+              "evidence_id": "939ad785-4dcb-4536-ba81-1db4bfc92d8f",
+              "support_kind": "direct_quote"
+            }
+          ]
+        },
+        {
+          "claim_id": "claim-prob-6",
+          "text": "Record aviation:101844 records problem: \"CRACK IN FWD BAFFLE CENTER.\"",
+          "claim_type": "historical_problem",
+          "supports": [
+            {
+              "corpus_id": "2795c1d6-a5f4-5c8d-a773-4ac724d10e99",
+              "record_id": "aviation:101844",
+              "field": "PROBLEM",
+              "start": 0,
+              "end": 27,
+              "quote": "CRACK IN FWD BAFFLE CENTER.",
+              "source_sha256": "7f6e29c80ff41e42db1b006a18094d147e12164933bb31914c23fca1beae2041",
+              "kind": "log_span",
+              "evidence_id": "52977363-9c9e-44c8-9816-03a160c57374",
+              "support_kind": "direct_quote"
+            }
+          ]
+        },
+        {
+          "claim_id": "claim-act-7",
+          "text": "Record aviation:100614 records corrective action: \"STOP DRILLED CRACK.\"",
+          "claim_type": "historical_action",
+          "supports": [
+            {
+              "corpus_id": "2795c1d6-a5f4-5c8d-a773-4ac724d10e99",
+              "record_id": "aviation:100614",
+              "field": "ACTION",
+              "start": 0,
+              "end": 19,
+              "quote": "STOP DRILLED CRACK.",
+              "source_sha256": "4b46fa7a8375a87e36b84db7a09934e215a91cbb5355d18b74683e553c2832e7",
+              "kind": "log_span",
+              "evidence_id": "721340aa-5d35-4ba7-9c1f-282a226e0132",
+              "support_kind": "direct_quote"
+            },
+            {
+              "corpus_id": "2795c1d6-a5f4-5c8d-a773-4ac724d10e99",
+              "record_id": "aviation:100043",
+              "field": "ACTION",
+              "start": 0,
+              "end": 19,
+              "quote": "STOP DRILLED CRACK.",
+              "source_sha256": "4b46fa7a8375a87e36b84db7a09934e215a91cbb5355d18b74683e553c2832e7",
+              "kind": "log_span",
+              "evidence_id": "88410a34-92f8-4d22-9432-9df458f8a756",
+              "support_kind": "direct_quote"
+            },
+            {
+              "corpus_id": "2795c1d6-a5f4-5c8d-a773-4ac724d10e99",
+              "record_id": "aviation:100903",
+              "field": "ACTION",
+              "start": 0,
+              "end": 19,
+              "quote": "STOP DRILLED CRACK.",
+              "source_sha256": "4b46fa7a8375a87e36b84db7a09934e215a91cbb5355d18b74683e553c2832e7",
+              "kind": "log_span",
+              "evidence_id": "a6d559c6-2333-4a1b-865c-ef05060e50ac",
+              "support_kind": "direct_quote"
+            },
+            {
+              "corpus_id": "2795c1d6-a5f4-5c8d-a773-4ac724d10e99",
+              "record_id": "aviation:101544",
+              "field": "ACTION",
+              "start": 0,
+              "end": 19,
+              "quote": "STOP DRILLED CRACK.",
+              "source_sha256": "4b46fa7a8375a87e36b84db7a09934e215a91cbb5355d18b74683e553c2832e7",
+              "kind": "log_span",
+              "evidence_id": "612f62bb-cf20-4fe5-a027-e908d22c58e8",
+              "support_kind": "direct_quote"
+            },
+            {
+              "corpus_id": "2795c1d6-a5f4-5c8d-a773-4ac724d10e99",
+              "record_id": "aviation:104469",
+              "field": "ACTION",
+              "start": 0,
+              "end": 19,
+              "quote": "STOP DRILLED CRACK.",
+              "source_sha256": "4b46fa7a8375a87e36b84db7a09934e215a91cbb5355d18b74683e553c2832e7",
+              "kind": "log_span",
+              "evidence_id": "db843749-e8f3-456d-a8eb-072c28024367",
+              "support_kind": "direct_quote"
+            },
+            {
+              "corpus_id": "2795c1d6-a5f4-5c8d-a773-4ac724d10e99",
+              "record_id": "aviation:101844",
+              "field": "ACTION",
+              "start": 0,
+              "end": 19,
+              "quote": "STOP DRILLED CRACK.",
+              "source_sha256": "4b46fa7a8375a87e36b84db7a09934e215a91cbb5355d18b74683e553c2832e7",
+              "kind": "log_span",
+              "evidence_id": "dcabfe76-5ab2-4a81-9beb-3e95f0f59877",
+              "support_kind": "direct_quote"
+            }
+          ]
+        }
+      ],
+      "limitations": [
+        "Historical maintenance records lack operational context and model identity; applicability to your aircraft is not certified.",
+        "Maintenance records report historical actions as written and do not guarantee repair success or approved procedure."
+      ],
+      "missing": [],
+      "clarification": null,
+      "visual_refs": [],
+      "allowed_actions": [
+        {
+          "action": "hypothesis",
+          "parent_answer_id": "8071f754-8805-4d62-80dc-dd6100061f77",
+          "state_revision": 0
+        },
+        {
+          "action": "challenge",
+          "parent_answer_id": "8071f754-8805-4d62-80dc-dd6100061f77",
+          "state_revision": 0
+        },
+        {
+          "action": "sensitivity",
+          "parent_answer_id": "8071f754-8805-4d62-80dc-dd6100061f77",
+          "state_revision": 0
+        },
+        {
+          "action": "handover",
+          "parent_answer_id": "8071f754-8805-4d62-80dc-dd6100061f77",
+          "state_revision": 0
+        },
+        {
+          "action": "distinguish",
+          "parent_answer_id": "8071f754-8805-4d62-80dc-dd6100061f77",
+          "state_revision": 0
+        }
+      ],
+      "summary": "Historical record aviation:100614 reports: \"CRACK IN RIGHT FRONT BAFFLE.\". Its recorded action is: \"STOP DRILLED CRACK.\".",
+      "what_can_be_concluded": [
+        "Historical record aviation:100614 reports: &quot;CRACK IN RIGHT FRONT BAFFLE.&quot;. Its recorded action is: &quot;STOP DRILLED CRACK.&quot;.",
+        "Historical record aviation:100043 reports: &quot;TOP L/H BAFFLE HAS A CRACK.&quot;. Its recorded action is: &quot;STOP DRILLED CRACK.&quot;."
+      ],
+      "what_cannot_be_concluded": [
+        "These historical records do not establish the cause, repair effectiveness, aircraft identity, or applicability to your aircraft.",
+        "They do not supply approved maintenance instructions, operational clearance, or proof that the aircraft is safe to fly."
+      ],
+      "synthesis_evidence_ids": [
+        "109f6f45-09ae-4489-a8a4-d557d576069a",
+        "721340aa-5d35-4ba7-9c1f-282a226e0132",
+        "f96a96f7-05ab-4565-a340-525080df6eb0",
+        "88410a34-92f8-4d22-9432-9df458f8a756"
+      ],
+      "generation": {
+        "status": "not_requested",
+        "prompt_version": "evidence-selection/v2",
+        "effective_model": null,
+        "fallback_reason": "extractive_selected",
+        "requested_model": "extractive/v1"
+      }
+    },
+    "run_id": "5b1271f1-4121-4cb0-9ff5-0615e6df5fa0"
+  },
+  {
+    "repeat": 1,
+    "query": "baffle cracking",
+    "expected": "supported_historical",
+    "answer": {
+      "answer_id": "fc8fcb11-a0d6-473b-a7a6-b75eefac3d7e",
+      "run_id": "71a35131-dd02-4bc0-8079-1717dd1acb40",
+      "mode": "EVIDENCE",
+      "status": "supported_historical",
+      "headline": "Found 6 relevant historical maintenance record(s) matching complaint.",
+      "claims": [
+        {
+          "claim_id": "claim-prob-1",
+          "text": "Record aviation:103361 records problem: \"#3 BAFFLE CRACKED.\"",
+          "claim_type": "historical_problem",
+          "supports": [
+            {
+              "corpus_id": "2795c1d6-a5f4-5c8d-a773-4ac724d10e99",
+              "record_id": "aviation:103361",
+              "field": "PROBLEM",
+              "start": 0,
+              "end": 18,
+              "quote": "#3 BAFFLE CRACKED.",
+              "source_sha256": "4706d075841bedd39f80759f0f9c353688b95f1475cbd240c831e0528cc83767",
+              "kind": "log_span",
+              "evidence_id": "21ba0236-d68b-41ab-8e4b-b5d43dd49d30",
+              "support_kind": "direct_quote"
+            }
+          ]
+        },
+        {
+          "claim_id": "claim-prob-2",
+          "text": "Record aviation:100614 records problem: \"CRACK IN RIGHT FRONT BAFFLE.\"",
+          "claim_type": "historical_problem",
+          "supports": [
+            {
+              "corpus_id": "2795c1d6-a5f4-5c8d-a773-4ac724d10e99",
+              "record_id": "aviation:100614",
+              "field": "PROBLEM",
+              "start": 0,
+              "end": 28,
+              "quote": "CRACK IN RIGHT FRONT BAFFLE.",
+              "source_sha256": "ce79f60a2ff691d32657a2e950dee5d9ed509a4200d1049b66197327ad8661ee",
+              "kind": "log_span",
+              "evidence_id": "60d4f44e-06c6-4e7f-aa63-500746b649f6",
+              "support_kind": "direct_quote"
+            }
+          ]
+        },
+        {
+          "claim_id": "claim-prob-3",
+          "text": "Record aviation:105397 records problem: \"#1 BAFFLE IS CRACKED.\"",
+          "claim_type": "historical_problem",
+          "supports": [
+            {
+              "corpus_id": "2795c1d6-a5f4-5c8d-a773-4ac724d10e99",
+              "record_id": "aviation:105397",
+              "field": "PROBLEM",
+              "start": 0,
+              "end": 21,
+              "quote": "#1 BAFFLE IS CRACKED.",
+              "source_sha256": "d6847c2b5aeb0305f529119143e9e05fca339960e7e9ebbbdf04f8b2110602cf",
+              "kind": "log_span",
+              "evidence_id": "4ce706d6-977d-436f-8dfe-ef74a9ade01e",
+              "support_kind": "direct_quote"
+            }
+          ]
+        },
+        {
+          "claim_id": "claim-prob-4",
+          "text": "Record aviation:102922 records problem: \"AFT L/H BAFFLE IS CRACKED.\"",
+          "claim_type": "historical_problem",
+          "supports": [
+            {
+              "corpus_id": "2795c1d6-a5f4-5c8d-a773-4ac724d10e99",
+              "record_id": "aviation:102922",
+              "field": "PROBLEM",
+              "start": 0,
+              "end": 26,
+              "quote": "AFT L/H BAFFLE IS CRACKED.",
+              "source_sha256": "4a6c9e898776a9f8bace8474098474e815ebceff7887a01cf28a5a6940678e2a",
+              "kind": "log_span",
+              "evidence_id": "182607de-48fa-4bba-a54d-3b85fa4303b3",
+              "support_kind": "direct_quote"
+            }
+          ]
+        },
+        {
+          "claim_id": "claim-prob-5",
+          "text": "Record aviation:101882 records problem: \"#3 AFT BAFFLE CRACKED.\"",
+          "claim_type": "historical_problem",
+          "supports": [
+            {
+              "corpus_id": "2795c1d6-a5f4-5c8d-a773-4ac724d10e99",
+              "record_id": "aviation:101882",
+              "field": "PROBLEM",
+              "start": 0,
+              "end": 22,
+              "quote": "#3 AFT BAFFLE CRACKED.",
+              "source_sha256": "60e7d7f19824f92999a193499dbc8b35d98cba6dae8a55bb21699629b71c3842",
+              "kind": "log_span",
+              "evidence_id": "6c4728b9-6e98-45fc-85f9-3cfb4e973458",
+              "support_kind": "direct_quote"
+            },
+            {
+              "corpus_id": "2795c1d6-a5f4-5c8d-a773-4ac724d10e99",
+              "record_id": "aviation:103010",
+              "field": "PROBLEM",
+              "start": 0,
+              "end": 22,
+              "quote": "#3 AFT BAFFLE CRACKED.",
+              "source_sha256": "60e7d7f19824f92999a193499dbc8b35d98cba6dae8a55bb21699629b71c3842",
+              "kind": "log_span",
+              "evidence_id": "e91e9425-f419-43f4-bd4a-75b7b3fed8d9",
+              "support_kind": "direct_quote"
+            }
+          ]
+        },
+        {
+          "claim_id": "claim-act-6",
+          "text": "Record aviation:103361 records corrective action: \"STOP DRILLED CRACK IN #3 ENG BAFFLE.\"",
+          "claim_type": "historical_action",
+          "supports": [
+            {
+              "corpus_id": "2795c1d6-a5f4-5c8d-a773-4ac724d10e99",
+              "record_id": "aviation:103361",
+              "field": "ACTION",
+              "start": 0,
+              "end": 36,
+              "quote": "STOP DRILLED CRACK IN #3 ENG BAFFLE.",
+              "source_sha256": "badfbe4f0ab65f6fc70ac318a1783dddf92995f7579f7dc84475fb83f4525704",
+              "kind": "log_span",
+              "evidence_id": "355137eb-0213-425a-9547-6b553f93b743",
+              "support_kind": "direct_quote"
+            }
+          ]
+        },
+        {
+          "claim_id": "claim-act-7",
+          "text": "Record aviation:100614 records corrective action: \"STOP DRILLED CRACK.\"",
+          "claim_type": "historical_action",
+          "supports": [
+            {
+              "corpus_id": "2795c1d6-a5f4-5c8d-a773-4ac724d10e99",
+              "record_id": "aviation:100614",
+              "field": "ACTION",
+              "start": 0,
+              "end": 19,
+              "quote": "STOP DRILLED CRACK.",
+              "source_sha256": "4b46fa7a8375a87e36b84db7a09934e215a91cbb5355d18b74683e553c2832e7",
+              "kind": "log_span",
+              "evidence_id": "967a447f-011b-4830-9f0d-55e24d4fd3c2",
+              "support_kind": "direct_quote"
+            },
+            {
+              "corpus_id": "2795c1d6-a5f4-5c8d-a773-4ac724d10e99",
+              "record_id": "aviation:101882",
+              "field": "ACTION",
+              "start": 0,
+              "end": 19,
+              "quote": "STOP DRILLED CRACK.",
+              "source_sha256": "4b46fa7a8375a87e36b84db7a09934e215a91cbb5355d18b74683e553c2832e7",
+              "kind": "log_span",
+              "evidence_id": "0313ce31-7c73-4ea8-a95a-b1b86745d6f5",
+              "support_kind": "direct_quote"
+            }
+          ]
+        },
+        {
+          "claim_id": "claim-act-8",
+          "text": "Record aviation:105397 records corrective action: \"FABRICATED & INSTALLED PATCH ON BAFFLE W/ LIKE MATERIAL\"",
+          "claim_type": "historical_action",
+          "supports": [
+            {
+              "corpus_id": "2795c1d6-a5f4-5c8d-a773-4ac724d10e99",
+              "record_id": "aviation:105397",
+              "field": "ACTION",
+              "start": 0,
+              "end": 55,
+              "quote": "FABRICATED & INSTALLED PATCH ON BAFFLE W/ LIKE MATERIAL",
+              "source_sha256": "9a5eef77ac46f3c7dc6704041f873a978a35e7920a98ef168aeff7aa2e4ee7da",
+              "kind": "log_span",
+              "evidence_id": "e6e9f0ae-f87c-40b0-89b1-e5c3e258a7a0",
+              "support_kind": "direct_quote"
+            }
+          ]
+        },
+        {
+          "claim_id": "claim-act-9",
+          "text": "Record aviation:102922 records corrective action: \"FABRICATED PATCH FROM LIKE MATERIAL & RIVETED IAW\"",
+          "claim_type": "historical_action",
+          "supports": [
+            {
+              "corpus_id": "2795c1d6-a5f4-5c8d-a773-4ac724d10e99",
+              "record_id": "aviation:102922",
+              "field": "ACTION",
+              "start": 0,
+              "end": 49,
+              "quote": "FABRICATED PATCH FROM LIKE MATERIAL & RIVETED IAW",
+              "source_sha256": "f0c8e81818676850e20ee024486f8fb768bf28ed32e320d101a79d9771528bc4",
+              "kind": "log_span",
+              "evidence_id": "ef4b4204-11e1-465b-922b-5ea693fbad7b",
+              "support_kind": "direct_quote"
+            }
+          ]
+        },
+        {
+          "claim_id": "claim-act-10",
+          "text": "Record aviation:103010 records corrective action: \"INSTALLED PATCH MADE OF LIKE MATERIAL.\"",
+          "claim_type": "historical_action",
+          "supports": [
+            {
+              "corpus_id": "2795c1d6-a5f4-5c8d-a773-4ac724d10e99",
+              "record_id": "aviation:103010",
+              "field": "ACTION",
+              "start": 0,
+              "end": 38,
+              "quote": "INSTALLED PATCH MADE OF LIKE MATERIAL.",
+              "source_sha256": "72f2d222958d960a4921e54941e0c254199ab6bce64111e04901c4e4dd8890f7",
+              "kind": "log_span",
+              "evidence_id": "1fed363f-768a-4d79-a0cb-19ac3ecc1601",
+              "support_kind": "direct_quote"
+            }
+          ]
+        }
+      ],
+      "limitations": [
+        "Historical maintenance records lack operational context and model identity; applicability to your aircraft is not certified.",
+        "Maintenance records report historical actions as written and do not guarantee repair success or approved procedure."
+      ],
+      "missing": [],
+      "clarification": null,
+      "visual_refs": [],
+      "allowed_actions": [
+        {
+          "action": "hypothesis",
+          "parent_answer_id": "fc8fcb11-a0d6-473b-a7a6-b75eefac3d7e",
+          "state_revision": 0
+        },
+        {
+          "action": "challenge",
+          "parent_answer_id": "fc8fcb11-a0d6-473b-a7a6-b75eefac3d7e",
+          "state_revision": 0
+        },
+        {
+          "action": "sensitivity",
+          "parent_answer_id": "fc8fcb11-a0d6-473b-a7a6-b75eefac3d7e",
+          "state_revision": 0
+        },
+        {
+          "action": "handover",
+          "parent_answer_id": "fc8fcb11-a0d6-473b-a7a6-b75eefac3d7e",
+          "state_revision": 0
+        },
+        {
+          "action": "distinguish",
+          "parent_answer_id": "fc8fcb11-a0d6-473b-a7a6-b75eefac3d7e",
+          "state_revision": 0
+        }
+      ],
+      "summary": "Historical record aviation:103361 reports: \"#3 BAFFLE CRACKED.\". Its recorded action is: \"STOP DRILLED CRACK IN #3 ENG BAFFLE.\".",
+      "what_can_be_concluded": [
+        "Historical record aviation:103361 reports: &quot;#3 BAFFLE CRACKED.&quot;. Its recorded action is: &quot;STOP DRILLED CRACK IN #3 ENG BAFFLE.&quot;.",
+        "Historical record aviation:100614 reports: &quot;CRACK IN RIGHT FRONT BAFFLE.&quot;. Its recorded action is: &quot;STOP DRILLED CRACK.&quot;."
+      ],
+      "what_cannot_be_concluded": [
+        "These historical records do not establish the cause, repair effectiveness, aircraft identity, or applicability to your aircraft.",
+        "They do not supply approved maintenance instructions, operational clearance, or proof that the aircraft is safe to fly."
+      ],
+      "synthesis_evidence_ids": [
+        "21ba0236-d68b-41ab-8e4b-b5d43dd49d30",
+        "355137eb-0213-425a-9547-6b553f93b743",
+        "60d4f44e-06c6-4e7f-aa63-500746b649f6",
+        "967a447f-011b-4830-9f0d-55e24d4fd3c2"
+      ],
+      "generation": {
+        "status": "not_requested",
+        "prompt_version": "evidence-selection/v2",
+        "effective_model": null,
+        "fallback_reason": "extractive_selected",
+        "requested_model": "extractive/v1"
+      }
+    },
+    "run_id": "71a35131-dd02-4bc0-8079-1717dd1acb40"
+  },
+  {
+    "repeat": 1,
+    "query": "R/H engine forward alternator attachment bolt loose.",
+    "expected": "supported_historical",
+    "answer": {
+      "answer_id": "fb92032c-0645-45dc-a9e2-de2d29fef3b3",
+      "run_id": "e3d70c98-adf9-47fc-8027-1b38996b7f65",
+      "mode": "EVIDENCE",
+      "status": "supported_historical",
+      "headline": "Found 1 relevant historical maintenance record(s) matching complaint.",
+      "claims": [
+        {
+          "claim_id": "claim-prob-1",
+          "text": "Record aviation:100033 records problem: \"R/H ENG FWD ALT ATTACH BOLT LOOSE.\"",
+          "claim_type": "historical_problem",
+          "supports": [
+            {
+              "corpus_id": "2795c1d6-a5f4-5c8d-a773-4ac724d10e99",
+              "record_id": "aviation:100033",
+              "field": "PROBLEM",
+              "start": 0,
+              "end": 34,
+              "quote": "R/H ENG FWD ALT ATTACH BOLT LOOSE.",
+              "source_sha256": "07857b4281c29b2c03bf557acae6ef579ba84c51bdcd04efa00bccc6bd12bf50",
+              "kind": "log_span",
+              "evidence_id": "4c6252e6-2ea1-4f72-8b37-a952bef1224e",
+              "support_kind": "direct_quote"
+            }
+          ]
+        },
+        {
+          "claim_id": "claim-act-2",
+          "text": "Record aviation:100033 records corrective action: \"SECURED ALT ATTACH BOLT & RESAFETIED.\"",
+          "claim_type": "historical_action",
+          "supports": [
+            {
+              "corpus_id": "2795c1d6-a5f4-5c8d-a773-4ac724d10e99",
+              "record_id": "aviation:100033",
+              "field": "ACTION",
+              "start": 0,
+              "end": 37,
+              "quote": "SECURED ALT ATTACH BOLT & RESAFETIED.",
+              "source_sha256": "4e37157ee52003d6a03c27df0988b5543ba129ab0fa3d04ea020934882572e14",
+              "kind": "log_span",
+              "evidence_id": "dfe3b05d-e16c-4e2e-aaa2-a1db69ac6ad3",
+              "support_kind": "direct_quote"
+            }
+          ]
+        }
+      ],
+      "limitations": [
+        "Historical maintenance records lack operational context and model identity; applicability to your aircraft is not certified.",
+        "Maintenance records report historical actions as written and do not guarantee repair success or approved procedure."
+      ],
+      "missing": [],
+      "clarification": null,
+      "visual_refs": [
+        "engine_left",
+        "intake_system"
+      ],
+      "allowed_actions": [
+        {
+          "action": "hypothesis",
+          "parent_answer_id": "fb92032c-0645-45dc-a9e2-de2d29fef3b3",
+          "state_revision": 0
+        },
+        {
+          "action": "challenge",
+          "parent_answer_id": "fb92032c-0645-45dc-a9e2-de2d29fef3b3",
+          "state_revision": 0
+        },
+        {
+          "action": "sensitivity",
+          "parent_answer_id": "fb92032c-0645-45dc-a9e2-de2d29fef3b3",
+          "state_revision": 0
+        },
+        {
+          "action": "handover",
+          "parent_answer_id": "fb92032c-0645-45dc-a9e2-de2d29fef3b3",
+          "state_revision": 0
+        }
+      ],
+      "summary": "Historical record aviation:100033 reports: \"R/H ENG FWD ALT ATTACH BOLT LOOSE.\". Its recorded action is: \"SECURED ALT ATTACH BOLT & RESAFETIED.\".",
+      "what_can_be_concluded": [
+        "Historical record aviation:100033 reports: &quot;R/H ENG FWD ALT ATTACH BOLT LOOSE.&quot;. Its recorded action is: &quot;SECURED ALT ATTACH BOLT &amp; RESAFETIED.&quot;."
+      ],
+      "what_cannot_be_concluded": [
+        "These historical records do not establish the cause, repair effectiveness, aircraft identity, or applicability to your aircraft.",
+        "They do not supply approved maintenance instructions, operational clearance, or proof that the aircraft is safe to fly."
+      ],
+      "synthesis_evidence_ids": [
+        "4c6252e6-2ea1-4f72-8b37-a952bef1224e",
+        "dfe3b05d-e16c-4e2e-aaa2-a1db69ac6ad3"
+      ],
+      "generation": {
+        "status": "not_requested",
+        "prompt_version": "evidence-selection/v2",
+        "effective_model": null,
+        "fallback_reason": "extractive_selected",
+        "requested_model": "extractive/v1"
+      }
+    },
+    "run_id": "e3d70c98-adf9-47fc-8027-1b38996b7f65"
+  },
+  {
+    "repeat": 1,
+    "query": "#3 brake is missing a screw.",
+    "expected": "supported_historical",
+    "answer": {
+      "answer_id": "fc6591f4-8bf6-4a2e-8c0c-1e741ed9f2e1",
+      "run_id": "2c9c97de-f3ea-4683-8b16-dd45a7816a52",
+      "mode": "EVIDENCE",
+      "status": "supported_historical",
+      "headline": "Found 1 relevant historical maintenance record(s) matching complaint.",
+      "claims": [
+        {
+          "claim_id": "claim-prob-1",
+          "text": "Record aviation:100045 records problem: \"#3 BRAKE MISSING SCREW.\"",
+          "claim_type": "historical_problem",
+          "supports": [
+            {
+              "corpus_id": "2795c1d6-a5f4-5c8d-a773-4ac724d10e99",
+              "record_id": "aviation:100045",
+              "field": "PROBLEM",
+              "start": 0,
+              "end": 23,
+              "quote": "#3 BRAKE MISSING SCREW.",
+              "source_sha256": "a7e95d1a1200ca16c6462f638cd38fa7e6b6d037fe513f040daee23a29803be3",
+              "kind": "log_span",
+              "evidence_id": "c5f34984-a623-48de-9751-493394067548",
+              "support_kind": "direct_quote"
+            }
+          ]
+        },
+        {
+          "claim_id": "claim-act-2",
+          "text": "Record aviation:100045 records corrective action: \"REPLACED SCREW.\"",
+          "claim_type": "historical_action",
+          "supports": [
+            {
+              "corpus_id": "2795c1d6-a5f4-5c8d-a773-4ac724d10e99",
+              "record_id": "aviation:100045",
+              "field": "ACTION",
+              "start": 0,
+              "end": 15,
+              "quote": "REPLACED SCREW.",
+              "source_sha256": "ec84ceb363f4011e52e0bee4250549c058810709ab4f2a37e58c20db3cffb6be",
+              "kind": "log_span",
+              "evidence_id": "ce27b945-8947-4906-abe5-b54569e5c381",
+              "support_kind": "direct_quote"
+            }
+          ]
+        }
+      ],
+      "limitations": [
+        "Historical maintenance records lack operational context and model identity; applicability to your aircraft is not certified.",
+        "Maintenance records report historical actions as written and do not guarantee repair success or approved procedure."
+      ],
+      "missing": [],
+      "clarification": null,
+      "visual_refs": [],
+      "allowed_actions": [
+        {
+          "action": "hypothesis",
+          "parent_answer_id": "fc6591f4-8bf6-4a2e-8c0c-1e741ed9f2e1",
+          "state_revision": 0
+        },
+        {
+          "action": "challenge",
+          "parent_answer_id": "fc6591f4-8bf6-4a2e-8c0c-1e741ed9f2e1",
+          "state_revision": 0
+        },
+        {
+          "action": "sensitivity",
+          "parent_answer_id": "fc6591f4-8bf6-4a2e-8c0c-1e741ed9f2e1",
+          "state_revision": 0
+        },
+        {
+          "action": "handover",
+          "parent_answer_id": "fc6591f4-8bf6-4a2e-8c0c-1e741ed9f2e1",
+          "state_revision": 0
+        }
+      ],
+      "summary": "Historical record aviation:100045 reports: \"#3 BRAKE MISSING SCREW.\". Its recorded action is: \"REPLACED SCREW.\".",
+      "what_can_be_concluded": [
+        "Historical record aviation:100045 reports: &quot;#3 BRAKE MISSING SCREW.&quot;. Its recorded action is: &quot;REPLACED SCREW.&quot;."
+      ],
+      "what_cannot_be_concluded": [
+        "These historical records do not establish the cause, repair effectiveness, aircraft identity, or applicability to your aircraft.",
+        "They do not supply approved maintenance instructions, operational clearance, or proof that the aircraft is safe to fly."
+      ],
+      "synthesis_evidence_ids": [
+        "c5f34984-a623-48de-9751-493394067548",
+        "ce27b945-8947-4906-abe5-b54569e5c381"
+      ],
+      "generation": {
+        "status": "not_requested",
+        "prompt_version": "evidence-selection/v2",
+        "effective_model": null,
+        "fallback_reason": "extractive_selected",
+        "requested_model": "extractive/v1"
+      }
+    },
+    "run_id": "2c9c97de-f3ea-4683-8b16-dd45a7816a52"
+  },
+  {
+    "repeat": 1,
+    "query": "Right main gear brake pedal feels soft and spongy",
+    "expected": "insufficient_evidence",
+    "answer": {
+      "answer_id": "5a6e2070-c5b9-49d7-8f10-1666ce679166",
+      "run_id": "a1a7fc8f-03de-4f34-8bbd-84fe111eaed7",
+      "mode": "EVIDENCE",
+      "status": "insufficient_evidence",
+      "headline": "No historical maintenance records found matching this fault complaint.",
+      "claims": [],
+      "limitations": [
+        "Historical maintenance records lack operational context and model identity; applicability to your aircraft is not certified.",
+        "Maintenance records report historical actions as written and do not guarantee repair success or approved procedure."
+      ],
+      "missing": [
+        "No matching records found in authorized corpus."
+      ],
+      "clarification": null,
+      "visual_refs": [],
+      "allowed_actions": [],
+      "summary": "Insufficient evidence: retrieved candidates do not establish a matching complaint in the authorized records. This does not prove that the fault is absent or identify a repair.",
+      "what_can_be_concluded": [
+        "No evidence found for this complaint in the historical records."
+      ],
+      "what_cannot_be_concluded": [
+        "These historical records do not establish the cause, repair effectiveness, aircraft identity, or applicability to your aircraft.",
+        "They do not supply approved maintenance instructions, operational clearance, or proof that the aircraft is safe to fly."
+      ],
+      "synthesis_evidence_ids": [],
+      "generation": {
+        "status": "not_requested",
+        "prompt_version": "evidence-selection/v2",
+        "effective_model": null,
+        "fallback_reason": "no_matching_evidence",
+        "requested_model": "extractive/v1"
+      }
+    },
+    "run_id": "a1a7fc8f-03de-4f34-8bbd-84fe111eaed7"
+  },
+  {
+    "repeat": 1,
+    "query": "CYL #99 intake leak",
+    "expected": "insufficient_evidence",
+    "answer": {
+      "answer_id": "75eaa65e-097b-4f63-ba20-3585e3e7a120",
+      "run_id": "5fb04963-0f8d-44fd-aff0-e66b3c82e0ee",
+      "mode": "EVIDENCE",
+      "status": "insufficient_evidence",
+      "headline": "No historical maintenance records found matching this fault complaint.",
+      "claims": [],
+      "limitations": [
+        "Historical maintenance records lack operational context and model identity; applicability to your aircraft is not certified.",
+        "Maintenance records report historical actions as written and do not guarantee repair success or approved procedure."
+      ],
+      "missing": [
+        "No matching records found in authorized corpus."
+      ],
+      "clarification": null,
+      "visual_refs": [],
+      "allowed_actions": [],
+      "summary": "Insufficient evidence: retrieved candidates do not establish a matching complaint in the authorized records. This does not prove that the fault is absent or identify a repair.",
+      "what_can_be_concluded": [
+        "No evidence found for this complaint in the historical records."
+      ],
+      "what_cannot_be_concluded": [
+        "These historical records do not establish the cause, repair effectiveness, aircraft identity, or applicability to your aircraft.",
+        "They do not supply approved maintenance instructions, operational clearance, or proof that the aircraft is safe to fly."
+      ],
+      "synthesis_evidence_ids": [],
+      "generation": {
+        "status": "not_requested",
+        "prompt_version": "evidence-selection/v2",
+        "effective_model": null,
+        "fallback_reason": "no_matching_evidence",
+        "requested_model": "extractive/v1"
+      }
+    },
+    "run_id": "5fb04963-0f8d-44fd-aff0-e66b3c82e0ee"
+  },
+  {
+    "repeat": 1,
+    "query": "baffle crack with unfamiliar actuator failure",
+    "expected": "insufficient_evidence",
+    "answer": {
+      "answer_id": "f552107e-2d98-494a-b65d-f36c25c9ff94",
+      "run_id": "a6fd7f85-88ed-4c73-adf4-e2520889dc88",
+      "mode": "EVIDENCE",
+      "status": "insufficient_evidence",
+      "headline": "No historical maintenance records found matching this fault complaint.",
+      "claims": [],
+      "limitations": [
+        "Historical maintenance records lack operational context and model identity; applicability to your aircraft is not certified.",
+        "Maintenance records report historical actions as written and do not guarantee repair success or approved procedure."
+      ],
+      "missing": [
+        "No matching records found in authorized corpus."
+      ],
+      "clarification": null,
+      "visual_refs": [],
+      "allowed_actions": [],
+      "summary": "Insufficient evidence: retrieved candidates do not establish a matching complaint in the authorized records. This does not prove that the fault is absent or identify a repair.",
+      "what_can_be_concluded": [
+        "No evidence found for this complaint in the historical records."
+      ],
+      "what_cannot_be_concluded": [
+        "These historical records do not establish the cause, repair effectiveness, aircraft identity, or applicability to your aircraft.",
+        "They do not supply approved maintenance instructions, operational clearance, or proof that the aircraft is safe to fly."
+      ],
+      "synthesis_evidence_ids": [],
+      "generation": {
+        "status": "not_requested",
+        "prompt_version": "evidence-selection/v2",
+        "effective_model": null,
+        "fallback_reason": "no_matching_evidence",
+        "requested_model": "extractive/v1"
+      }
+    },
+    "run_id": "a6fd7f85-88ed-4c73-adf4-e2520889dc88"
+  },
+  {
+    "repeat": 1,
+    "query": "What is the approved torque specification in ft-lbs for the intake flange?",
+    "expected": "insufficient_evidence",
+    "answer": {
+      "answer_id": "22e39822-306e-4bc4-98e6-31aa67ec3ae4",
+      "run_id": "15331feb-4fde-41bc-86c4-0f5987d9c543",
+      "mode": "EVIDENCE",
+      "status": "insufficient_evidence",
+      "headline": "Requested specification or operational guarantee is not established by historical logs.",
+      "claims": [],
+      "limitations": [
+        "Historical logs do not establish approved specifications, repair instructions, or operational clearance.",
+        "Refer to official FAA-approved Aircraft Maintenance Manuals (AMM) for certified specifications."
+      ],
+      "missing": [
+        "Applicable approved documentation and qualified operational assessment are not present in these historical records.",
+        "No matching records found in authorized corpus."
+      ],
+      "clarification": null,
+      "visual_refs": [],
+      "allowed_actions": [],
+      "summary": "Insufficient evidence: retrieved candidates do not establish a matching complaint in the authorized records. This does not prove that the fault is absent or identify a repair.",
+      "what_can_be_concluded": [
+        "No evidence found for this complaint in the historical records."
+      ],
+      "what_cannot_be_concluded": [
+        "These historical records do not establish the cause, repair effectiveness, aircraft identity, or applicability to your aircraft.",
+        "They do not supply approved maintenance instructions, operational clearance, or proof that the aircraft is safe to fly."
+      ],
+      "synthesis_evidence_ids": [],
+      "generation": {
+        "status": "not_requested",
+        "prompt_version": "evidence-selection/v2",
+        "effective_model": null,
+        "fallback_reason": "outside_log_authority",
+        "requested_model": "extractive/v1"
+      }
+    },
+    "run_id": "15331feb-4fde-41bc-86c4-0f5987d9c543"
+  },
+  {
+    "repeat": 1,
+    "query": "Is the aircraft safe to fly after this intake leak?",
+    "expected": "insufficient_evidence",
+    "answer": {
+      "answer_id": "39c75dcf-e1fa-4d5b-a36c-b1f58e907141",
+      "run_id": "b13424ab-266b-477b-843b-b3b15ea7844a",
+      "mode": "EVIDENCE",
+      "status": "insufficient_evidence",
+      "headline": "Requested specification or operational guarantee is not established by historical logs.",
+      "claims": [],
+      "limitations": [
+        "Historical logs do not establish approved specifications, repair instructions, or operational clearance.",
+        "Refer to official FAA-approved Aircraft Maintenance Manuals (AMM) for certified specifications."
+      ],
+      "missing": [
+        "Applicable approved documentation and qualified operational assessment are not present in these historical records.",
+        "No matching records found in authorized corpus."
+      ],
+      "clarification": null,
+      "visual_refs": [],
+      "allowed_actions": [],
+      "summary": "Insufficient evidence: retrieved candidates do not establish a matching complaint in the authorized records. This does not prove that the fault is absent or identify a repair.",
+      "what_can_be_concluded": [
+        "No evidence found for this complaint in the historical records."
+      ],
+      "what_cannot_be_concluded": [
+        "These historical records do not establish the cause, repair effectiveness, aircraft identity, or applicability to your aircraft.",
+        "They do not supply approved maintenance instructions, operational clearance, or proof that the aircraft is safe to fly."
+      ],
+      "synthesis_evidence_ids": [],
+      "generation": {
+        "status": "not_requested",
+        "prompt_version": "evidence-selection/v2",
+        "effective_model": null,
+        "fallback_reason": "outside_log_authority",
+        "requested_model": "extractive/v1"
+      }
+    },
+    "run_id": "b13424ab-266b-477b-843b-b3b15ea7844a"
+  },
+  {
+    "repeat": 2,
+    "query": "intake leak",
+    "expected": "supported_historical",
+    "answer": {
+      "answer_id": "b16e7650-3ac7-4d13-aa3d-5f23b9b6c645",
+      "run_id": "07ea5d21-9e5e-42d8-a80c-21c7fabdaea5",
+      "mode": "EVIDENCE",
+      "status": "supported_historical",
+      "headline": "Found 6 relevant historical maintenance record(s) matching complaint.",
+      "claims": [
+        {
+          "claim_id": "claim-prob-1",
+          "text": "Record aviation:102838 records problem: \"#2 INTAKE HAS LEAK.\"",
+          "claim_type": "historical_problem",
+          "supports": [
+            {
+              "corpus_id": "2795c1d6-a5f4-5c8d-a773-4ac724d10e99",
+              "record_id": "aviation:102838",
+              "field": "PROBLEM",
+              "start": 0,
+              "end": 19,
+              "quote": "#2 INTAKE HAS LEAK.",
+              "source_sha256": "eb25320a6a2be1851a5cc8e09516dc7376c953582b96b11db112c37b02130a67",
+              "kind": "log_span",
+              "evidence_id": "db787a13-4751-44c2-8463-90c92aedc8d1",
+              "support_kind": "direct_quote"
+            }
+          ]
+        },
+        {
+          "claim_id": "claim-prob-2",
+          "text": "Record aviation:103510 records problem: \"#2 INTAKE SLIGHT LEAK.\"",
+          "claim_type": "historical_problem",
+          "supports": [
+            {
+              "corpus_id": "2795c1d6-a5f4-5c8d-a773-4ac724d10e99",
+              "record_id": "aviation:103510",
+              "field": "PROBLEM",
+              "start": 0,
+              "end": 22,
+              "quote": "#2 INTAKE SLIGHT LEAK.",
+              "source_sha256": "5f447d02c962d2153c0dbafbd25e8b638f9b46446a97eaddd6ca27cc8aec4cca",
+              "kind": "log_span",
+              "evidence_id": "9edad316-1a5c-4c94-9834-c72be2acaccb",
+              "support_kind": "direct_quote"
+            }
+          ]
+        },
+        {
+          "claim_id": "claim-prob-3",
+          "text": "Record aviation:106087 records problem: \"INTAKE #3 LEAKING.\"",
+          "claim_type": "historical_problem",
+          "supports": [
+            {
+              "corpus_id": "2795c1d6-a5f4-5c8d-a773-4ac724d10e99",
+              "record_id": "aviation:106087",
+              "field": "PROBLEM",
+              "start": 0,
+              "end": 18,
+              "quote": "INTAKE #3 LEAKING.",
+              "source_sha256": "7e35ab448b1c39abe485ca3b64d5b1f1a184ada962aae3b546d9472bf803a60c",
+              "kind": "log_span",
+              "evidence_id": "d196ec12-c2f9-4454-a93a-8bbe296b49d5",
+              "support_kind": "direct_quote"
+            }
+          ]
+        },
+        {
+          "claim_id": "claim-prob-4",
+          "text": "Record aviation:104952 records problem: \"#4 INTAKE OIL LEAK.\"",
+          "claim_type": "historical_problem",
+          "supports": [
+            {
+              "corpus_id": "2795c1d6-a5f4-5c8d-a773-4ac724d10e99",
+              "record_id": "aviation:104952",
+              "field": "PROBLEM",
+              "start": 0,
+              "end": 19,
+              "quote": "#4 INTAKE OIL LEAK.",
+              "source_sha256": "7686c72f69b8b3d24e807db11a50e9694d3db944a6bdf37a4b312e22eef860bb",
+              "kind": "log_span",
+              "evidence_id": "a280553a-6552-4916-96c8-2c78bdaaf1ce",
+              "support_kind": "direct_quote"
+            }
+          ]
+        },
+        {
+          "claim_id": "claim-prob-5",
+          "text": "Record aviation:106090 records problem: \"#3 INTAKE LEAKS.\"",
+          "claim_type": "historical_problem",
+          "supports": [
+            {
+              "corpus_id": "2795c1d6-a5f4-5c8d-a773-4ac724d10e99",
+              "record_id": "aviation:106090",
+              "field": "PROBLEM",
+              "start": 0,
+              "end": 16,
+              "quote": "#3 INTAKE LEAKS.",
+              "source_sha256": "46ffc7ea27b6003f52a8db5d29cfd488ff602b4a171f8557da0e835d1a79b32b",
+              "kind": "log_span",
+              "evidence_id": "dc10c01a-c1e1-46e2-8669-8281c198621e",
+              "support_kind": "direct_quote"
+            }
+          ]
+        },
+        {
+          "claim_id": "claim-prob-6",
+          "text": "Record aviation:100081 records problem: \"#2 INTAKE LEAKS.\"",
+          "claim_type": "historical_problem",
+          "supports": [
+            {
+              "corpus_id": "2795c1d6-a5f4-5c8d-a773-4ac724d10e99",
+              "record_id": "aviation:100081",
+              "field": "PROBLEM",
+              "start": 0,
+              "end": 16,
+              "quote": "#2 INTAKE LEAKS.",
+              "source_sha256": "de88c88426b9e528b5ae6c99db82fc047bd5a88207a65ad89cdaea87d434a8ea",
+              "kind": "log_span",
+              "evidence_id": "43df4f2c-ead7-4339-a7b0-079e3a4d1306",
+              "support_kind": "direct_quote"
+            }
+          ]
+        },
+        {
+          "claim_id": "claim-act-7",
+          "text": "Record aviation:102838 records corrective action: \"REMOVED & REPLACED INTAKE GASKET.\"",
+          "claim_type": "historical_action",
+          "supports": [
+            {
+              "corpus_id": "2795c1d6-a5f4-5c8d-a773-4ac724d10e99",
+              "record_id": "aviation:102838",
+              "field": "ACTION",
+              "start": 0,
+              "end": 33,
+              "quote": "REMOVED & REPLACED INTAKE GASKET.",
+              "source_sha256": "8593a794818aac2ac13d677c454065cb73f7b0548be4ed5c6c434e9d3981e17e",
+              "kind": "log_span",
+              "evidence_id": "849593dc-b446-491c-adab-b535d9c6dcd8",
+              "support_kind": "direct_quote"
+            }
+          ]
+        },
+        {
+          "claim_id": "claim-act-8",
+          "text": "Record aviation:103510 records corrective action: \"INSTALLED NEW INTAKE GASKET.\"",
+          "claim_type": "historical_action",
+          "supports": [
+            {
+              "corpus_id": "2795c1d6-a5f4-5c8d-a773-4ac724d10e99",
+              "record_id": "aviation:103510",
+              "field": "ACTION",
+              "start": 0,
+              "end": 28,
+              "quote": "INSTALLED NEW INTAKE GASKET.",
+              "source_sha256": "36b4514d54d29c1a16b92ae18bc617beb514b572797b66a13b0352fa94863a96",
+              "kind": "log_span",
+              "evidence_id": "2fbffafc-4c8b-4dac-8822-0ef1a9fbe9ae",
+              "support_kind": "direct_quote"
+            }
+          ]
+        },
+        {
+          "claim_id": "claim-act-9",
+          "text": "Record aviation:106087 records corrective action: \"REMOVED & REPLACED GASKET.\"",
+          "claim_type": "historical_action",
+          "supports": [
+            {
+              "corpus_id": "2795c1d6-a5f4-5c8d-a773-4ac724d10e99",
+              "record_id": "aviation:106087",
+              "field": "ACTION",
+              "start": 0,
+              "end": 26,
+              "quote": "REMOVED & REPLACED GASKET.",
+              "source_sha256": "a9add81fc8579b1962cbdae090ac3fd0e589cb7dec4e11787b901051b280e235",
+              "kind": "log_span",
+              "evidence_id": "acf0f7c7-d305-4677-ab05-e183fa22ed99",
+              "support_kind": "direct_quote"
+            }
+          ]
+        },
+        {
+          "claim_id": "claim-act-10",
+          "text": "Record aviation:104952 records corrective action: \"INSPECTED & FOUND OIL LEAK TO BE RESIDUAL. CLEANED AREA\"",
+          "claim_type": "historical_action",
+          "supports": [
+            {
+              "corpus_id": "2795c1d6-a5f4-5c8d-a773-4ac724d10e99",
+              "record_id": "aviation:104952",
+              "field": "ACTION",
+              "start": 0,
+              "end": 55,
+              "quote": "INSPECTED & FOUND OIL LEAK TO BE RESIDUAL. CLEANED AREA",
+              "source_sha256": "7b3356ffa42500b2f597924597ebe55c34c4f446639327e34aa86a6e10bd96fc",
+              "kind": "log_span",
+              "evidence_id": "973b6bed-e7bf-45b9-b5fc-7127b4497ea9",
+              "support_kind": "direct_quote"
+            }
+          ]
+        },
+        {
+          "claim_id": "claim-act-11",
+          "text": "Record aviation:106090 records corrective action: \"REPLACED GASKET.\"",
+          "claim_type": "historical_action",
+          "supports": [
+            {
+              "corpus_id": "2795c1d6-a5f4-5c8d-a773-4ac724d10e99",
+              "record_id": "aviation:106090",
+              "field": "ACTION",
+              "start": 0,
+              "end": 16,
+              "quote": "REPLACED GASKET.",
+              "source_sha256": "2a955acab4496675864f9792fc507d398abd53e646357b0a33e6ea4335c363a1",
+              "kind": "log_span",
+              "evidence_id": "74134609-b22e-41a3-b171-92d9f59beb90",
+              "support_kind": "direct_quote"
+            },
+            {
+              "corpus_id": "2795c1d6-a5f4-5c8d-a773-4ac724d10e99",
+              "record_id": "aviation:100081",
+              "field": "ACTION",
+              "start": 0,
+              "end": 16,
+              "quote": "REPLACED GASKET.",
+              "source_sha256": "2a955acab4496675864f9792fc507d398abd53e646357b0a33e6ea4335c363a1",
+              "kind": "log_span",
+              "evidence_id": "dfbbf342-4dd7-4414-b125-608a09360e8e",
+              "support_kind": "direct_quote"
+            }
+          ]
+        }
+      ],
+      "limitations": [
+        "Historical maintenance records lack operational context and model identity; applicability to your aircraft is not certified.",
+        "Maintenance records report historical actions as written and do not guarantee repair success or approved procedure."
+      ],
+      "missing": [],
+      "clarification": null,
+      "visual_refs": [
+        "intake_system",
+        "intake_gasket"
+      ],
+      "allowed_actions": [
+        {
+          "action": "hypothesis",
+          "parent_answer_id": "b16e7650-3ac7-4d13-aa3d-5f23b9b6c645",
+          "state_revision": 0
+        },
+        {
+          "action": "challenge",
+          "parent_answer_id": "b16e7650-3ac7-4d13-aa3d-5f23b9b6c645",
+          "state_revision": 0
+        },
+        {
+          "action": "sensitivity",
+          "parent_answer_id": "b16e7650-3ac7-4d13-aa3d-5f23b9b6c645",
+          "state_revision": 0
+        },
+        {
+          "action": "handover",
+          "parent_answer_id": "b16e7650-3ac7-4d13-aa3d-5f23b9b6c645",
+          "state_revision": 0
+        },
+        {
+          "action": "distinguish",
+          "parent_answer_id": "b16e7650-3ac7-4d13-aa3d-5f23b9b6c645",
+          "state_revision": 0
+        }
+      ],
+      "summary": "Historical record aviation:102838 reports: \"#2 INTAKE HAS LEAK.\". Its recorded action is: \"REMOVED & REPLACED INTAKE GASKET.\".",
+      "what_can_be_concluded": [
+        "Historical record aviation:102838 reports: &quot;#2 INTAKE HAS LEAK.&quot;. Its recorded action is: &quot;REMOVED &amp; REPLACED INTAKE GASKET.&quot;.",
+        "Historical record aviation:103510 reports: &quot;#2 INTAKE SLIGHT LEAK.&quot;. Its recorded action is: &quot;INSTALLED NEW INTAKE GASKET.&quot;."
+      ],
+      "what_cannot_be_concluded": [
+        "These historical records do not establish the cause, repair effectiveness, aircraft identity, or applicability to your aircraft.",
+        "They do not supply approved maintenance instructions, operational clearance, or proof that the aircraft is safe to fly."
+      ],
+      "synthesis_evidence_ids": [
+        "db787a13-4751-44c2-8463-90c92aedc8d1",
+        "849593dc-b446-491c-adab-b535d9c6dcd8",
+        "9edad316-1a5c-4c94-9834-c72be2acaccb",
+        "2fbffafc-4c8b-4dac-8822-0ef1a9fbe9ae"
+      ],
+      "generation": {
+        "status": "not_requested",
+        "prompt_version": "evidence-selection/v2",
+        "effective_model": null,
+        "fallback_reason": "extractive_selected",
+        "requested_model": "extractive/v1"
+      }
+    },
+    "run_id": "07ea5d21-9e5e-42d8-a80c-21c7fabdaea5"
+  },
+  {
+    "repeat": 2,
+    "query": "baffle crack",
+    "expected": "supported_historical",
+    "answer": {
+      "answer_id": "ee34a173-f17b-4a9b-a094-bc578758eb79",
+      "run_id": "9d030b7e-fafa-4a83-8871-b555d819a00f",
+      "mode": "EVIDENCE",
+      "status": "supported_historical",
+      "headline": "Found 6 relevant historical maintenance record(s) matching complaint.",
+      "claims": [
+        {
+          "claim_id": "claim-prob-1",
+          "text": "Record aviation:100614 records problem: \"CRACK IN RIGHT FRONT BAFFLE.\"",
+          "claim_type": "historical_problem",
+          "supports": [
+            {
+              "corpus_id": "2795c1d6-a5f4-5c8d-a773-4ac724d10e99",
+              "record_id": "aviation:100614",
+              "field": "PROBLEM",
+              "start": 0,
+              "end": 28,
+              "quote": "CRACK IN RIGHT FRONT BAFFLE.",
+              "source_sha256": "ce79f60a2ff691d32657a2e950dee5d9ed509a4200d1049b66197327ad8661ee",
+              "kind": "log_span",
+              "evidence_id": "2b67f364-2ff7-4ff0-8d81-a9c6ea5ef996",
+              "support_kind": "direct_quote"
+            }
+          ]
+        },
+        {
+          "claim_id": "claim-prob-2",
+          "text": "Record aviation:100043 records problem: \"TOP L/H BAFFLE HAS A CRACK.\"",
+          "claim_type": "historical_problem",
+          "supports": [
+            {
+              "corpus_id": "2795c1d6-a5f4-5c8d-a773-4ac724d10e99",
+              "record_id": "aviation:100043",
+              "field": "PROBLEM",
+              "start": 0,
+              "end": 27,
+              "quote": "TOP L/H BAFFLE HAS A CRACK.",
+              "source_sha256": "c3789be654b3d9cc910064baea428e863b3d3a4b47313ea84f22d875513cd024",
+              "kind": "log_span",
+              "evidence_id": "6a874e10-0fb5-4922-bd09-7d43f1715ac5",
+              "support_kind": "direct_quote"
+            }
+          ]
+        },
+        {
+          "claim_id": "claim-prob-3",
+          "text": "Record aviation:100903 records problem: \"BACK L/H BAFFLE HAS A CRACK.\"",
+          "claim_type": "historical_problem",
+          "supports": [
+            {
+              "corpus_id": "2795c1d6-a5f4-5c8d-a773-4ac724d10e99",
+              "record_id": "aviation:100903",
+              "field": "PROBLEM",
+              "start": 0,
+              "end": 28,
+              "quote": "BACK L/H BAFFLE HAS A CRACK.",
+              "source_sha256": "8365c13957cc92a5450cabcfa76bd39f55ff3eb125f0bee070b9eca1ff687d4f",
+              "kind": "log_span",
+              "evidence_id": "bfaf8cbf-87fc-49a7-8ec6-d05b462fba02",
+              "support_kind": "direct_quote"
+            }
+          ]
+        },
+        {
+          "claim_id": "claim-prob-4",
+          "text": "Record aviation:101544 records problem: \"L/H BACK BAFFLE HAS A CRACK.\"",
+          "claim_type": "historical_problem",
+          "supports": [
+            {
+              "corpus_id": "2795c1d6-a5f4-5c8d-a773-4ac724d10e99",
+              "record_id": "aviation:101544",
+              "field": "PROBLEM",
+              "start": 0,
+              "end": 28,
+              "quote": "L/H BACK BAFFLE HAS A CRACK.",
+              "source_sha256": "ac16f1bad6d39383c1c69ce7510044b776b0407af76e02a5573fe33d2337f311",
+              "kind": "log_span",
+              "evidence_id": "11952ed1-c339-4bf9-859d-1aef24f67e66",
+              "support_kind": "direct_quote"
+            }
+          ]
+        },
+        {
+          "claim_id": "claim-prob-5",
+          "text": "Record aviation:104469 records problem: \"CRACK ON L/H UPPER BAFFLE.\"",
+          "claim_type": "historical_problem",
+          "supports": [
+            {
+              "corpus_id": "2795c1d6-a5f4-5c8d-a773-4ac724d10e99",
+              "record_id": "aviation:104469",
+              "field": "PROBLEM",
+              "start": 0,
+              "end": 26,
+              "quote": "CRACK ON L/H UPPER BAFFLE.",
+              "source_sha256": "fd9ec95c535396df75383c3c7b5ac6a33b5ef5f3ca34bcc0ab577cc38ccb73bb",
+              "kind": "log_span",
+              "evidence_id": "58c1b22a-caef-44d7-9dcb-1a72b244a369",
+              "support_kind": "direct_quote"
+            }
+          ]
+        },
+        {
+          "claim_id": "claim-prob-6",
+          "text": "Record aviation:101844 records problem: \"CRACK IN FWD BAFFLE CENTER.\"",
+          "claim_type": "historical_problem",
+          "supports": [
+            {
+              "corpus_id": "2795c1d6-a5f4-5c8d-a773-4ac724d10e99",
+              "record_id": "aviation:101844",
+              "field": "PROBLEM",
+              "start": 0,
+              "end": 27,
+              "quote": "CRACK IN FWD BAFFLE CENTER.",
+              "source_sha256": "7f6e29c80ff41e42db1b006a18094d147e12164933bb31914c23fca1beae2041",
+              "kind": "log_span",
+              "evidence_id": "b19db4d0-c6f3-470a-b31a-213d01693ad2",
+              "support_kind": "direct_quote"
+            }
+          ]
+        },
+        {
+          "claim_id": "claim-act-7",
+          "text": "Record aviation:100614 records corrective action: \"STOP DRILLED CRACK.\"",
+          "claim_type": "historical_action",
+          "supports": [
+            {
+              "corpus_id": "2795c1d6-a5f4-5c8d-a773-4ac724d10e99",
+              "record_id": "aviation:100614",
+              "field": "ACTION",
+              "start": 0,
+              "end": 19,
+              "quote": "STOP DRILLED CRACK.",
+              "source_sha256": "4b46fa7a8375a87e36b84db7a09934e215a91cbb5355d18b74683e553c2832e7",
+              "kind": "log_span",
+              "evidence_id": "571e9eae-f187-4376-af78-e1d4ac0afc40",
+              "support_kind": "direct_quote"
+            },
+            {
+              "corpus_id": "2795c1d6-a5f4-5c8d-a773-4ac724d10e99",
+              "record_id": "aviation:100043",
+              "field": "ACTION",
+              "start": 0,
+              "end": 19,
+              "quote": "STOP DRILLED CRACK.",
+              "source_sha256": "4b46fa7a8375a87e36b84db7a09934e215a91cbb5355d18b74683e553c2832e7",
+              "kind": "log_span",
+              "evidence_id": "81451714-4eeb-4616-b8f7-af90fe54a6bb",
+              "support_kind": "direct_quote"
+            },
+            {
+              "corpus_id": "2795c1d6-a5f4-5c8d-a773-4ac724d10e99",
+              "record_id": "aviation:100903",
+              "field": "ACTION",
+              "start": 0,
+              "end": 19,
+              "quote": "STOP DRILLED CRACK.",
+              "source_sha256": "4b46fa7a8375a87e36b84db7a09934e215a91cbb5355d18b74683e553c2832e7",
+              "kind": "log_span",
+              "evidence_id": "381edf82-ed29-4679-a3c1-4adb5bc31f96",
+              "support_kind": "direct_quote"
+            },
+            {
+              "corpus_id": "2795c1d6-a5f4-5c8d-a773-4ac724d10e99",
+              "record_id": "aviation:101544",
+              "field": "ACTION",
+              "start": 0,
+              "end": 19,
+              "quote": "STOP DRILLED CRACK.",
+              "source_sha256": "4b46fa7a8375a87e36b84db7a09934e215a91cbb5355d18b74683e553c2832e7",
+              "kind": "log_span",
+              "evidence_id": "b8d0493b-c78e-477a-98ef-a72d1fc9472a",
+              "support_kind": "direct_quote"
+            },
+            {
+              "corpus_id": "2795c1d6-a5f4-5c8d-a773-4ac724d10e99",
+              "record_id": "aviation:104469",
+              "field": "ACTION",
+              "start": 0,
+              "end": 19,
+              "quote": "STOP DRILLED CRACK.",
+              "source_sha256": "4b46fa7a8375a87e36b84db7a09934e215a91cbb5355d18b74683e553c2832e7",
+              "kind": "log_span",
+              "evidence_id": "a94ff004-4e59-4092-b7ff-fd1697c9beef",
+              "support_kind": "direct_quote"
+            },
+            {
+              "corpus_id": "2795c1d6-a5f4-5c8d-a773-4ac724d10e99",
+              "record_id": "aviation:101844",
+              "field": "ACTION",
+              "start": 0,
+              "end": 19,
+              "quote": "STOP DRILLED CRACK.",
+              "source_sha256": "4b46fa7a8375a87e36b84db7a09934e215a91cbb5355d18b74683e553c2832e7",
+              "kind": "log_span",
+              "evidence_id": "7ed04cfb-c94e-4add-a191-1df762a44d62",
+              "support_kind": "direct_quote"
+            }
+          ]
+        }
+      ],
+      "limitations": [
+        "Historical maintenance records lack operational context and model identity; applicability to your aircraft is not certified.",
+        "Maintenance records report historical actions as written and do not guarantee repair success or approved procedure."
+      ],
+      "missing": [],
+      "clarification": null,
+      "visual_refs": [],
+      "allowed_actions": [
+        {
+          "action": "hypothesis",
+          "parent_answer_id": "ee34a173-f17b-4a9b-a094-bc578758eb79",
+          "state_revision": 0
+        },
+        {
+          "action": "challenge",
+          "parent_answer_id": "ee34a173-f17b-4a9b-a094-bc578758eb79",
+          "state_revision": 0
+        },
+        {
+          "action": "sensitivity",
+          "parent_answer_id": "ee34a173-f17b-4a9b-a094-bc578758eb79",
+          "state_revision": 0
+        },
+        {
+          "action": "handover",
+          "parent_answer_id": "ee34a173-f17b-4a9b-a094-bc578758eb79",
+          "state_revision": 0
+        },
+        {
+          "action": "distinguish",
+          "parent_answer_id": "ee34a173-f17b-4a9b-a094-bc578758eb79",
+          "state_revision": 0
+        }
+      ],
+      "summary": "Historical record aviation:100614 reports: \"CRACK IN RIGHT FRONT BAFFLE.\". Its recorded action is: \"STOP DRILLED CRACK.\".",
+      "what_can_be_concluded": [
+        "Historical record aviation:100614 reports: &quot;CRACK IN RIGHT FRONT BAFFLE.&quot;. Its recorded action is: &quot;STOP DRILLED CRACK.&quot;.",
+        "Historical record aviation:100043 reports: &quot;TOP L/H BAFFLE HAS A CRACK.&quot;. Its recorded action is: &quot;STOP DRILLED CRACK.&quot;."
+      ],
+      "what_cannot_be_concluded": [
+        "These historical records do not establish the cause, repair effectiveness, aircraft identity, or applicability to your aircraft.",
+        "They do not supply approved maintenance instructions, operational clearance, or proof that the aircraft is safe to fly."
+      ],
+      "synthesis_evidence_ids": [
+        "2b67f364-2ff7-4ff0-8d81-a9c6ea5ef996",
+        "571e9eae-f187-4376-af78-e1d4ac0afc40",
+        "6a874e10-0fb5-4922-bd09-7d43f1715ac5",
+        "81451714-4eeb-4616-b8f7-af90fe54a6bb"
+      ],
+      "generation": {
+        "status": "not_requested",
+        "prompt_version": "evidence-selection/v2",
+        "effective_model": null,
+        "fallback_reason": "extractive_selected",
+        "requested_model": "extractive/v1"
+      }
+    },
+    "run_id": "9d030b7e-fafa-4a83-8871-b555d819a00f"
+  },
+  {
+    "repeat": 2,
+    "query": "baffle cracking",
+    "expected": "supported_historical",
+    "answer": {
+      "answer_id": "0a1bc0af-304f-4512-a0da-c7e4579e3a90",
+      "run_id": "25cf4f4f-7b2c-4916-b962-61ec88994963",
+      "mode": "EVIDENCE",
+      "status": "supported_historical",
+      "headline": "Found 6 relevant historical maintenance record(s) matching complaint.",
+      "claims": [
+        {
+          "claim_id": "claim-prob-1",
+          "text": "Record aviation:103361 records problem: \"#3 BAFFLE CRACKED.\"",
+          "claim_type": "historical_problem",
+          "supports": [
+            {
+              "corpus_id": "2795c1d6-a5f4-5c8d-a773-4ac724d10e99",
+              "record_id": "aviation:103361",
+              "field": "PROBLEM",
+              "start": 0,
+              "end": 18,
+              "quote": "#3 BAFFLE CRACKED.",
+              "source_sha256": "4706d075841bedd39f80759f0f9c353688b95f1475cbd240c831e0528cc83767",
+              "kind": "log_span",
+              "evidence_id": "76a75d09-7ab0-4642-9ce0-4ec717ce8a4c",
+              "support_kind": "direct_quote"
+            }
+          ]
+        },
+        {
+          "claim_id": "claim-prob-2",
+          "text": "Record aviation:100614 records problem: \"CRACK IN RIGHT FRONT BAFFLE.\"",
+          "claim_type": "historical_problem",
+          "supports": [
+            {
+              "corpus_id": "2795c1d6-a5f4-5c8d-a773-4ac724d10e99",
+              "record_id": "aviation:100614",
+              "field": "PROBLEM",
+              "start": 0,
+              "end": 28,
+              "quote": "CRACK IN RIGHT FRONT BAFFLE.",
+              "source_sha256": "ce79f60a2ff691d32657a2e950dee5d9ed509a4200d1049b66197327ad8661ee",
+              "kind": "log_span",
+              "evidence_id": "c4d77cc5-ceb5-4273-9e79-07a9eb856f3d",
+              "support_kind": "direct_quote"
+            }
+          ]
+        },
+        {
+          "claim_id": "claim-prob-3",
+          "text": "Record aviation:105397 records problem: \"#1 BAFFLE IS CRACKED.\"",
+          "claim_type": "historical_problem",
+          "supports": [
+            {
+              "corpus_id": "2795c1d6-a5f4-5c8d-a773-4ac724d10e99",
+              "record_id": "aviation:105397",
+              "field": "PROBLEM",
+              "start": 0,
+              "end": 21,
+              "quote": "#1 BAFFLE IS CRACKED.",
+              "source_sha256": "d6847c2b5aeb0305f529119143e9e05fca339960e7e9ebbbdf04f8b2110602cf",
+              "kind": "log_span",
+              "evidence_id": "303dc199-d18a-41c2-a2bc-56ccaadc99aa",
+              "support_kind": "direct_quote"
+            }
+          ]
+        },
+        {
+          "claim_id": "claim-prob-4",
+          "text": "Record aviation:102922 records problem: \"AFT L/H BAFFLE IS CRACKED.\"",
+          "claim_type": "historical_problem",
+          "supports": [
+            {
+              "corpus_id": "2795c1d6-a5f4-5c8d-a773-4ac724d10e99",
+              "record_id": "aviation:102922",
+              "field": "PROBLEM",
+              "start": 0,
+              "end": 26,
+              "quote": "AFT L/H BAFFLE IS CRACKED.",
+              "source_sha256": "4a6c9e898776a9f8bace8474098474e815ebceff7887a01cf28a5a6940678e2a",
+              "kind": "log_span",
+              "evidence_id": "5c03e4f0-8901-4553-ae2b-6c04853e2020",
+              "support_kind": "direct_quote"
+            }
+          ]
+        },
+        {
+          "claim_id": "claim-prob-5",
+          "text": "Record aviation:101882 records problem: \"#3 AFT BAFFLE CRACKED.\"",
+          "claim_type": "historical_problem",
+          "supports": [
+            {
+              "corpus_id": "2795c1d6-a5f4-5c8d-a773-4ac724d10e99",
+              "record_id": "aviation:101882",
+              "field": "PROBLEM",
+              "start": 0,
+              "end": 22,
+              "quote": "#3 AFT BAFFLE CRACKED.",
+              "source_sha256": "60e7d7f19824f92999a193499dbc8b35d98cba6dae8a55bb21699629b71c3842",
+              "kind": "log_span",
+              "evidence_id": "1050beb4-8afe-4446-824a-2fc4831b17c9",
+              "support_kind": "direct_quote"
+            },
+            {
+              "corpus_id": "2795c1d6-a5f4-5c8d-a773-4ac724d10e99",
+              "record_id": "aviation:103010",
+              "field": "PROBLEM",
+              "start": 0,
+              "end": 22,
+              "quote": "#3 AFT BAFFLE CRACKED.",
+              "source_sha256": "60e7d7f19824f92999a193499dbc8b35d98cba6dae8a55bb21699629b71c3842",
+              "kind": "log_span",
+              "evidence_id": "66bfa793-2bc6-4b1a-b162-58927d27817c",
+              "support_kind": "direct_quote"
+            }
+          ]
+        },
+        {
+          "claim_id": "claim-act-6",
+          "text": "Record aviation:103361 records corrective action: \"STOP DRILLED CRACK IN #3 ENG BAFFLE.\"",
+          "claim_type": "historical_action",
+          "supports": [
+            {
+              "corpus_id": "2795c1d6-a5f4-5c8d-a773-4ac724d10e99",
+              "record_id": "aviation:103361",
+              "field": "ACTION",
+              "start": 0,
+              "end": 36,
+              "quote": "STOP DRILLED CRACK IN #3 ENG BAFFLE.",
+              "source_sha256": "badfbe4f0ab65f6fc70ac318a1783dddf92995f7579f7dc84475fb83f4525704",
+              "kind": "log_span",
+              "evidence_id": "725c01cc-a977-4b77-9474-a219154d3e5b",
+              "support_kind": "direct_quote"
+            }
+          ]
+        },
+        {
+          "claim_id": "claim-act-7",
+          "text": "Record aviation:100614 records corrective action: \"STOP DRILLED CRACK.\"",
+          "claim_type": "historical_action",
+          "supports": [
+            {
+              "corpus_id": "2795c1d6-a5f4-5c8d-a773-4ac724d10e99",
+              "record_id": "aviation:100614",
+              "field": "ACTION",
+              "start": 0,
+              "end": 19,
+              "quote": "STOP DRILLED CRACK.",
+              "source_sha256": "4b46fa7a8375a87e36b84db7a09934e215a91cbb5355d18b74683e553c2832e7",
+              "kind": "log_span",
+              "evidence_id": "a6818695-dc66-49dd-8824-cc95e0f46540",
+              "support_kind": "direct_quote"
+            },
+            {
+              "corpus_id": "2795c1d6-a5f4-5c8d-a773-4ac724d10e99",
+              "record_id": "aviation:101882",
+              "field": "ACTION",
+              "start": 0,
+              "end": 19,
+              "quote": "STOP DRILLED CRACK.",
+              "source_sha256": "4b46fa7a8375a87e36b84db7a09934e215a91cbb5355d18b74683e553c2832e7",
+              "kind": "log_span",
+              "evidence_id": "1b24edde-01aa-4180-b67e-1962480d09f5",
+              "support_kind": "direct_quote"
+            }
+          ]
+        },
+        {
+          "claim_id": "claim-act-8",
+          "text": "Record aviation:105397 records corrective action: \"FABRICATED & INSTALLED PATCH ON BAFFLE W/ LIKE MATERIAL\"",
+          "claim_type": "historical_action",
+          "supports": [
+            {
+              "corpus_id": "2795c1d6-a5f4-5c8d-a773-4ac724d10e99",
+              "record_id": "aviation:105397",
+              "field": "ACTION",
+              "start": 0,
+              "end": 55,
+              "quote": "FABRICATED & INSTALLED PATCH ON BAFFLE W/ LIKE MATERIAL",
+              "source_sha256": "9a5eef77ac46f3c7dc6704041f873a978a35e7920a98ef168aeff7aa2e4ee7da",
+              "kind": "log_span",
+              "evidence_id": "4f8e9154-5350-4322-b920-3d209d6f7029",
+              "support_kind": "direct_quote"
+            }
+          ]
+        },
+        {
+          "claim_id": "claim-act-9",
+          "text": "Record aviation:102922 records corrective action: \"FABRICATED PATCH FROM LIKE MATERIAL & RIVETED IAW\"",
+          "claim_type": "historical_action",
+          "supports": [
+            {
+              "corpus_id": "2795c1d6-a5f4-5c8d-a773-4ac724d10e99",
+              "record_id": "aviation:102922",
+              "field": "ACTION",
+              "start": 0,
+              "end": 49,
+              "quote": "FABRICATED PATCH FROM LIKE MATERIAL & RIVETED IAW",
+              "source_sha256": "f0c8e81818676850e20ee024486f8fb768bf28ed32e320d101a79d9771528bc4",
+              "kind": "log_span",
+              "evidence_id": "fed6dea1-f748-41de-b8ee-a998c3bdec28",
+              "support_kind": "direct_quote"
+            }
+          ]
+        },
+        {
+          "claim_id": "claim-act-10",
+          "text": "Record aviation:103010 records corrective action: \"INSTALLED PATCH MADE OF LIKE MATERIAL.\"",
+          "claim_type": "historical_action",
+          "supports": [
+            {
+              "corpus_id": "2795c1d6-a5f4-5c8d-a773-4ac724d10e99",
+              "record_id": "aviation:103010",
+              "field": "ACTION",
+              "start": 0,
+              "end": 38,
+              "quote": "INSTALLED PATCH MADE OF LIKE MATERIAL.",
+              "source_sha256": "72f2d222958d960a4921e54941e0c254199ab6bce64111e04901c4e4dd8890f7",
+              "kind": "log_span",
+              "evidence_id": "2b98afff-207a-454c-9913-21db7486115c",
+              "support_kind": "direct_quote"
+            }
+          ]
+        }
+      ],
+      "limitations": [
+        "Historical maintenance records lack operational context and model identity; applicability to your aircraft is not certified.",
+        "Maintenance records report historical actions as written and do not guarantee repair success or approved procedure."
+      ],
+      "missing": [],
+      "clarification": null,
+      "visual_refs": [],
+      "allowed_actions": [
+        {
+          "action": "hypothesis",
+          "parent_answer_id": "0a1bc0af-304f-4512-a0da-c7e4579e3a90",
+          "state_revision": 0
+        },
+        {
+          "action": "challenge",
+          "parent_answer_id": "0a1bc0af-304f-4512-a0da-c7e4579e3a90",
+          "state_revision": 0
+        },
+        {
+          "action": "sensitivity",
+          "parent_answer_id": "0a1bc0af-304f-4512-a0da-c7e4579e3a90",
+          "state_revision": 0
+        },
+        {
+          "action": "handover",
+          "parent_answer_id": "0a1bc0af-304f-4512-a0da-c7e4579e3a90",
+          "state_revision": 0
+        },
+        {
+          "action": "distinguish",
+          "parent_answer_id": "0a1bc0af-304f-4512-a0da-c7e4579e3a90",
+          "state_revision": 0
+        }
+      ],
+      "summary": "Historical record aviation:103361 reports: \"#3 BAFFLE CRACKED.\". Its recorded action is: \"STOP DRILLED CRACK IN #3 ENG BAFFLE.\".",
+      "what_can_be_concluded": [
+        "Historical record aviation:103361 reports: &quot;#3 BAFFLE CRACKED.&quot;. Its recorded action is: &quot;STOP DRILLED CRACK IN #3 ENG BAFFLE.&quot;.",
+        "Historical record aviation:100614 reports: &quot;CRACK IN RIGHT FRONT BAFFLE.&quot;. Its recorded action is: &quot;STOP DRILLED CRACK.&quot;."
+      ],
+      "what_cannot_be_concluded": [
+        "These historical records do not establish the cause, repair effectiveness, aircraft identity, or applicability to your aircraft.",
+        "They do not supply approved maintenance instructions, operational clearance, or proof that the aircraft is safe to fly."
+      ],
+      "synthesis_evidence_ids": [
+        "76a75d09-7ab0-4642-9ce0-4ec717ce8a4c",
+        "725c01cc-a977-4b77-9474-a219154d3e5b",
+        "c4d77cc5-ceb5-4273-9e79-07a9eb856f3d",
+        "a6818695-dc66-49dd-8824-cc95e0f46540"
+      ],
+      "generation": {
+        "status": "not_requested",
+        "prompt_version": "evidence-selection/v2",
+        "effective_model": null,
+        "fallback_reason": "extractive_selected",
+        "requested_model": "extractive/v1"
+      }
+    },
+    "run_id": "25cf4f4f-7b2c-4916-b962-61ec88994963"
+  },
+  {
+    "repeat": 2,
+    "query": "R/H engine forward alternator attachment bolt loose.",
+    "expected": "supported_historical",
+    "answer": {
+      "answer_id": "c0e851ea-7e01-4f2a-8b61-51a359359e27",
+      "run_id": "b961166c-5e6f-4c13-84e9-256d4b255293",
+      "mode": "EVIDENCE",
+      "status": "supported_historical",
+      "headline": "Found 1 relevant historical maintenance record(s) matching complaint.",
+      "claims": [
+        {
+          "claim_id": "claim-prob-1",
+          "text": "Record aviation:100033 records problem: \"R/H ENG FWD ALT ATTACH BOLT LOOSE.\"",
+          "claim_type": "historical_problem",
+          "supports": [
+            {
+              "corpus_id": "2795c1d6-a5f4-5c8d-a773-4ac724d10e99",
+              "record_id": "aviation:100033",
+              "field": "PROBLEM",
+              "start": 0,
+              "end": 34,
+              "quote": "R/H ENG FWD ALT ATTACH BOLT LOOSE.",
+              "source_sha256": "07857b4281c29b2c03bf557acae6ef579ba84c51bdcd04efa00bccc6bd12bf50",
+              "kind": "log_span",
+              "evidence_id": "244f85f1-5254-4c2a-957a-05596341bc6f",
+              "support_kind": "direct_quote"
+            }
+          ]
+        },
+        {
+          "claim_id": "claim-act-2",
+          "text": "Record aviation:100033 records corrective action: \"SECURED ALT ATTACH BOLT & RESAFETIED.\"",
+          "claim_type": "historical_action",
+          "supports": [
+            {
+              "corpus_id": "2795c1d6-a5f4-5c8d-a773-4ac724d10e99",
+              "record_id": "aviation:100033",
+              "field": "ACTION",
+              "start": 0,
+              "end": 37,
+              "quote": "SECURED ALT ATTACH BOLT & RESAFETIED.",
+              "source_sha256": "4e37157ee52003d6a03c27df0988b5543ba129ab0fa3d04ea020934882572e14",
+              "kind": "log_span",
+              "evidence_id": "69318db1-225e-4735-82ed-d33fad5f1400",
+              "support_kind": "direct_quote"
+            }
+          ]
+        }
+      ],
+      "limitations": [
+        "Historical maintenance records lack operational context and model identity; applicability to your aircraft is not certified.",
+        "Maintenance records report historical actions as written and do not guarantee repair success or approved procedure."
+      ],
+      "missing": [],
+      "clarification": null,
+      "visual_refs": [
+        "engine_left",
+        "intake_system"
+      ],
+      "allowed_actions": [
+        {
+          "action": "hypothesis",
+          "parent_answer_id": "c0e851ea-7e01-4f2a-8b61-51a359359e27",
+          "state_revision": 0
+        },
+        {
+          "action": "challenge",
+          "parent_answer_id": "c0e851ea-7e01-4f2a-8b61-51a359359e27",
+          "state_revision": 0
+        },
+        {
+          "action": "sensitivity",
+          "parent_answer_id": "c0e851ea-7e01-4f2a-8b61-51a359359e27",
+          "state_revision": 0
+        },
+        {
+          "action": "handover",
+          "parent_answer_id": "c0e851ea-7e01-4f2a-8b61-51a359359e27",
+          "state_revision": 0
+        }
+      ],
+      "summary": "Historical record aviation:100033 reports: \"R/H ENG FWD ALT ATTACH BOLT LOOSE.\". Its recorded action is: \"SECURED ALT ATTACH BOLT & RESAFETIED.\".",
+      "what_can_be_concluded": [
+        "Historical record aviation:100033 reports: &quot;R/H ENG FWD ALT ATTACH BOLT LOOSE.&quot;. Its recorded action is: &quot;SECURED ALT ATTACH BOLT &amp; RESAFETIED.&quot;."
+      ],
+      "what_cannot_be_concluded": [
+        "These historical records do not establish the cause, repair effectiveness, aircraft identity, or applicability to your aircraft.",
+        "They do not supply approved maintenance instructions, operational clearance, or proof that the aircraft is safe to fly."
+      ],
+      "synthesis_evidence_ids": [
+        "244f85f1-5254-4c2a-957a-05596341bc6f",
+        "69318db1-225e-4735-82ed-d33fad5f1400"
+      ],
+      "generation": {
+        "status": "not_requested",
+        "prompt_version": "evidence-selection/v2",
+        "effective_model": null,
+        "fallback_reason": "extractive_selected",
+        "requested_model": "extractive/v1"
+      }
+    },
+    "run_id": "b961166c-5e6f-4c13-84e9-256d4b255293"
+  },
+  {
+    "repeat": 2,
+    "query": "#3 brake is missing a screw.",
+    "expected": "supported_historical",
+    "answer": {
+      "answer_id": "03830784-7e58-4750-88e7-d6ba298ace06",
+      "run_id": "5b89e799-6746-4366-87fd-aa8860bc742e",
+      "mode": "EVIDENCE",
+      "status": "supported_historical",
+      "headline": "Found 1 relevant historical maintenance record(s) matching complaint.",
+      "claims": [
+        {
+          "claim_id": "claim-prob-1",
+          "text": "Record aviation:100045 records problem: \"#3 BRAKE MISSING SCREW.\"",
+          "claim_type": "historical_problem",
+          "supports": [
+            {
+              "corpus_id": "2795c1d6-a5f4-5c8d-a773-4ac724d10e99",
+              "record_id": "aviation:100045",
+              "field": "PROBLEM",
+              "start": 0,
+              "end": 23,
+              "quote": "#3 BRAKE MISSING SCREW.",
+              "source_sha256": "a7e95d1a1200ca16c6462f638cd38fa7e6b6d037fe513f040daee23a29803be3",
+              "kind": "log_span",
+              "evidence_id": "375c9e35-9415-4eee-91e1-c8c719c74d79",
+              "support_kind": "direct_quote"
+            }
+          ]
+        },
+        {
+          "claim_id": "claim-act-2",
+          "text": "Record aviation:100045 records corrective action: \"REPLACED SCREW.\"",
+          "claim_type": "historical_action",
+          "supports": [
+            {
+              "corpus_id": "2795c1d6-a5f4-5c8d-a773-4ac724d10e99",
+              "record_id": "aviation:100045",
+              "field": "ACTION",
+              "start": 0,
+              "end": 15,
+              "quote": "REPLACED SCREW.",
+              "source_sha256": "ec84ceb363f4011e52e0bee4250549c058810709ab4f2a37e58c20db3cffb6be",
+              "kind": "log_span",
+              "evidence_id": "c2153c9c-ee14-4594-aa93-94e7ed9adf93",
+              "support_kind": "direct_quote"
+            }
+          ]
+        }
+      ],
+      "limitations": [
+        "Historical maintenance records lack operational context and model identity; applicability to your aircraft is not certified.",
+        "Maintenance records report historical actions as written and do not guarantee repair success or approved procedure."
+      ],
+      "missing": [],
+      "clarification": null,
+      "visual_refs": [],
+      "allowed_actions": [
+        {
+          "action": "hypothesis",
+          "parent_answer_id": "03830784-7e58-4750-88e7-d6ba298ace06",
+          "state_revision": 0
+        },
+        {
+          "action": "challenge",
+          "parent_answer_id": "03830784-7e58-4750-88e7-d6ba298ace06",
+          "state_revision": 0
+        },
+        {
+          "action": "sensitivity",
+          "parent_answer_id": "03830784-7e58-4750-88e7-d6ba298ace06",
+          "state_revision": 0
+        },
+        {
+          "action": "handover",
+          "parent_answer_id": "03830784-7e58-4750-88e7-d6ba298ace06",
+          "state_revision": 0
+        }
+      ],
+      "summary": "Historical record aviation:100045 reports: \"#3 BRAKE MISSING SCREW.\". Its recorded action is: \"REPLACED SCREW.\".",
+      "what_can_be_concluded": [
+        "Historical record aviation:100045 reports: &quot;#3 BRAKE MISSING SCREW.&quot;. Its recorded action is: &quot;REPLACED SCREW.&quot;."
+      ],
+      "what_cannot_be_concluded": [
+        "These historical records do not establish the cause, repair effectiveness, aircraft identity, or applicability to your aircraft.",
+        "They do not supply approved maintenance instructions, operational clearance, or proof that the aircraft is safe to fly."
+      ],
+      "synthesis_evidence_ids": [
+        "375c9e35-9415-4eee-91e1-c8c719c74d79",
+        "c2153c9c-ee14-4594-aa93-94e7ed9adf93"
+      ],
+      "generation": {
+        "status": "not_requested",
+        "prompt_version": "evidence-selection/v2",
+        "effective_model": null,
+        "fallback_reason": "extractive_selected",
+        "requested_model": "extractive/v1"
+      }
+    },
+    "run_id": "5b89e799-6746-4366-87fd-aa8860bc742e"
+  },
+  {
+    "repeat": 2,
+    "query": "Right main gear brake pedal feels soft and spongy",
+    "expected": "insufficient_evidence",
+    "answer": {
+      "answer_id": "3ecb19db-4b09-4481-89d5-d54c8d873453",
+      "run_id": "8553a2cf-2a18-403b-a3b1-a57469c01d25",
+      "mode": "EVIDENCE",
+      "status": "insufficient_evidence",
+      "headline": "No historical maintenance records found matching this fault complaint.",
+      "claims": [],
+      "limitations": [
+        "Historical maintenance records lack operational context and model identity; applicability to your aircraft is not certified.",
+        "Maintenance records report historical actions as written and do not guarantee repair success or approved procedure."
+      ],
+      "missing": [
+        "No matching records found in authorized corpus."
+      ],
+      "clarification": null,
+      "visual_refs": [],
+      "allowed_actions": [],
+      "summary": "Insufficient evidence: retrieved candidates do not establish a matching complaint in the authorized records. This does not prove that the fault is absent or identify a repair.",
+      "what_can_be_concluded": [
+        "No evidence found for this complaint in the historical records."
+      ],
+      "what_cannot_be_concluded": [
+        "These historical records do not establish the cause, repair effectiveness, aircraft identity, or applicability to your aircraft.",
+        "They do not supply approved maintenance instructions, operational clearance, or proof that the aircraft is safe to fly."
+      ],
+      "synthesis_evidence_ids": [],
+      "generation": {
+        "status": "not_requested",
+        "prompt_version": "evidence-selection/v2",
+        "effective_model": null,
+        "fallback_reason": "no_matching_evidence",
+        "requested_model": "extractive/v1"
+      }
+    },
+    "run_id": "8553a2cf-2a18-403b-a3b1-a57469c01d25"
+  },
+  {
+    "repeat": 2,
+    "query": "CYL #99 intake leak",
+    "expected": "insufficient_evidence",
+    "answer": {
+      "answer_id": "c8f03875-db81-46d9-aed0-e96b763f916e",
+      "run_id": "21f38d0b-9c8e-48fa-851c-84111d0728c0",
+      "mode": "EVIDENCE",
+      "status": "insufficient_evidence",
+      "headline": "No historical maintenance records found matching this fault complaint.",
+      "claims": [],
+      "limitations": [
+        "Historical maintenance records lack operational context and model identity; applicability to your aircraft is not certified.",
+        "Maintenance records report historical actions as written and do not guarantee repair success or approved procedure."
+      ],
+      "missing": [
+        "No matching records found in authorized corpus."
+      ],
+      "clarification": null,
+      "visual_refs": [],
+      "allowed_actions": [],
+      "summary": "Insufficient evidence: retrieved candidates do not establish a matching complaint in the authorized records. This does not prove that the fault is absent or identify a repair.",
+      "what_can_be_concluded": [
+        "No evidence found for this complaint in the historical records."
+      ],
+      "what_cannot_be_concluded": [
+        "These historical records do not establish the cause, repair effectiveness, aircraft identity, or applicability to your aircraft.",
+        "They do not supply approved maintenance instructions, operational clearance, or proof that the aircraft is safe to fly."
+      ],
+      "synthesis_evidence_ids": [],
+      "generation": {
+        "status": "not_requested",
+        "prompt_version": "evidence-selection/v2",
+        "effective_model": null,
+        "fallback_reason": "no_matching_evidence",
+        "requested_model": "extractive/v1"
+      }
+    },
+    "run_id": "21f38d0b-9c8e-48fa-851c-84111d0728c0"
+  },
+  {
+    "repeat": 2,
+    "query": "baffle crack with unfamiliar actuator failure",
+    "expected": "insufficient_evidence",
+    "answer": {
+      "answer_id": "36cd891b-35e3-467f-8bf0-178d725c25c9",
+      "run_id": "c1c91b8e-460b-4a9e-927a-1cbfed0001d4",
+      "mode": "EVIDENCE",
+      "status": "insufficient_evidence",
+      "headline": "No historical maintenance records found matching this fault complaint.",
+      "claims": [],
+      "limitations": [
+        "Historical maintenance records lack operational context and model identity; applicability to your aircraft is not certified.",
+        "Maintenance records report historical actions as written and do not guarantee repair success or approved procedure."
+      ],
+      "missing": [
+        "No matching records found in authorized corpus."
+      ],
+      "clarification": null,
+      "visual_refs": [],
+      "allowed_actions": [],
+      "summary": "Insufficient evidence: retrieved candidates do not establish a matching complaint in the authorized records. This does not prove that the fault is absent or identify a repair.",
+      "what_can_be_concluded": [
+        "No evidence found for this complaint in the historical records."
+      ],
+      "what_cannot_be_concluded": [
+        "These historical records do not establish the cause, repair effectiveness, aircraft identity, or applicability to your aircraft.",
+        "They do not supply approved maintenance instructions, operational clearance, or proof that the aircraft is safe to fly."
+      ],
+      "synthesis_evidence_ids": [],
+      "generation": {
+        "status": "not_requested",
+        "prompt_version": "evidence-selection/v2",
+        "effective_model": null,
+        "fallback_reason": "no_matching_evidence",
+        "requested_model": "extractive/v1"
+      }
+    },
+    "run_id": "c1c91b8e-460b-4a9e-927a-1cbfed0001d4"
+  },
+  {
+    "repeat": 2,
+    "query": "What is the approved torque specification in ft-lbs for the intake flange?",
+    "expected": "insufficient_evidence",
+    "answer": {
+      "answer_id": "e3dbf768-7312-4cde-809e-cbe9975114db",
+      "run_id": "c83eed76-0346-42c1-aec2-48ac7290b9e7",
+      "mode": "EVIDENCE",
+      "status": "insufficient_evidence",
+      "headline": "Requested specification or operational guarantee is not established by historical logs.",
+      "claims": [],
+      "limitations": [
+        "Historical logs do not establish approved specifications, repair instructions, or operational clearance.",
+        "Refer to official FAA-approved Aircraft Maintenance Manuals (AMM) for certified specifications."
+      ],
+      "missing": [
+        "Applicable approved documentation and qualified operational assessment are not present in these historical records.",
+        "No matching records found in authorized corpus."
+      ],
+      "clarification": null,
+      "visual_refs": [],
+      "allowed_actions": [],
+      "summary": "Insufficient evidence: retrieved candidates do not establish a matching complaint in the authorized records. This does not prove that the fault is absent or identify a repair.",
+      "what_can_be_concluded": [
+        "No evidence found for this complaint in the historical records."
+      ],
+      "what_cannot_be_concluded": [
+        "These historical records do not establish the cause, repair effectiveness, aircraft identity, or applicability to your aircraft.",
+        "They do not supply approved maintenance instructions, operational clearance, or proof that the aircraft is safe to fly."
+      ],
+      "synthesis_evidence_ids": [],
+      "generation": {
+        "status": "not_requested",
+        "prompt_version": "evidence-selection/v2",
+        "effective_model": null,
+        "fallback_reason": "outside_log_authority",
+        "requested_model": "extractive/v1"
+      }
+    },
+    "run_id": "c83eed76-0346-42c1-aec2-48ac7290b9e7"
+  },
+  {
+    "repeat": 2,
+    "query": "Is the aircraft safe to fly after this intake leak?",
+    "expected": "insufficient_evidence",
+    "answer": {
+      "answer_id": "2b75ac56-e96c-41db-bbc9-67739e761b84",
+      "run_id": "b3e46621-67c1-4d9c-859a-e22636a219dc",
+      "mode": "EVIDENCE",
+      "status": "insufficient_evidence",
+      "headline": "Requested specification or operational guarantee is not established by historical logs.",
+      "claims": [],
+      "limitations": [
+        "Historical logs do not establish approved specifications, repair instructions, or operational clearance.",
+        "Refer to official FAA-approved Aircraft Maintenance Manuals (AMM) for certified specifications."
+      ],
+      "missing": [
+        "Applicable approved documentation and qualified operational assessment are not present in these historical records.",
+        "No matching records found in authorized corpus."
+      ],
+      "clarification": null,
+      "visual_refs": [],
+      "allowed_actions": [],
+      "summary": "Insufficient evidence: retrieved candidates do not establish a matching complaint in the authorized records. This does not prove that the fault is absent or identify a repair.",
+      "what_can_be_concluded": [
+        "No evidence found for this complaint in the historical records."
+      ],
+      "what_cannot_be_concluded": [
+        "These historical records do not establish the cause, repair effectiveness, aircraft identity, or applicability to your aircraft.",
+        "They do not supply approved maintenance instructions, operational clearance, or proof that the aircraft is safe to fly."
+      ],
+      "synthesis_evidence_ids": [],
+      "generation": {
+        "status": "not_requested",
+        "prompt_version": "evidence-selection/v2",
+        "effective_model": null,
+        "fallback_reason": "outside_log_authority",
+        "requested_model": "extractive/v1"
+      }
+    },
+    "run_id": "b3e46621-67c1-4d9c-859a-e22636a219dc"
+  },
+  {
+    "repeat": 3,
+    "query": "intake leak",
+    "expected": "supported_historical",
+    "answer": {
+      "answer_id": "778a370e-ec62-46de-811f-fa8a80828065",
+      "run_id": "957aae22-667a-443a-9023-6ff0b7240243",
+      "mode": "EVIDENCE",
+      "status": "supported_historical",
+      "headline": "Found 6 relevant historical maintenance record(s) matching complaint.",
+      "claims": [
+        {
+          "claim_id": "claim-prob-1",
+          "text": "Record aviation:102838 records problem: \"#2 INTAKE HAS LEAK.\"",
+          "claim_type": "historical_problem",
+          "supports": [
+            {
+              "corpus_id": "2795c1d6-a5f4-5c8d-a773-4ac724d10e99",
+              "record_id": "aviation:102838",
+              "field": "PROBLEM",
+              "start": 0,
+              "end": 19,
+              "quote": "#2 INTAKE HAS LEAK.",
+              "source_sha256": "eb25320a6a2be1851a5cc8e09516dc7376c953582b96b11db112c37b02130a67",
+              "kind": "log_span",
+              "evidence_id": "83ee1b39-0a81-4b3e-8bf3-118f10c3f439",
+              "support_kind": "direct_quote"
+            }
+          ]
+        },
+        {
+          "claim_id": "claim-prob-2",
+          "text": "Record aviation:103510 records problem: \"#2 INTAKE SLIGHT LEAK.\"",
+          "claim_type": "historical_problem",
+          "supports": [
+            {
+              "corpus_id": "2795c1d6-a5f4-5c8d-a773-4ac724d10e99",
+              "record_id": "aviation:103510",
+              "field": "PROBLEM",
+              "start": 0,
+              "end": 22,
+              "quote": "#2 INTAKE SLIGHT LEAK.",
+              "source_sha256": "5f447d02c962d2153c0dbafbd25e8b638f9b46446a97eaddd6ca27cc8aec4cca",
+              "kind": "log_span",
+              "evidence_id": "7da184d9-d359-4d15-8465-8468d9c46618",
+              "support_kind": "direct_quote"
+            }
+          ]
+        },
+        {
+          "claim_id": "claim-prob-3",
+          "text": "Record aviation:106087 records problem: \"INTAKE #3 LEAKING.\"",
+          "claim_type": "historical_problem",
+          "supports": [
+            {
+              "corpus_id": "2795c1d6-a5f4-5c8d-a773-4ac724d10e99",
+              "record_id": "aviation:106087",
+              "field": "PROBLEM",
+              "start": 0,
+              "end": 18,
+              "quote": "INTAKE #3 LEAKING.",
+              "source_sha256": "7e35ab448b1c39abe485ca3b64d5b1f1a184ada962aae3b546d9472bf803a60c",
+              "kind": "log_span",
+              "evidence_id": "d419a6ce-f298-4485-bd58-b4e79e198b99",
+              "support_kind": "direct_quote"
+            }
+          ]
+        },
+        {
+          "claim_id": "claim-prob-4",
+          "text": "Record aviation:104952 records problem: \"#4 INTAKE OIL LEAK.\"",
+          "claim_type": "historical_problem",
+          "supports": [
+            {
+              "corpus_id": "2795c1d6-a5f4-5c8d-a773-4ac724d10e99",
+              "record_id": "aviation:104952",
+              "field": "PROBLEM",
+              "start": 0,
+              "end": 19,
+              "quote": "#4 INTAKE OIL LEAK.",
+              "source_sha256": "7686c72f69b8b3d24e807db11a50e9694d3db944a6bdf37a4b312e22eef860bb",
+              "kind": "log_span",
+              "evidence_id": "dc4dc558-c21a-4218-8859-677595367c87",
+              "support_kind": "direct_quote"
+            }
+          ]
+        },
+        {
+          "claim_id": "claim-prob-5",
+          "text": "Record aviation:106090 records problem: \"#3 INTAKE LEAKS.\"",
+          "claim_type": "historical_problem",
+          "supports": [
+            {
+              "corpus_id": "2795c1d6-a5f4-5c8d-a773-4ac724d10e99",
+              "record_id": "aviation:106090",
+              "field": "PROBLEM",
+              "start": 0,
+              "end": 16,
+              "quote": "#3 INTAKE LEAKS.",
+              "source_sha256": "46ffc7ea27b6003f52a8db5d29cfd488ff602b4a171f8557da0e835d1a79b32b",
+              "kind": "log_span",
+              "evidence_id": "325ec7f0-a1c8-49a1-95f9-ab9faafefec1",
+              "support_kind": "direct_quote"
+            }
+          ]
+        },
+        {
+          "claim_id": "claim-prob-6",
+          "text": "Record aviation:100081 records problem: \"#2 INTAKE LEAKS.\"",
+          "claim_type": "historical_problem",
+          "supports": [
+            {
+              "corpus_id": "2795c1d6-a5f4-5c8d-a773-4ac724d10e99",
+              "record_id": "aviation:100081",
+              "field": "PROBLEM",
+              "start": 0,
+              "end": 16,
+              "quote": "#2 INTAKE LEAKS.",
+              "source_sha256": "de88c88426b9e528b5ae6c99db82fc047bd5a88207a65ad89cdaea87d434a8ea",
+              "kind": "log_span",
+              "evidence_id": "c57dbc49-1c61-447a-8f7d-e44f916b6e7f",
+              "support_kind": "direct_quote"
+            }
+          ]
+        },
+        {
+          "claim_id": "claim-act-7",
+          "text": "Record aviation:102838 records corrective action: \"REMOVED & REPLACED INTAKE GASKET.\"",
+          "claim_type": "historical_action",
+          "supports": [
+            {
+              "corpus_id": "2795c1d6-a5f4-5c8d-a773-4ac724d10e99",
+              "record_id": "aviation:102838",
+              "field": "ACTION",
+              "start": 0,
+              "end": 33,
+              "quote": "REMOVED & REPLACED INTAKE GASKET.",
+              "source_sha256": "8593a794818aac2ac13d677c454065cb73f7b0548be4ed5c6c434e9d3981e17e",
+              "kind": "log_span",
+              "evidence_id": "bbe45e21-6a69-4bed-acbf-f8cbc6b4bce1",
+              "support_kind": "direct_quote"
+            }
+          ]
+        },
+        {
+          "claim_id": "claim-act-8",
+          "text": "Record aviation:103510 records corrective action: \"INSTALLED NEW INTAKE GASKET.\"",
+          "claim_type": "historical_action",
+          "supports": [
+            {
+              "corpus_id": "2795c1d6-a5f4-5c8d-a773-4ac724d10e99",
+              "record_id": "aviation:103510",
+              "field": "ACTION",
+              "start": 0,
+              "end": 28,
+              "quote": "INSTALLED NEW INTAKE GASKET.",
+              "source_sha256": "36b4514d54d29c1a16b92ae18bc617beb514b572797b66a13b0352fa94863a96",
+              "kind": "log_span",
+              "evidence_id": "c902a8b9-b7a3-4e51-83a0-b6474cd413a3",
+              "support_kind": "direct_quote"
+            }
+          ]
+        },
+        {
+          "claim_id": "claim-act-9",
+          "text": "Record aviation:106087 records corrective action: \"REMOVED & REPLACED GASKET.\"",
+          "claim_type": "historical_action",
+          "supports": [
+            {
+              "corpus_id": "2795c1d6-a5f4-5c8d-a773-4ac724d10e99",
+              "record_id": "aviation:106087",
+              "field": "ACTION",
+              "start": 0,
+              "end": 26,
+              "quote": "REMOVED & REPLACED GASKET.",
+              "source_sha256": "a9add81fc8579b1962cbdae090ac3fd0e589cb7dec4e11787b901051b280e235",
+              "kind": "log_span",
+              "evidence_id": "117cfdd4-d908-4700-bf89-7086c73c9812",
+              "support_kind": "direct_quote"
+            }
+          ]
+        },
+        {
+          "claim_id": "claim-act-10",
+          "text": "Record aviation:104952 records corrective action: \"INSPECTED & FOUND OIL LEAK TO BE RESIDUAL. CLEANED AREA\"",
+          "claim_type": "historical_action",
+          "supports": [
+            {
+              "corpus_id": "2795c1d6-a5f4-5c8d-a773-4ac724d10e99",
+              "record_id": "aviation:104952",
+              "field": "ACTION",
+              "start": 0,
+              "end": 55,
+              "quote": "INSPECTED & FOUND OIL LEAK TO BE RESIDUAL. CLEANED AREA",
+              "source_sha256": "7b3356ffa42500b2f597924597ebe55c34c4f446639327e34aa86a6e10bd96fc",
+              "kind": "log_span",
+              "evidence_id": "7115d26d-ab97-46a5-829c-6143e40a4834",
+              "support_kind": "direct_quote"
+            }
+          ]
+        },
+        {
+          "claim_id": "claim-act-11",
+          "text": "Record aviation:106090 records corrective action: \"REPLACED GASKET.\"",
+          "claim_type": "historical_action",
+          "supports": [
+            {
+              "corpus_id": "2795c1d6-a5f4-5c8d-a773-4ac724d10e99",
+              "record_id": "aviation:106090",
+              "field": "ACTION",
+              "start": 0,
+              "end": 16,
+              "quote": "REPLACED GASKET.",
+              "source_sha256": "2a955acab4496675864f9792fc507d398abd53e646357b0a33e6ea4335c363a1",
+              "kind": "log_span",
+              "evidence_id": "e5d7fda4-85e8-4024-b1f0-5b01876dc39d",
+              "support_kind": "direct_quote"
+            },
+            {
+              "corpus_id": "2795c1d6-a5f4-5c8d-a773-4ac724d10e99",
+              "record_id": "aviation:100081",
+              "field": "ACTION",
+              "start": 0,
+              "end": 16,
+              "quote": "REPLACED GASKET.",
+              "source_sha256": "2a955acab4496675864f9792fc507d398abd53e646357b0a33e6ea4335c363a1",
+              "kind": "log_span",
+              "evidence_id": "83ba0f87-810b-4f89-bcfd-a00dd965ab19",
+              "support_kind": "direct_quote"
+            }
+          ]
+        }
+      ],
+      "limitations": [
+        "Historical maintenance records lack operational context and model identity; applicability to your aircraft is not certified.",
+        "Maintenance records report historical actions as written and do not guarantee repair success or approved procedure."
+      ],
+      "missing": [],
+      "clarification": null,
+      "visual_refs": [
+        "intake_system",
+        "intake_gasket"
+      ],
+      "allowed_actions": [
+        {
+          "action": "hypothesis",
+          "parent_answer_id": "778a370e-ec62-46de-811f-fa8a80828065",
+          "state_revision": 0
+        },
+        {
+          "action": "challenge",
+          "parent_answer_id": "778a370e-ec62-46de-811f-fa8a80828065",
+          "state_revision": 0
+        },
+        {
+          "action": "sensitivity",
+          "parent_answer_id": "778a370e-ec62-46de-811f-fa8a80828065",
+          "state_revision": 0
+        },
+        {
+          "action": "handover",
+          "parent_answer_id": "778a370e-ec62-46de-811f-fa8a80828065",
+          "state_revision": 0
+        },
+        {
+          "action": "distinguish",
+          "parent_answer_id": "778a370e-ec62-46de-811f-fa8a80828065",
+          "state_revision": 0
+        }
+      ],
+      "summary": "Historical record aviation:102838 reports: \"#2 INTAKE HAS LEAK.\". Its recorded action is: \"REMOVED & REPLACED INTAKE GASKET.\".",
+      "what_can_be_concluded": [
+        "Historical record aviation:102838 reports: &quot;#2 INTAKE HAS LEAK.&quot;. Its recorded action is: &quot;REMOVED &amp; REPLACED INTAKE GASKET.&quot;.",
+        "Historical record aviation:103510 reports: &quot;#2 INTAKE SLIGHT LEAK.&quot;. Its recorded action is: &quot;INSTALLED NEW INTAKE GASKET.&quot;."
+      ],
+      "what_cannot_be_concluded": [
+        "These historical records do not establish the cause, repair effectiveness, aircraft identity, or applicability to your aircraft.",
+        "They do not supply approved maintenance instructions, operational clearance, or proof that the aircraft is safe to fly."
+      ],
+      "synthesis_evidence_ids": [
+        "83ee1b39-0a81-4b3e-8bf3-118f10c3f439",
+        "bbe45e21-6a69-4bed-acbf-f8cbc6b4bce1",
+        "7da184d9-d359-4d15-8465-8468d9c46618",
+        "c902a8b9-b7a3-4e51-83a0-b6474cd413a3"
+      ],
+      "generation": {
+        "status": "not_requested",
+        "prompt_version": "evidence-selection/v2",
+        "effective_model": null,
+        "fallback_reason": "extractive_selected",
+        "requested_model": "extractive/v1"
+      }
+    },
+    "run_id": "957aae22-667a-443a-9023-6ff0b7240243"
+  },
+  {
+    "repeat": 3,
+    "query": "baffle crack",
+    "expected": "supported_historical",
+    "answer": {
+      "answer_id": "d9268c2e-54b3-4582-a2be-290cebd7b9ee",
+      "run_id": "bc1eee90-5ae3-42aa-a75b-3da1e0a767d5",
+      "mode": "EVIDENCE",
+      "status": "supported_historical",
+      "headline": "Found 6 relevant historical maintenance record(s) matching complaint.",
+      "claims": [
+        {
+          "claim_id": "claim-prob-1",
+          "text": "Record aviation:100614 records problem: \"CRACK IN RIGHT FRONT BAFFLE.\"",
+          "claim_type": "historical_problem",
+          "supports": [
+            {
+              "corpus_id": "2795c1d6-a5f4-5c8d-a773-4ac724d10e99",
+              "record_id": "aviation:100614",
+              "field": "PROBLEM",
+              "start": 0,
+              "end": 28,
+              "quote": "CRACK IN RIGHT FRONT BAFFLE.",
+              "source_sha256": "ce79f60a2ff691d32657a2e950dee5d9ed509a4200d1049b66197327ad8661ee",
+              "kind": "log_span",
+              "evidence_id": "983a2e47-8b7d-465c-a9e9-3f0a398b5e14",
+              "support_kind": "direct_quote"
+            }
+          ]
+        },
+        {
+          "claim_id": "claim-prob-2",
+          "text": "Record aviation:100043 records problem: \"TOP L/H BAFFLE HAS A CRACK.\"",
+          "claim_type": "historical_problem",
+          "supports": [
+            {
+              "corpus_id": "2795c1d6-a5f4-5c8d-a773-4ac724d10e99",
+              "record_id": "aviation:100043",
+              "field": "PROBLEM",
+              "start": 0,
+              "end": 27,
+              "quote": "TOP L/H BAFFLE HAS A CRACK.",
+              "source_sha256": "c3789be654b3d9cc910064baea428e863b3d3a4b47313ea84f22d875513cd024",
+              "kind": "log_span",
+              "evidence_id": "758db39a-9bc8-443f-a250-e19f2f09066b",
+              "support_kind": "direct_quote"
+            }
+          ]
+        },
+        {
+          "claim_id": "claim-prob-3",
+          "text": "Record aviation:100903 records problem: \"BACK L/H BAFFLE HAS A CRACK.\"",
+          "claim_type": "historical_problem",
+          "supports": [
+            {
+              "corpus_id": "2795c1d6-a5f4-5c8d-a773-4ac724d10e99",
+              "record_id": "aviation:100903",
+              "field": "PROBLEM",
+              "start": 0,
+              "end": 28,
+              "quote": "BACK L/H BAFFLE HAS A CRACK.",
+              "source_sha256": "8365c13957cc92a5450cabcfa76bd39f55ff3eb125f0bee070b9eca1ff687d4f",
+              "kind": "log_span",
+              "evidence_id": "1389b838-c381-4cad-b891-d6be159a76ad",
+              "support_kind": "direct_quote"
+            }
+          ]
+        },
+        {
+          "claim_id": "claim-prob-4",
+          "text": "Record aviation:101544 records problem: \"L/H BACK BAFFLE HAS A CRACK.\"",
+          "claim_type": "historical_problem",
+          "supports": [
+            {
+              "corpus_id": "2795c1d6-a5f4-5c8d-a773-4ac724d10e99",
+              "record_id": "aviation:101544",
+              "field": "PROBLEM",
+              "start": 0,
+              "end": 28,
+              "quote": "L/H BACK BAFFLE HAS A CRACK.",
+              "source_sha256": "ac16f1bad6d39383c1c69ce7510044b776b0407af76e02a5573fe33d2337f311",
+              "kind": "log_span",
+              "evidence_id": "68f80b9e-ced3-469f-a5da-a97334c1d324",
+              "support_kind": "direct_quote"
+            }
+          ]
+        },
+        {
+          "claim_id": "claim-prob-5",
+          "text": "Record aviation:104469 records problem: \"CRACK ON L/H UPPER BAFFLE.\"",
+          "claim_type": "historical_problem",
+          "supports": [
+            {
+              "corpus_id": "2795c1d6-a5f4-5c8d-a773-4ac724d10e99",
+              "record_id": "aviation:104469",
+              "field": "PROBLEM",
+              "start": 0,
+              "end": 26,
+              "quote": "CRACK ON L/H UPPER BAFFLE.",
+              "source_sha256": "fd9ec95c535396df75383c3c7b5ac6a33b5ef5f3ca34bcc0ab577cc38ccb73bb",
+              "kind": "log_span",
+              "evidence_id": "63a96b12-01f2-47d5-8f59-a8d4925caecd",
+              "support_kind": "direct_quote"
+            }
+          ]
+        },
+        {
+          "claim_id": "claim-prob-6",
+          "text": "Record aviation:101844 records problem: \"CRACK IN FWD BAFFLE CENTER.\"",
+          "claim_type": "historical_problem",
+          "supports": [
+            {
+              "corpus_id": "2795c1d6-a5f4-5c8d-a773-4ac724d10e99",
+              "record_id": "aviation:101844",
+              "field": "PROBLEM",
+              "start": 0,
+              "end": 27,
+              "quote": "CRACK IN FWD BAFFLE CENTER.",
+              "source_sha256": "7f6e29c80ff41e42db1b006a18094d147e12164933bb31914c23fca1beae2041",
+              "kind": "log_span",
+              "evidence_id": "115760da-fd98-47b2-a670-3b35cb98afc7",
+              "support_kind": "direct_quote"
+            }
+          ]
+        },
+        {
+          "claim_id": "claim-act-7",
+          "text": "Record aviation:100614 records corrective action: \"STOP DRILLED CRACK.\"",
+          "claim_type": "historical_action",
+          "supports": [
+            {
+              "corpus_id": "2795c1d6-a5f4-5c8d-a773-4ac724d10e99",
+              "record_id": "aviation:100614",
+              "field": "ACTION",
+              "start": 0,
+              "end": 19,
+              "quote": "STOP DRILLED CRACK.",
+              "source_sha256": "4b46fa7a8375a87e36b84db7a09934e215a91cbb5355d18b74683e553c2832e7",
+              "kind": "log_span",
+              "evidence_id": "e7598845-6520-4a82-9c9a-b5a4d7b8e368",
+              "support_kind": "direct_quote"
+            },
+            {
+              "corpus_id": "2795c1d6-a5f4-5c8d-a773-4ac724d10e99",
+              "record_id": "aviation:100043",
+              "field": "ACTION",
+              "start": 0,
+              "end": 19,
+              "quote": "STOP DRILLED CRACK.",
+              "source_sha256": "4b46fa7a8375a87e36b84db7a09934e215a91cbb5355d18b74683e553c2832e7",
+              "kind": "log_span",
+              "evidence_id": "e166106c-25c4-4bd0-814c-8bf95d105b82",
+              "support_kind": "direct_quote"
+            },
+            {
+              "corpus_id": "2795c1d6-a5f4-5c8d-a773-4ac724d10e99",
+              "record_id": "aviation:100903",
+              "field": "ACTION",
+              "start": 0,
+              "end": 19,
+              "quote": "STOP DRILLED CRACK.",
+              "source_sha256": "4b46fa7a8375a87e36b84db7a09934e215a91cbb5355d18b74683e553c2832e7",
+              "kind": "log_span",
+              "evidence_id": "988192f4-15c5-48ee-bc54-6acd23316e0f",
+              "support_kind": "direct_quote"
+            },
+            {
+              "corpus_id": "2795c1d6-a5f4-5c8d-a773-4ac724d10e99",
+              "record_id": "aviation:101544",
+              "field": "ACTION",
+              "start": 0,
+              "end": 19,
+              "quote": "STOP DRILLED CRACK.",
+              "source_sha256": "4b46fa7a8375a87e36b84db7a09934e215a91cbb5355d18b74683e553c2832e7",
+              "kind": "log_span",
+              "evidence_id": "0b506f29-6b6c-473f-9aee-15e8c4d6d297",
+              "support_kind": "direct_quote"
+            },
+            {
+              "corpus_id": "2795c1d6-a5f4-5c8d-a773-4ac724d10e99",
+              "record_id": "aviation:104469",
+              "field": "ACTION",
+              "start": 0,
+              "end": 19,
+              "quote": "STOP DRILLED CRACK.",
+              "source_sha256": "4b46fa7a8375a87e36b84db7a09934e215a91cbb5355d18b74683e553c2832e7",
+              "kind": "log_span",
+              "evidence_id": "59e02f39-e889-4d26-8e33-b206baa52f83",
+              "support_kind": "direct_quote"
+            },
+            {
+              "corpus_id": "2795c1d6-a5f4-5c8d-a773-4ac724d10e99",
+              "record_id": "aviation:101844",
+              "field": "ACTION",
+              "start": 0,
+              "end": 19,
+              "quote": "STOP DRILLED CRACK.",
+              "source_sha256": "4b46fa7a8375a87e36b84db7a09934e215a91cbb5355d18b74683e553c2832e7",
+              "kind": "log_span",
+              "evidence_id": "1d736fdf-1501-4efa-8325-5519e86a7fbf",
+              "support_kind": "direct_quote"
+            }
+          ]
+        }
+      ],
+      "limitations": [
+        "Historical maintenance records lack operational context and model identity; applicability to your aircraft is not certified.",
+        "Maintenance records report historical actions as written and do not guarantee repair success or approved procedure."
+      ],
+      "missing": [],
+      "clarification": null,
+      "visual_refs": [],
+      "allowed_actions": [
+        {
+          "action": "hypothesis",
+          "parent_answer_id": "d9268c2e-54b3-4582-a2be-290cebd7b9ee",
+          "state_revision": 0
+        },
+        {
+          "action": "challenge",
+          "parent_answer_id": "d9268c2e-54b3-4582-a2be-290cebd7b9ee",
+          "state_revision": 0
+        },
+        {
+          "action": "sensitivity",
+          "parent_answer_id": "d9268c2e-54b3-4582-a2be-290cebd7b9ee",
+          "state_revision": 0
+        },
+        {
+          "action": "handover",
+          "parent_answer_id": "d9268c2e-54b3-4582-a2be-290cebd7b9ee",
+          "state_revision": 0
+        },
+        {
+          "action": "distinguish",
+          "parent_answer_id": "d9268c2e-54b3-4582-a2be-290cebd7b9ee",
+          "state_revision": 0
+        }
+      ],
+      "summary": "Historical record aviation:100614 reports: \"CRACK IN RIGHT FRONT BAFFLE.\". Its recorded action is: \"STOP DRILLED CRACK.\".",
+      "what_can_be_concluded": [
+        "Historical record aviation:100614 reports: &quot;CRACK IN RIGHT FRONT BAFFLE.&quot;. Its recorded action is: &quot;STOP DRILLED CRACK.&quot;.",
+        "Historical record aviation:100043 reports: &quot;TOP L/H BAFFLE HAS A CRACK.&quot;. Its recorded action is: &quot;STOP DRILLED CRACK.&quot;."
+      ],
+      "what_cannot_be_concluded": [
+        "These historical records do not establish the cause, repair effectiveness, aircraft identity, or applicability to your aircraft.",
+        "They do not supply approved maintenance instructions, operational clearance, or proof that the aircraft is safe to fly."
+      ],
+      "synthesis_evidence_ids": [
+        "983a2e47-8b7d-465c-a9e9-3f0a398b5e14",
+        "e7598845-6520-4a82-9c9a-b5a4d7b8e368",
+        "758db39a-9bc8-443f-a250-e19f2f09066b",
+        "e166106c-25c4-4bd0-814c-8bf95d105b82"
+      ],
+      "generation": {
+        "status": "not_requested",
+        "prompt_version": "evidence-selection/v2",
+        "effective_model": null,
+        "fallback_reason": "extractive_selected",
+        "requested_model": "extractive/v1"
+      }
+    },
+    "run_id": "bc1eee90-5ae3-42aa-a75b-3da1e0a767d5"
+  },
+  {
+    "repeat": 3,
+    "query": "baffle cracking",
+    "expected": "supported_historical",
+    "answer": {
+      "answer_id": "f207fd88-c937-4289-860d-8413a322a0ff",
+      "run_id": "6a0401d6-a6bb-4752-bfcc-e5216e49f907",
+      "mode": "EVIDENCE",
+      "status": "supported_historical",
+      "headline": "Found 6 relevant historical maintenance record(s) matching complaint.",
+      "claims": [
+        {
+          "claim_id": "claim-prob-1",
+          "text": "Record aviation:103361 records problem: \"#3 BAFFLE CRACKED.\"",
+          "claim_type": "historical_problem",
+          "supports": [
+            {
+              "corpus_id": "2795c1d6-a5f4-5c8d-a773-4ac724d10e99",
+              "record_id": "aviation:103361",
+              "field": "PROBLEM",
+              "start": 0,
+              "end": 18,
+              "quote": "#3 BAFFLE CRACKED.",
+              "source_sha256": "4706d075841bedd39f80759f0f9c353688b95f1475cbd240c831e0528cc83767",
+              "kind": "log_span",
+              "evidence_id": "88a1961b-11ef-49fc-bf11-6eda0d88137d",
+              "support_kind": "direct_quote"
+            }
+          ]
+        },
+        {
+          "claim_id": "claim-prob-2",
+          "text": "Record aviation:100614 records problem: \"CRACK IN RIGHT FRONT BAFFLE.\"",
+          "claim_type": "historical_problem",
+          "supports": [
+            {
+              "corpus_id": "2795c1d6-a5f4-5c8d-a773-4ac724d10e99",
+              "record_id": "aviation:100614",
+              "field": "PROBLEM",
+              "start": 0,
+              "end": 28,
+              "quote": "CRACK IN RIGHT FRONT BAFFLE.",
+              "source_sha256": "ce79f60a2ff691d32657a2e950dee5d9ed509a4200d1049b66197327ad8661ee",
+              "kind": "log_span",
+              "evidence_id": "cf6c2a73-0397-4838-abf2-97883b4732d4",
+              "support_kind": "direct_quote"
+            }
+          ]
+        },
+        {
+          "claim_id": "claim-prob-3",
+          "text": "Record aviation:105397 records problem: \"#1 BAFFLE IS CRACKED.\"",
+          "claim_type": "historical_problem",
+          "supports": [
+            {
+              "corpus_id": "2795c1d6-a5f4-5c8d-a773-4ac724d10e99",
+              "record_id": "aviation:105397",
+              "field": "PROBLEM",
+              "start": 0,
+              "end": 21,
+              "quote": "#1 BAFFLE IS CRACKED.",
+              "source_sha256": "d6847c2b5aeb0305f529119143e9e05fca339960e7e9ebbbdf04f8b2110602cf",
+              "kind": "log_span",
+              "evidence_id": "e0d8eba8-7138-4039-9e58-6ec201064871",
+              "support_kind": "direct_quote"
+            }
+          ]
+        },
+        {
+          "claim_id": "claim-prob-4",
+          "text": "Record aviation:102922 records problem: \"AFT L/H BAFFLE IS CRACKED.\"",
+          "claim_type": "historical_problem",
+          "supports": [
+            {
+              "corpus_id": "2795c1d6-a5f4-5c8d-a773-4ac724d10e99",
+              "record_id": "aviation:102922",
+              "field": "PROBLEM",
+              "start": 0,
+              "end": 26,
+              "quote": "AFT L/H BAFFLE IS CRACKED.",
+              "source_sha256": "4a6c9e898776a9f8bace8474098474e815ebceff7887a01cf28a5a6940678e2a",
+              "kind": "log_span",
+              "evidence_id": "49a6628a-6f3a-4789-8cf1-6f07a3eec82e",
+              "support_kind": "direct_quote"
+            }
+          ]
+        },
+        {
+          "claim_id": "claim-prob-5",
+          "text": "Record aviation:101882 records problem: \"#3 AFT BAFFLE CRACKED.\"",
+          "claim_type": "historical_problem",
+          "supports": [
+            {
+              "corpus_id": "2795c1d6-a5f4-5c8d-a773-4ac724d10e99",
+              "record_id": "aviation:101882",
+              "field": "PROBLEM",
+              "start": 0,
+              "end": 22,
+              "quote": "#3 AFT BAFFLE CRACKED.",
+              "source_sha256": "60e7d7f19824f92999a193499dbc8b35d98cba6dae8a55bb21699629b71c3842",
+              "kind": "log_span",
+              "evidence_id": "8c8281e8-17b4-49c4-88be-2fb3349678a7",
+              "support_kind": "direct_quote"
+            },
+            {
+              "corpus_id": "2795c1d6-a5f4-5c8d-a773-4ac724d10e99",
+              "record_id": "aviation:103010",
+              "field": "PROBLEM",
+              "start": 0,
+              "end": 22,
+              "quote": "#3 AFT BAFFLE CRACKED.",
+              "source_sha256": "60e7d7f19824f92999a193499dbc8b35d98cba6dae8a55bb21699629b71c3842",
+              "kind": "log_span",
+              "evidence_id": "09de7576-fc1b-4955-a022-0dc2b56bf955",
+              "support_kind": "direct_quote"
+            }
+          ]
+        },
+        {
+          "claim_id": "claim-act-6",
+          "text": "Record aviation:103361 records corrective action: \"STOP DRILLED CRACK IN #3 ENG BAFFLE.\"",
+          "claim_type": "historical_action",
+          "supports": [
+            {
+              "corpus_id": "2795c1d6-a5f4-5c8d-a773-4ac724d10e99",
+              "record_id": "aviation:103361",
+              "field": "ACTION",
+              "start": 0,
+              "end": 36,
+              "quote": "STOP DRILLED CRACK IN #3 ENG BAFFLE.",
+              "source_sha256": "badfbe4f0ab65f6fc70ac318a1783dddf92995f7579f7dc84475fb83f4525704",
+              "kind": "log_span",
+              "evidence_id": "705f6dd1-12a5-4301-9659-0f73d7fe70b3",
+              "support_kind": "direct_quote"
+            }
+          ]
+        },
+        {
+          "claim_id": "claim-act-7",
+          "text": "Record aviation:100614 records corrective action: \"STOP DRILLED CRACK.\"",
+          "claim_type": "historical_action",
+          "supports": [
+            {
+              "corpus_id": "2795c1d6-a5f4-5c8d-a773-4ac724d10e99",
+              "record_id": "aviation:100614",
+              "field": "ACTION",
+              "start": 0,
+              "end": 19,
+              "quote": "STOP DRILLED CRACK.",
+              "source_sha256": "4b46fa7a8375a87e36b84db7a09934e215a91cbb5355d18b74683e553c2832e7",
+              "kind": "log_span",
+              "evidence_id": "aa52202c-2d3a-42f9-9837-f127e7a0af24",
+              "support_kind": "direct_quote"
+            },
+            {
+              "corpus_id": "2795c1d6-a5f4-5c8d-a773-4ac724d10e99",
+              "record_id": "aviation:101882",
+              "field": "ACTION",
+              "start": 0,
+              "end": 19,
+              "quote": "STOP DRILLED CRACK.",
+              "source_sha256": "4b46fa7a8375a87e36b84db7a09934e215a91cbb5355d18b74683e553c2832e7",
+              "kind": "log_span",
+              "evidence_id": "366665a5-6484-4b5c-99e4-d03950a4e406",
+              "support_kind": "direct_quote"
+            }
+          ]
+        },
+        {
+          "claim_id": "claim-act-8",
+          "text": "Record aviation:105397 records corrective action: \"FABRICATED & INSTALLED PATCH ON BAFFLE W/ LIKE MATERIAL\"",
+          "claim_type": "historical_action",
+          "supports": [
+            {
+              "corpus_id": "2795c1d6-a5f4-5c8d-a773-4ac724d10e99",
+              "record_id": "aviation:105397",
+              "field": "ACTION",
+              "start": 0,
+              "end": 55,
+              "quote": "FABRICATED & INSTALLED PATCH ON BAFFLE W/ LIKE MATERIAL",
+              "source_sha256": "9a5eef77ac46f3c7dc6704041f873a978a35e7920a98ef168aeff7aa2e4ee7da",
+              "kind": "log_span",
+              "evidence_id": "fc6cf381-a9fd-4efb-96de-3929d460b869",
+              "support_kind": "direct_quote"
+            }
+          ]
+        },
+        {
+          "claim_id": "claim-act-9",
+          "text": "Record aviation:102922 records corrective action: \"FABRICATED PATCH FROM LIKE MATERIAL & RIVETED IAW\"",
+          "claim_type": "historical_action",
+          "supports": [
+            {
+              "corpus_id": "2795c1d6-a5f4-5c8d-a773-4ac724d10e99",
+              "record_id": "aviation:102922",
+              "field": "ACTION",
+              "start": 0,
+              "end": 49,
+              "quote": "FABRICATED PATCH FROM LIKE MATERIAL & RIVETED IAW",
+              "source_sha256": "f0c8e81818676850e20ee024486f8fb768bf28ed32e320d101a79d9771528bc4",
+              "kind": "log_span",
+              "evidence_id": "23d53518-a8a9-43b8-9812-ecec6270ac6e",
+              "support_kind": "direct_quote"
+            }
+          ]
+        },
+        {
+          "claim_id": "claim-act-10",
+          "text": "Record aviation:103010 records corrective action: \"INSTALLED PATCH MADE OF LIKE MATERIAL.\"",
+          "claim_type": "historical_action",
+          "supports": [
+            {
+              "corpus_id": "2795c1d6-a5f4-5c8d-a773-4ac724d10e99",
+              "record_id": "aviation:103010",
+              "field": "ACTION",
+              "start": 0,
+              "end": 38,
+              "quote": "INSTALLED PATCH MADE OF LIKE MATERIAL.",
+              "source_sha256": "72f2d222958d960a4921e54941e0c254199ab6bce64111e04901c4e4dd8890f7",
+              "kind": "log_span",
+              "evidence_id": "600601b6-932c-4b3d-a723-d62972e6abfd",
+              "support_kind": "direct_quote"
+            }
+          ]
+        }
+      ],
+      "limitations": [
+        "Historical maintenance records lack operational context and model identity; applicability to your aircraft is not certified.",
+        "Maintenance records report historical actions as written and do not guarantee repair success or approved procedure."
+      ],
+      "missing": [],
+      "clarification": null,
+      "visual_refs": [],
+      "allowed_actions": [
+        {
+          "action": "hypothesis",
+          "parent_answer_id": "f207fd88-c937-4289-860d-8413a322a0ff",
+          "state_revision": 0
+        },
+        {
+          "action": "challenge",
+          "parent_answer_id": "f207fd88-c937-4289-860d-8413a322a0ff",
+          "state_revision": 0
+        },
+        {
+          "action": "sensitivity",
+          "parent_answer_id": "f207fd88-c937-4289-860d-8413a322a0ff",
+          "state_revision": 0
+        },
+        {
+          "action": "handover",
+          "parent_answer_id": "f207fd88-c937-4289-860d-8413a322a0ff",
+          "state_revision": 0
+        },
+        {
+          "action": "distinguish",
+          "parent_answer_id": "f207fd88-c937-4289-860d-8413a322a0ff",
+          "state_revision": 0
+        }
+      ],
+      "summary": "Historical record aviation:103361 reports: \"#3 BAFFLE CRACKED.\". Its recorded action is: \"STOP DRILLED CRACK IN #3 ENG BAFFLE.\".",
+      "what_can_be_concluded": [
+        "Historical record aviation:103361 reports: &quot;#3 BAFFLE CRACKED.&quot;. Its recorded action is: &quot;STOP DRILLED CRACK IN #3 ENG BAFFLE.&quot;.",
+        "Historical record aviation:100614 reports: &quot;CRACK IN RIGHT FRONT BAFFLE.&quot;. Its recorded action is: &quot;STOP DRILLED CRACK.&quot;."
+      ],
+      "what_cannot_be_concluded": [
+        "These historical records do not establish the cause, repair effectiveness, aircraft identity, or applicability to your aircraft.",
+        "They do not supply approved maintenance instructions, operational clearance, or proof that the aircraft is safe to fly."
+      ],
+      "synthesis_evidence_ids": [
+        "88a1961b-11ef-49fc-bf11-6eda0d88137d",
+        "705f6dd1-12a5-4301-9659-0f73d7fe70b3",
+        "cf6c2a73-0397-4838-abf2-97883b4732d4",
+        "aa52202c-2d3a-42f9-9837-f127e7a0af24"
+      ],
+      "generation": {
+        "status": "not_requested",
+        "prompt_version": "evidence-selection/v2",
+        "effective_model": null,
+        "fallback_reason": "extractive_selected",
+        "requested_model": "extractive/v1"
+      }
+    },
+    "run_id": "6a0401d6-a6bb-4752-bfcc-e5216e49f907"
+  },
+  {
+    "repeat": 3,
+    "query": "R/H engine forward alternator attachment bolt loose.",
+    "expected": "supported_historical",
+    "answer": {
+      "answer_id": "702ac5aa-014f-4785-8021-20c4d1965f5c",
+      "run_id": "a42e7b9d-99d6-4162-a718-91e035d3ec3e",
+      "mode": "EVIDENCE",
+      "status": "supported_historical",
+      "headline": "Found 1 relevant historical maintenance record(s) matching complaint.",
+      "claims": [
+        {
+          "claim_id": "claim-prob-1",
+          "text": "Record aviation:100033 records problem: \"R/H ENG FWD ALT ATTACH BOLT LOOSE.\"",
+          "claim_type": "historical_problem",
+          "supports": [
+            {
+              "corpus_id": "2795c1d6-a5f4-5c8d-a773-4ac724d10e99",
+              "record_id": "aviation:100033",
+              "field": "PROBLEM",
+              "start": 0,
+              "end": 34,
+              "quote": "R/H ENG FWD ALT ATTACH BOLT LOOSE.",
+              "source_sha256": "07857b4281c29b2c03bf557acae6ef579ba84c51bdcd04efa00bccc6bd12bf50",
+              "kind": "log_span",
+              "evidence_id": "0f355ddc-6bfa-4d73-bdff-b484bb0f85fd",
+              "support_kind": "direct_quote"
+            }
+          ]
+        },
+        {
+          "claim_id": "claim-act-2",
+          "text": "Record aviation:100033 records corrective action: \"SECURED ALT ATTACH BOLT & RESAFETIED.\"",
+          "claim_type": "historical_action",
+          "supports": [
+            {
+              "corpus_id": "2795c1d6-a5f4-5c8d-a773-4ac724d10e99",
+              "record_id": "aviation:100033",
+              "field": "ACTION",
+              "start": 0,
+              "end": 37,
+              "quote": "SECURED ALT ATTACH BOLT & RESAFETIED.",
+              "source_sha256": "4e37157ee52003d6a03c27df0988b5543ba129ab0fa3d04ea020934882572e14",
+              "kind": "log_span",
+              "evidence_id": "70335507-23d4-49a5-8ee6-186775778738",
+              "support_kind": "direct_quote"
+            }
+          ]
+        }
+      ],
+      "limitations": [
+        "Historical maintenance records lack operational context and model identity; applicability to your aircraft is not certified.",
+        "Maintenance records report historical actions as written and do not guarantee repair success or approved procedure."
+      ],
+      "missing": [],
+      "clarification": null,
+      "visual_refs": [
+        "engine_left",
+        "intake_system"
+      ],
+      "allowed_actions": [
+        {
+          "action": "hypothesis",
+          "parent_answer_id": "702ac5aa-014f-4785-8021-20c4d1965f5c",
+          "state_revision": 0
+        },
+        {
+          "action": "challenge",
+          "parent_answer_id": "702ac5aa-014f-4785-8021-20c4d1965f5c",
+          "state_revision": 0
+        },
+        {
+          "action": "sensitivity",
+          "parent_answer_id": "702ac5aa-014f-4785-8021-20c4d1965f5c",
+          "state_revision": 0
+        },
+        {
+          "action": "handover",
+          "parent_answer_id": "702ac5aa-014f-4785-8021-20c4d1965f5c",
+          "state_revision": 0
+        }
+      ],
+      "summary": "Historical record aviation:100033 reports: \"R/H ENG FWD ALT ATTACH BOLT LOOSE.\". Its recorded action is: \"SECURED ALT ATTACH BOLT & RESAFETIED.\".",
+      "what_can_be_concluded": [
+        "Historical record aviation:100033 reports: &quot;R/H ENG FWD ALT ATTACH BOLT LOOSE.&quot;. Its recorded action is: &quot;SECURED ALT ATTACH BOLT &amp; RESAFETIED.&quot;."
+      ],
+      "what_cannot_be_concluded": [
+        "These historical records do not establish the cause, repair effectiveness, aircraft identity, or applicability to your aircraft.",
+        "They do not supply approved maintenance instructions, operational clearance, or proof that the aircraft is safe to fly."
+      ],
+      "synthesis_evidence_ids": [
+        "0f355ddc-6bfa-4d73-bdff-b484bb0f85fd",
+        "70335507-23d4-49a5-8ee6-186775778738"
+      ],
+      "generation": {
+        "status": "not_requested",
+        "prompt_version": "evidence-selection/v2",
+        "effective_model": null,
+        "fallback_reason": "extractive_selected",
+        "requested_model": "extractive/v1"
+      }
+    },
+    "run_id": "a42e7b9d-99d6-4162-a718-91e035d3ec3e"
+  },
+  {
+    "repeat": 3,
+    "query": "#3 brake is missing a screw.",
+    "expected": "supported_historical",
+    "answer": {
+      "answer_id": "139a6b8b-5a14-438a-92e2-c130dc83b74a",
+      "run_id": "7b7dd5f4-38f7-4ef7-a8f7-a1b535b0024b",
+      "mode": "EVIDENCE",
+      "status": "supported_historical",
+      "headline": "Found 1 relevant historical maintenance record(s) matching complaint.",
+      "claims": [
+        {
+          "claim_id": "claim-prob-1",
+          "text": "Record aviation:100045 records problem: \"#3 BRAKE MISSING SCREW.\"",
+          "claim_type": "historical_problem",
+          "supports": [
+            {
+              "corpus_id": "2795c1d6-a5f4-5c8d-a773-4ac724d10e99",
+              "record_id": "aviation:100045",
+              "field": "PROBLEM",
+              "start": 0,
+              "end": 23,
+              "quote": "#3 BRAKE MISSING SCREW.",
+              "source_sha256": "a7e95d1a1200ca16c6462f638cd38fa7e6b6d037fe513f040daee23a29803be3",
+              "kind": "log_span",
+              "evidence_id": "4207f52a-fb3e-4cbf-9e8c-f62c33eaae0d",
+              "support_kind": "direct_quote"
+            }
+          ]
+        },
+        {
+          "claim_id": "claim-act-2",
+          "text": "Record aviation:100045 records corrective action: \"REPLACED SCREW.\"",
+          "claim_type": "historical_action",
+          "supports": [
+            {
+              "corpus_id": "2795c1d6-a5f4-5c8d-a773-4ac724d10e99",
+              "record_id": "aviation:100045",
+              "field": "ACTION",
+              "start": 0,
+              "end": 15,
+              "quote": "REPLACED SCREW.",
+              "source_sha256": "ec84ceb363f4011e52e0bee4250549c058810709ab4f2a37e58c20db3cffb6be",
+              "kind": "log_span",
+              "evidence_id": "4a97b841-feb7-4743-b436-3a5850bc7425",
+              "support_kind": "direct_quote"
+            }
+          ]
+        }
+      ],
+      "limitations": [
+        "Historical maintenance records lack operational context and model identity; applicability to your aircraft is not certified.",
+        "Maintenance records report historical actions as written and do not guarantee repair success or approved procedure."
+      ],
+      "missing": [],
+      "clarification": null,
+      "visual_refs": [],
+      "allowed_actions": [
+        {
+          "action": "hypothesis",
+          "parent_answer_id": "139a6b8b-5a14-438a-92e2-c130dc83b74a",
+          "state_revision": 0
+        },
+        {
+          "action": "challenge",
+          "parent_answer_id": "139a6b8b-5a14-438a-92e2-c130dc83b74a",
+          "state_revision": 0
+        },
+        {
+          "action": "sensitivity",
+          "parent_answer_id": "139a6b8b-5a14-438a-92e2-c130dc83b74a",
+          "state_revision": 0
+        },
+        {
+          "action": "handover",
+          "parent_answer_id": "139a6b8b-5a14-438a-92e2-c130dc83b74a",
+          "state_revision": 0
+        }
+      ],
+      "summary": "Historical record aviation:100045 reports: \"#3 BRAKE MISSING SCREW.\". Its recorded action is: \"REPLACED SCREW.\".",
+      "what_can_be_concluded": [
+        "Historical record aviation:100045 reports: &quot;#3 BRAKE MISSING SCREW.&quot;. Its recorded action is: &quot;REPLACED SCREW.&quot;."
+      ],
+      "what_cannot_be_concluded": [
+        "These historical records do not establish the cause, repair effectiveness, aircraft identity, or applicability to your aircraft.",
+        "They do not supply approved maintenance instructions, operational clearance, or proof that the aircraft is safe to fly."
+      ],
+      "synthesis_evidence_ids": [
+        "4207f52a-fb3e-4cbf-9e8c-f62c33eaae0d",
+        "4a97b841-feb7-4743-b436-3a5850bc7425"
+      ],
+      "generation": {
+        "status": "not_requested",
+        "prompt_version": "evidence-selection/v2",
+        "effective_model": null,
+        "fallback_reason": "extractive_selected",
+        "requested_model": "extractive/v1"
+      }
+    },
+    "run_id": "7b7dd5f4-38f7-4ef7-a8f7-a1b535b0024b"
+  },
+  {
+    "repeat": 3,
+    "query": "Right main gear brake pedal feels soft and spongy",
+    "expected": "insufficient_evidence",
+    "answer": {
+      "answer_id": "d30e67d1-f65d-4507-ba75-380825cf17f9",
+      "run_id": "49dbd607-8985-439d-bd96-130e4f6b947e",
+      "mode": "EVIDENCE",
+      "status": "insufficient_evidence",
+      "headline": "No historical maintenance records found matching this fault complaint.",
+      "claims": [],
+      "limitations": [
+        "Historical maintenance records lack operational context and model identity; applicability to your aircraft is not certified.",
+        "Maintenance records report historical actions as written and do not guarantee repair success or approved procedure."
+      ],
+      "missing": [
+        "No matching records found in authorized corpus."
+      ],
+      "clarification": null,
+      "visual_refs": [],
+      "allowed_actions": [],
+      "summary": "Insufficient evidence: retrieved candidates do not establish a matching complaint in the authorized records. This does not prove that the fault is absent or identify a repair.",
+      "what_can_be_concluded": [
+        "No evidence found for this complaint in the historical records."
+      ],
+      "what_cannot_be_concluded": [
+        "These historical records do not establish the cause, repair effectiveness, aircraft identity, or applicability to your aircraft.",
+        "They do not supply approved maintenance instructions, operational clearance, or proof that the aircraft is safe to fly."
+      ],
+      "synthesis_evidence_ids": [],
+      "generation": {
+        "status": "not_requested",
+        "prompt_version": "evidence-selection/v2",
+        "effective_model": null,
+        "fallback_reason": "no_matching_evidence",
+        "requested_model": "extractive/v1"
+      }
+    },
+    "run_id": "49dbd607-8985-439d-bd96-130e4f6b947e"
+  },
+  {
+    "repeat": 3,
+    "query": "CYL #99 intake leak",
+    "expected": "insufficient_evidence",
+    "answer": {
+      "answer_id": "c747df81-f6da-4435-a661-4a663f6d84bc",
+      "run_id": "a0e59e6a-acff-453f-a5de-50b2ebe12a09",
+      "mode": "EVIDENCE",
+      "status": "insufficient_evidence",
+      "headline": "No historical maintenance records found matching this fault complaint.",
+      "claims": [],
+      "limitations": [
+        "Historical maintenance records lack operational context and model identity; applicability to your aircraft is not certified.",
+        "Maintenance records report historical actions as written and do not guarantee repair success or approved procedure."
+      ],
+      "missing": [
+        "No matching records found in authorized corpus."
+      ],
+      "clarification": null,
+      "visual_refs": [],
+      "allowed_actions": [],
+      "summary": "Insufficient evidence: retrieved candidates do not establish a matching complaint in the authorized records. This does not prove that the fault is absent or identify a repair.",
+      "what_can_be_concluded": [
+        "No evidence found for this complaint in the historical records."
+      ],
+      "what_cannot_be_concluded": [
+        "These historical records do not establish the cause, repair effectiveness, aircraft identity, or applicability to your aircraft.",
+        "They do not supply approved maintenance instructions, operational clearance, or proof that the aircraft is safe to fly."
+      ],
+      "synthesis_evidence_ids": [],
+      "generation": {
+        "status": "not_requested",
+        "prompt_version": "evidence-selection/v2",
+        "effective_model": null,
+        "fallback_reason": "no_matching_evidence",
+        "requested_model": "extractive/v1"
+      }
+    },
+    "run_id": "a0e59e6a-acff-453f-a5de-50b2ebe12a09"
+  },
+  {
+    "repeat": 3,
+    "query": "baffle crack with unfamiliar actuator failure",
+    "expected": "insufficient_evidence",
+    "answer": {
+      "answer_id": "e99ea419-efe1-4465-8c28-107a130b09eb",
+      "run_id": "e968d197-ce9c-4dfa-a86f-481b24fbcd2b",
+      "mode": "EVIDENCE",
+      "status": "insufficient_evidence",
+      "headline": "No historical maintenance records found matching this fault complaint.",
+      "claims": [],
+      "limitations": [
+        "Historical maintenance records lack operational context and model identity; applicability to your aircraft is not certified.",
+        "Maintenance records report historical actions as written and do not guarantee repair success or approved procedure."
+      ],
+      "missing": [
+        "No matching records found in authorized corpus."
+      ],
+      "clarification": null,
+      "visual_refs": [],
+      "allowed_actions": [],
+      "summary": "Insufficient evidence: retrieved candidates do not establish a matching complaint in the authorized records. This does not prove that the fault is absent or identify a repair.",
+      "what_can_be_concluded": [
+        "No evidence found for this complaint in the historical records."
+      ],
+      "what_cannot_be_concluded": [
+        "These historical records do not establish the cause, repair effectiveness, aircraft identity, or applicability to your aircraft.",
+        "They do not supply approved maintenance instructions, operational clearance, or proof that the aircraft is safe to fly."
+      ],
+      "synthesis_evidence_ids": [],
+      "generation": {
+        "status": "not_requested",
+        "prompt_version": "evidence-selection/v2",
+        "effective_model": null,
+        "fallback_reason": "no_matching_evidence",
+        "requested_model": "extractive/v1"
+      }
+    },
+    "run_id": "e968d197-ce9c-4dfa-a86f-481b24fbcd2b"
+  },
+  {
+    "repeat": 3,
+    "query": "What is the approved torque specification in ft-lbs for the intake flange?",
+    "expected": "insufficient_evidence",
+    "answer": {
+      "answer_id": "1932aa84-4a40-4a3c-a1c2-16b2b47fcb1c",
+      "run_id": "a00f50e0-dd99-4b5d-bdf4-77cf6bda9d58",
+      "mode": "EVIDENCE",
+      "status": "insufficient_evidence",
+      "headline": "Requested specification or operational guarantee is not established by historical logs.",
+      "claims": [],
+      "limitations": [
+        "Historical logs do not establish approved specifications, repair instructions, or operational clearance.",
+        "Refer to official FAA-approved Aircraft Maintenance Manuals (AMM) for certified specifications."
+      ],
+      "missing": [
+        "Applicable approved documentation and qualified operational assessment are not present in these historical records.",
+        "No matching records found in authorized corpus."
+      ],
+      "clarification": null,
+      "visual_refs": [],
+      "allowed_actions": [],
+      "summary": "Insufficient evidence: retrieved candidates do not establish a matching complaint in the authorized records. This does not prove that the fault is absent or identify a repair.",
+      "what_can_be_concluded": [
+        "No evidence found for this complaint in the historical records."
+      ],
+      "what_cannot_be_concluded": [
+        "These historical records do not establish the cause, repair effectiveness, aircraft identity, or applicability to your aircraft.",
+        "They do not supply approved maintenance instructions, operational clearance, or proof that the aircraft is safe to fly."
+      ],
+      "synthesis_evidence_ids": [],
+      "generation": {
+        "status": "not_requested",
+        "prompt_version": "evidence-selection/v2",
+        "effective_model": null,
+        "fallback_reason": "outside_log_authority",
+        "requested_model": "extractive/v1"
+      }
+    },
+    "run_id": "a00f50e0-dd99-4b5d-bdf4-77cf6bda9d58"
+  },
+  {
+    "repeat": 3,
+    "query": "Is the aircraft safe to fly after this intake leak?",
+    "expected": "insufficient_evidence",
+    "answer": {
+      "answer_id": "ce37e8e6-fe2a-48cf-a324-5f6456cf418e",
+      "run_id": "e847f83c-00fb-4082-b328-83dd2734578c",
+      "mode": "EVIDENCE",
+      "status": "insufficient_evidence",
+      "headline": "Requested specification or operational guarantee is not established by historical logs.",
+      "claims": [],
+      "limitations": [
+        "Historical logs do not establish approved specifications, repair instructions, or operational clearance.",
+        "Refer to official FAA-approved Aircraft Maintenance Manuals (AMM) for certified specifications."
+      ],
+      "missing": [
+        "Applicable approved documentation and qualified operational assessment are not present in these historical records.",
+        "No matching records found in authorized corpus."
+      ],
+      "clarification": null,
+      "visual_refs": [],
+      "allowed_actions": [],
+      "summary": "Insufficient evidence: retrieved candidates do not establish a matching complaint in the authorized records. This does not prove that the fault is absent or identify a repair.",
+      "what_can_be_concluded": [
+        "No evidence found for this complaint in the historical records."
+      ],
+      "what_cannot_be_concluded": [
+        "These historical records do not establish the cause, repair effectiveness, aircraft identity, or applicability to your aircraft.",
+        "They do not supply approved maintenance instructions, operational clearance, or proof that the aircraft is safe to fly."
+      ],
+      "synthesis_evidence_ids": [],
+      "generation": {
+        "status": "not_requested",
+        "prompt_version": "evidence-selection/v2",
+        "effective_model": null,
+        "fallback_reason": "outside_log_authority",
+        "requested_model": "extractive/v1"
+      }
+    },
+    "run_id": "e847f83c-00fb-4082-b328-83dd2734578c"
+  }
+]
