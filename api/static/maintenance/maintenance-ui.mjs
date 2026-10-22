@@ -238,7 +238,7 @@ function renderAnswer(answer, container) {
   if (container.querySelector(`[data-answer-id="${CSS.escape(answer.answer_id)}"]`)) return;
   const el = node('article', 'answer' + (answer.mode === 'HYPOTHESIS' ? ' hypothesis' : '')); el.dataset.answerId = answer.answer_id;
   el.append(node('div', 'answer-meta', `${answer.simulated ? 'SIMULATED · ' : ''}${answer.mode} · ${answer.status.replaceAll('_', ' ')}`), node('h3', '', answer.headline));
-  claimList('What the records report', answer.findings, el); claimList('Actions recorded in history', answer.historical_actions, el);
+  claimList('What these cases describe', answer.findings, el); claimList('What was recorded next', answer.historical_actions, el);
   claimList('Contrasting cases', answer.contrasting_cases, el);
   // Hypotheses are rendered only inside a server-authorized HYPOTHESIS envelope.
   if (answer.mode === 'HYPOTHESIS') textList('Unverified reasoning', answer.hypotheses, el);
@@ -347,7 +347,7 @@ async function sendMessage(text) {
   try {
     const run = await api.message(state.session.session_id, { message: text, model: $('agentModelSelect').value,
       search_spec: searchSpec(text), idempotency_key: uid(), expected_revision: state.session.revision });
-    state.session.revision = run.session_revision; userMessage(text); state.turn = newTurn(); $('chatInput').value = ''; $('heroInput').value = '';
+    state.session.revision = run.session_revision; $('chatSection').scrollIntoView({ behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'instant' : 'smooth', block: 'start' }); userMessage(text); state.turn = newTurn(); $('chatInput').value = ''; $('heroInput').value = '';
     await watchRun(run.run_id);
   } catch (error) {
     setBusy(false);
@@ -446,10 +446,10 @@ $('storyBtn').addEventListener('click', () => {
   const body = panel('How Maintenance Atlas works', 'Evidence before explanation');
   for (const text of ['Search retrieves source records; deterministic services handle filtering, deduplication and calculations.', 'The LLM drafts narrow claims from fetched evidence. The server checks the claims before releasing an answer.', 'User observations, historical reports and missing information remain separate. Possible solutions require your explicit click.', demo ? 'This preview plays invented UI fixtures. It runs no search model, language model or production validator.' : 'No generated draft or private model reasoning is streamed into the conversation.']) body.append(node('p', 'helper', text));
 });
-$('explorerBtn').addEventListener('click', () => { const toggle = document.querySelector('[data-drawer="queryDrawer"]'); if ($('queryDrawer').hidden) toggle.click(); $('queryText').focus(); });
+$('explorerBtn').addEventListener('click', () => { const toggle = document.querySelector('[data-drawer="queryDrawer"]'); if ($('queryDrawer').hidden) toggle.click(); $('queryDrawer').scrollIntoView({block:'center',behavior:'smooth'}); $('queryText').focus({preventScroll:true}); });
 $('settingsBtn').addEventListener('click', () => {
   const body = panel('Settings', 'Server-confirmed capabilities');
-  body.append(node('p', 'helper', 'Choose the model in the chat toolbar and retrieval options in Advanced options. These apply to future runs. Provider credentials belong on the server.'), node('pre', '', JSON.stringify(state.capabilities, null, 2)));
+  body.append(node('p', 'helper', 'Choose the model in the chat toolbar and retrieval options in Advanced options. These apply to future runs. Provider credentials belong on the server.'), button('Open search preferences', () => { $('panelDialog').close(); const toggle = document.querySelector('[data-drawer="advancedDrawer"]'); if ($('advancedDrawer').hidden) toggle.click(); $('advancedDrawer').scrollIntoView({block:'center',behavior:'smooth'}); }, 'primary-btn'));
 });
 $('uploadBtn').addEventListener('click', () => $('fileInput').click());
 $('fileInput').addEventListener('change', () => protect(async () => {
