@@ -21,10 +21,28 @@ def test_maintenance_page_and_assets_served():
     assert resp.status_code == 200
     assert "Maintenance Atlas" in resp.text
     assert "atlas-workspace.css" in resp.text
+    assert '<base href="/maintenance/">' in resp.text
 
     resp_slash = client.get("/maintenance/")
     assert resp_slash.status_code == 200
     assert "Maintenance Atlas" in resp_slash.text
+
+    # Root redirect
+    root_resp = client.get("/", follow_redirects=False)
+    assert root_resp.status_code == 307
+    assert root_resp.headers["location"] == "/maintenance/"
+
+    # Check assets resolve via /maintenance/ prefix
+    css_maint = client.get("/maintenance/atlas-workspace.css")
+    assert css_maint.status_code == 200
+    assert "--teal-950" in css_maint.text or "atlas" in css_maint.text
+
+    # Check assets resolve via root fallback
+    css_root = client.get("/atlas-workspace.css")
+    assert css_root.status_code == 200
+
+    css_base = client.get("/talent-base.css")
+    assert css_base.status_code == 200
 
     # Check static modular CSS
     css_resp = client.get("/static/maintenance/atlas-workspace.css")

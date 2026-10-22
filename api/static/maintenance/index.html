@@ -2,11 +2,12 @@
 <html lang="en">
 <head>
   <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+  <base href="/maintenance/">
   <title>Maintenance Atlas — evidence copilot</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500;600&family=Newsreader:ital,wght@1,500&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="./talent-base.css"><link rel="stylesheet" href="./maintenance.css"><link rel="stylesheet" href="./atlas-workspace.css">
+  <link rel="stylesheet" href="/maintenance/talent-base.css"><link rel="stylesheet" href="/maintenance/maintenance.css"><link rel="stylesheet" href="/maintenance/atlas-workspace.css">
 </head>
 <body>
   <div class="talent-shell" id="shell">
@@ -122,5 +123,5 @@
   <dialog id="panelDialog" aria-labelledby="panelTitle"><div class="drawer-panel-head"><div><div class="results-eyebrow" id="panelEyebrow"></div><h2 id="panelTitle"></h2></div><button class="mini-btn" id="panelCloseBtn">close</button></div><div class="panel-body" id="panelBody"></div></dialog>
   <input type="file" id="fileInput" accept=".txt,.md,.pdf" hidden>
   <!-- One controller only. Never load talent.js or agent-panel.js alongside this. -->
-  <script type="module" src="./maintenance-ui.mjs"></script><script type="module" src="./workspace-navigation.mjs"></script>
+  <script type="module" src="/maintenance/maintenance-ui.mjs"></script><script type="module" src="/maintenance/workspace-navigation.mjs"></script>
 </body></html>

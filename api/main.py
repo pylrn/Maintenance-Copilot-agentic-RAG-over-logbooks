@@ -10,7 +10,7 @@ from pathlib import Path
 from uuid import UUID
 
 from fastapi import FastAPI
-from fastapi.responses import FileResponse, JSONResponse
+from fastapi.responses import FileResponse, JSONResponse, RedirectResponse
 from fastapi.staticfiles import StaticFiles
 from starlette.exceptions import HTTPException
 
@@ -225,6 +225,10 @@ def create_app(settings=None, search_engine=None):
             "reranker_available": bool(engine and engine.reranker),
         }
 
+    @app.get("/")
+    async def root():
+        return RedirectResponse("/maintenance/", status_code=307)
+
     @app.get("/maintenance")
     @app.get("/maintenance/")
     async def product():
@@ -266,6 +270,18 @@ def create_app(settings=None, search_engine=None):
                 "Expires": "0",
             },
         )
+
+    @app.get("/{file_name}")
+    async def root_fallback_asset(file_name: str):
+        maintenance_root = (ROOT / "api/static/maintenance").resolve()
+        asset_path = (maintenance_root / file_name).resolve()
+        if str(asset_path).startswith(str(maintenance_root)) and asset_path.is_file():
+            return FileResponse(asset_path)
+        static_root = (ROOT / "api/static").resolve()
+        static_asset = (static_root / file_name).resolve()
+        if str(static_asset).startswith(str(static_root)) and static_asset.is_file():
+            return FileResponse(static_asset)
+        raise HTTPException(404, "not_found")
 
     static = ROOT / "api/static"
     if static.is_dir():
