@@ -76,7 +76,8 @@ async def perform_action(
             model_id=model_id,
         )
 
-        hypo_env = hypo_service.generate_conceptual_hypothesis(
+        hypo_env = await hypo_service.generate_hypothesis_with_lm(
+            provider=provider,
             parent_answer=parent_answer,  # type: ignore
             query_raw=parent_answer.headline,
             run_id=run_id,
