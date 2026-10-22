@@ -1,0 +1,1 @@
+{"version":"baseline/v1","calibrated":false,"rrf_k":60,"weights":{"bm25_raw":0.5,"bm25_normalized":0.5,"dense":1.0},"note":"Compatibility tiers are relevance heuristics. No score is repair confidence. Thresholds require development evaluation."}

@@ -1,0 +1,16 @@
+{
+  "patterns": {
+    "raw_rows": 1678,
+    "distinct_pairs": 1054
+  },
+  "comparison_records": 2,
+  "sensitivity_changes": [
+    "number_removed"
+  ],
+  "receipt_hashes": [
+    "c08f5830240251eee87725d52e0fe32ef654151a97019c263ed469c944d8af14",
+    "09a1d3a0c3204a99e4de9ef406549c3105c0c061acfd5e7a6651ac0da154c895",
+    "157fc4d8b31910d6930ce4bbf9e74a94a6d366a9dbf99bae2caf750e6b11aa55"
+  ],
+  "claims": "Computations only; no model answer or diagnosis."
+}

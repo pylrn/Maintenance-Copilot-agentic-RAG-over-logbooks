@@ -1,0 +1,72 @@
+[
+  {
+    "protocol_version": "maintenance/v1",
+    "run_id": "56a23a36-52a3-404e-9d0b-5855ce7c4a52",
+    "sequence": 1,
+    "type": "run_started",
+    "created_at": "2026-10-21T18:49:38.049114Z",
+    "data": {
+      "fixture_only": true
+    }
+  },
+  {
+    "protocol_version": "maintenance/v1",
+    "run_id": "56a23a36-52a3-404e-9d0b-5855ce7c4a52",
+    "sequence": 2,
+    "type": "tool_started",
+    "created_at": "2026-10-21T18:49:38.049269Z",
+    "data": {
+      "fixture_only": true
+    }
+  },
+  {
+    "protocol_version": "maintenance/v1",
+    "run_id": "56a23a36-52a3-404e-9d0b-5855ce7c4a52",
+    "sequence": 3,
+    "type": "tool_completed",
+    "created_at": "2026-10-21T18:49:38.049270Z",
+    "data": {
+      "fixture_only": true
+    }
+  },
+  {
+    "protocol_version": "maintenance/v1",
+    "run_id": "56a23a36-52a3-404e-9d0b-5855ce7c4a52",
+    "sequence": 4,
+    "type": "evidence_ready",
+    "created_at": "2026-10-21T18:49:38.049272Z",
+    "data": {
+      "fixture_only": true
+    }
+  },
+  {
+    "protocol_version": "maintenance/v1",
+    "run_id": "56a23a36-52a3-404e-9d0b-5855ce7c4a52",
+    "sequence": 5,
+    "type": "validation_started",
+    "created_at": "2026-10-21T18:49:38.049273Z",
+    "data": {
+      "fixture_only": true
+    }
+  },
+  {
+    "protocol_version": "maintenance/v1",
+    "run_id": "56a23a36-52a3-404e-9d0b-5855ce7c4a52",
+    "sequence": 6,
+    "type": "answer_validated",
+    "created_at": "2026-10-21T18:49:38.049274Z",
+    "data": {
+      "fixture_only": true
+    }
+  },
+  {
+    "protocol_version": "maintenance/v1",
+    "run_id": "56a23a36-52a3-404e-9d0b-5855ce7c4a52",
+    "sequence": 7,
+    "type": "done",
+    "created_at": "2026-10-21T18:49:38.049275Z",
+    "data": {
+      "fixture_only": true
+    }
+  }
+]

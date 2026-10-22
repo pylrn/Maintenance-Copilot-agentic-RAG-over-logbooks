@@ -1,0 +1,28 @@
+{
+  "runtime": "Docker Linux ARM64, CPU",
+  "health": {
+    "ready": true,
+    "retrieval_ready": true,
+    "database_ready": true,
+    "workflows_ready": false,
+    "startup_errors": []
+  },
+  "aviation_search_status": 200,
+  "top_ids": [
+    "aviation:100188",
+    "aviation:100220",
+    "aviation:100375",
+    "aviation:101708",
+    "aviation:101803"
+  ],
+  "channels": [
+    "bm25_normalized",
+    "bm25_raw",
+    "dense"
+  ],
+  "source_lookup_status": 200,
+  "facility_search_status": 200,
+  "provider_configured": false,
+  "workflows_ready": false,
+  "ui_status": "person_two_ui_pending"
+}

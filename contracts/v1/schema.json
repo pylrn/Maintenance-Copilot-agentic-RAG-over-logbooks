@@ -1,0 +1,1719 @@
+{
+  "$defs": {
+    "ActionRequest": {
+      "additionalProperties": false,
+      "properties": {
+        "action": {
+          "enum": [
+            "challenge",
+            "distinguish",
+            "sensitivity",
+            "hypothesis",
+            "handover"
+          ],
+          "title": "Action",
+          "type": "string"
+        },
+        "parent_answer_id": {
+          "format": "uuid",
+          "title": "Parent Answer Id",
+          "type": "string"
+        },
+        "expected_revision": {
+          "minimum": 0,
+          "title": "Expected Revision",
+          "type": "integer"
+        },
+        "idempotency_key": {
+          "format": "uuid",
+          "title": "Idempotency Key",
+          "type": "string"
+        },
+        "parameters": {
+          "additionalProperties": true,
+          "title": "Parameters",
+          "type": "object"
+        }
+      },
+      "required": [
+        "action",
+        "parent_answer_id",
+        "expected_revision",
+        "idempotency_key"
+      ],
+      "title": "ActionRequest",
+      "type": "object"
+    },
+    "AllowedAction": {
+      "additionalProperties": false,
+      "properties": {
+        "action": {
+          "enum": [
+            "challenge",
+            "distinguish",
+            "sensitivity",
+            "hypothesis",
+            "handover"
+          ],
+          "title": "Action",
+          "type": "string"
+        },
+        "parent_answer_id": {
+          "format": "uuid",
+          "title": "Parent Answer Id",
+          "type": "string"
+        },
+        "state_revision": {
+          "minimum": 0,
+          "title": "State Revision",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "action",
+        "parent_answer_id",
+        "state_revision"
+      ],
+      "title": "AllowedAction",
+      "type": "object"
+    },
+    "AnswerEnvelope": {
+      "additionalProperties": false,
+      "properties": {
+        "answer_id": {
+          "format": "uuid",
+          "title": "Answer Id",
+          "type": "string"
+        },
+        "run_id": {
+          "format": "uuid",
+          "title": "Run Id",
+          "type": "string"
+        },
+        "mode": {
+          "enum": [
+            "EVIDENCE",
+            "HYPOTHESIS",
+            "CHALLENGE",
+            "SENSITIVITY",
+            "DISTINGUISH",
+            "HANDOVER"
+          ],
+          "title": "Mode",
+          "type": "string"
+        },
+        "status": {
+          "enum": [
+            "supported_historical",
+            "partial_evidence",
+            "clarification_needed",
+            "insufficient_evidence",
+            "retrieval_unavailable"
+          ],
+          "title": "Status",
+          "type": "string"
+        },
+        "headline": {
+          "title": "Headline",
+          "type": "string"
+        },
+        "claims": {
+          "items": {
+            "$ref": "#/$defs/Claim"
+          },
+          "title": "Claims",
+          "type": "array"
+        },
+        "limitations": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Limitations",
+          "type": "array"
+        },
+        "missing": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Missing",
+          "type": "array"
+        },
+        "clarification": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Clarification"
+        },
+        "visual_refs": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Visual Refs",
+          "type": "array"
+        },
+        "allowed_actions": {
+          "items": {
+            "$ref": "#/$defs/AllowedAction"
+          },
+          "title": "Allowed Actions",
+          "type": "array"
+        }
+      },
+      "required": [
+        "answer_id",
+        "run_id",
+        "mode",
+        "status",
+        "headline",
+        "claims"
+      ],
+      "title": "AnswerEnvelope",
+      "type": "object"
+    },
+    "BoardItem": {
+      "additionalProperties": false,
+      "properties": {
+        "item_id": {
+          "format": "uuid",
+          "title": "Item Id",
+          "type": "string"
+        },
+        "column": {
+          "enum": [
+            "known",
+            "reported",
+            "missing"
+          ],
+          "title": "Column",
+          "type": "string"
+        },
+        "text": {
+          "title": "Text",
+          "type": "string"
+        },
+        "origin": {
+          "enum": [
+            "user_report",
+            "historical_log",
+            "verified_document",
+            "schema_gap"
+          ],
+          "title": "Origin",
+          "type": "string"
+        },
+        "origin_ref": {
+          "title": "Origin Ref",
+          "type": "string"
+        },
+        "created_revision": {
+          "minimum": 0,
+          "title": "Created Revision",
+          "type": "integer"
+        },
+        "supersedes": {
+          "anyOf": [
+            {
+              "format": "uuid",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Supersedes"
+        },
+        "verification_status": {
+          "enum": [
+            "user_reported",
+            "source_validated",
+            "unresolved"
+          ],
+          "title": "Verification Status",
+          "type": "string"
+        },
+        "affected_component_ids": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Affected Component Ids",
+          "type": "array"
+        }
+      },
+      "required": [
+        "item_id",
+        "column",
+        "text",
+        "origin",
+        "origin_ref",
+        "created_revision",
+        "verification_status"
+      ],
+      "title": "BoardItem",
+      "type": "object"
+    },
+    "Claim": {
+      "additionalProperties": false,
+      "properties": {
+        "claim_id": {
+          "title": "Claim Id",
+          "type": "string"
+        },
+        "text": {
+          "title": "Text",
+          "type": "string"
+        },
+        "claim_type": {
+          "enum": [
+            "historical_problem",
+            "historical_action",
+            "reported_result",
+            "source_difference",
+            "count",
+            "sensitivity"
+          ],
+          "title": "Claim Type",
+          "type": "string"
+        },
+        "supports": {
+          "items": {
+            "discriminator": {
+              "mapping": {
+                "aggregate_receipt": "#/$defs/ReceiptSupport",
+                "log_span": "#/$defs/SupportSpan",
+                "search_comparison": "#/$defs/ReceiptSupport"
+              },
+              "propertyName": "kind"
+            },
+            "oneOf": [
+              {
+                "$ref": "#/$defs/SupportSpan"
+              },
+              {
+                "$ref": "#/$defs/ReceiptSupport"
+              }
+            ]
+          },
+          "minItems": 1,
+          "title": "Supports",
+          "type": "array"
+        }
+      },
+      "required": [
+        "claim_id",
+        "text",
+        "claim_type",
+        "supports"
+      ],
+      "title": "Claim",
+      "type": "object"
+    },
+    "Compatibility": {
+      "additionalProperties": false,
+      "properties": {
+        "tier": {
+          "enum": [
+            "direct",
+            "related",
+            "tangential"
+          ],
+          "title": "Tier",
+          "type": "string"
+        },
+        "facts": {
+          "additionalProperties": {
+            "enum": [
+              "agreement",
+              "difference",
+              "unknown"
+            ],
+            "type": "string"
+          },
+          "title": "Facts",
+          "type": "object"
+        },
+        "query_mentions": {
+          "items": {
+            "$ref": "#/$defs/Mention"
+          },
+          "title": "Query Mentions",
+          "type": "array"
+        },
+        "source_mentions": {
+          "items": {
+            "$ref": "#/$defs/Mention"
+          },
+          "title": "Source Mentions",
+          "type": "array"
+        },
+        "limitations": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Limitations",
+          "type": "array"
+        }
+      },
+      "required": [
+        "tier",
+        "facts"
+      ],
+      "title": "Compatibility",
+      "type": "object"
+    },
+    "ComponentContextEnvelope": {
+      "additionalProperties": false,
+      "properties": {
+        "component_id": {
+          "title": "Component Id",
+          "type": "string"
+        },
+        "name": {
+          "title": "Name",
+          "type": "string"
+        },
+        "explanation": {
+          "title": "Explanation",
+          "type": "string"
+        },
+        "citations": {
+          "items": {
+            "additionalProperties": true,
+            "type": "object"
+          },
+          "title": "Citations",
+          "type": "array"
+        },
+        "profile_revision": {
+          "title": "Profile Revision",
+          "type": "integer"
+        },
+        "applicability": {
+          "enum": [
+            "generic",
+            "applicable",
+            "unknown",
+            "mismatch"
+          ],
+          "title": "Applicability",
+          "type": "string"
+        },
+        "source_available": {
+          "title": "Source Available",
+          "type": "boolean"
+        },
+        "asset_mapping_ids": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Asset Mapping Ids",
+          "type": "array"
+        },
+        "related_log_ids": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Related Log Ids",
+          "type": "array"
+        }
+      },
+      "required": [
+        "component_id",
+        "name",
+        "explanation",
+        "citations",
+        "profile_revision",
+        "applicability",
+        "source_available",
+        "asset_mapping_ids",
+        "related_log_ids"
+      ],
+      "title": "ComponentContextEnvelope",
+      "type": "object"
+    },
+    "ComputationReceipt": {
+      "additionalProperties": false,
+      "properties": {
+        "kind": {
+          "enum": [
+            "aggregate",
+            "comparison",
+            "search_comparison"
+          ],
+          "title": "Kind",
+          "type": "string"
+        },
+        "parameters": {
+          "additionalProperties": true,
+          "title": "Parameters",
+          "type": "object"
+        },
+        "result": {
+          "additionalProperties": true,
+          "title": "Result",
+          "type": "object"
+        },
+        "corpus_ids": {
+          "items": {
+            "format": "uuid",
+            "type": "string"
+          },
+          "title": "Corpus Ids",
+          "type": "array"
+        },
+        "manifest_sha256": {
+          "title": "Manifest Sha256",
+          "type": "string"
+        },
+        "contributing_ids": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Contributing Ids",
+          "type": "array"
+        },
+        "validator_version": {
+          "default": "computation/v1",
+          "title": "Validator Version",
+          "type": "string"
+        }
+      },
+      "required": [
+        "kind",
+        "parameters",
+        "result",
+        "corpus_ids",
+        "manifest_sha256",
+        "contributing_ids"
+      ],
+      "title": "ComputationReceipt",
+      "type": "object"
+    },
+    "CorpusManifest": {
+      "additionalProperties": false,
+      "properties": {
+        "corpus_id": {
+          "format": "uuid",
+          "title": "Corpus Id",
+          "type": "string"
+        },
+        "domain": {
+          "enum": [
+            "aviation",
+            "facility"
+          ],
+          "title": "Domain",
+          "type": "string"
+        },
+        "sha256": {
+          "pattern": "^[0-9a-f]{64}$",
+          "title": "Sha256",
+          "type": "string"
+        },
+        "source_url": {
+          "title": "Source Url",
+          "type": "string"
+        },
+        "terms_note": {
+          "title": "Terms Note",
+          "type": "string"
+        },
+        "record_count": {
+          "minimum": 0,
+          "title": "Record Count",
+          "type": "integer"
+        },
+        "distinct_pairs": {
+          "minimum": 0,
+          "title": "Distinct Pairs",
+          "type": "integer"
+        },
+        "fields": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Fields",
+          "type": "array"
+        },
+        "parser_version": {
+          "default": "csv/v1",
+          "title": "Parser Version",
+          "type": "string"
+        },
+        "normalization_version": {
+          "default": "reviewed/v1",
+          "title": "Normalization Version",
+          "type": "string"
+        },
+        "catalog_revision": {
+          "default": "unreviewed/no-visual-mapping",
+          "title": "Catalog Revision",
+          "type": "string"
+        },
+        "warnings": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Warnings",
+          "type": "array"
+        }
+      },
+      "required": [
+        "corpus_id",
+        "domain",
+        "sha256",
+        "source_url",
+        "terms_note",
+        "record_count",
+        "distinct_pairs",
+        "fields"
+      ],
+      "title": "CorpusManifest",
+      "type": "object"
+    },
+    "DraftAnswer": {
+      "additionalProperties": false,
+      "properties": {
+        "proposed_status": {
+          "enum": [
+            "supported_historical",
+            "partial_evidence",
+            "clarification_needed",
+            "insufficient_evidence",
+            "retrieval_unavailable"
+          ],
+          "title": "Proposed Status",
+          "type": "string"
+        },
+        "findings": {
+          "items": {
+            "$ref": "#/$defs/Claim"
+          },
+          "title": "Findings",
+          "type": "array"
+        },
+        "historical_actions": {
+          "items": {
+            "$ref": "#/$defs/Claim"
+          },
+          "title": "Historical Actions",
+          "type": "array"
+        },
+        "contrasting_cases": {
+          "items": {
+            "$ref": "#/$defs/Claim"
+          },
+          "title": "Contrasting Cases",
+          "type": "array"
+        },
+        "gap_refs": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Gap Refs",
+          "type": "array"
+        },
+        "limitation_refs": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Limitation Refs",
+          "type": "array"
+        },
+        "clarification_ref": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Clarification Ref"
+        },
+        "component_refs": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Component Refs",
+          "type": "array"
+        }
+      },
+      "required": [
+        "proposed_status"
+      ],
+      "title": "DraftAnswer",
+      "type": "object"
+    },
+    "ErrorEnvelope": {
+      "additionalProperties": false,
+      "properties": {
+        "error": {
+          "title": "Error",
+          "type": "string"
+        },
+        "message": {
+          "title": "Message",
+          "type": "string"
+        },
+        "retryable": {
+          "default": false,
+          "title": "Retryable",
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "error",
+        "message"
+      ],
+      "title": "ErrorEnvelope",
+      "type": "object"
+    },
+    "EvidenceSpan": {
+      "additionalProperties": false,
+      "properties": {
+        "corpus_id": {
+          "format": "uuid",
+          "title": "Corpus Id",
+          "type": "string"
+        },
+        "record_id": {
+          "title": "Record Id",
+          "type": "string"
+        },
+        "field": {
+          "enum": [
+            "PROBLEM",
+            "ACTION",
+            "DESCRIPTION"
+          ],
+          "title": "Field",
+          "type": "string"
+        },
+        "start": {
+          "minimum": 0,
+          "title": "Start",
+          "type": "integer"
+        },
+        "end": {
+          "exclusiveMinimum": 0,
+          "title": "End",
+          "type": "integer"
+        },
+        "quote": {
+          "title": "Quote",
+          "type": "string"
+        },
+        "source_sha256": {
+          "description": "SHA256 of decoded raw field encoded as UTF-8",
+          "title": "Source Sha256",
+          "type": "string"
+        }
+      },
+      "required": [
+        "corpus_id",
+        "record_id",
+        "field",
+        "start",
+        "end",
+        "quote",
+        "source_sha256"
+      ],
+      "title": "EvidenceSpan",
+      "type": "object"
+    },
+    "HypothesisDraft": {
+      "additionalProperties": false,
+      "properties": {
+        "possible_explanations": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Possible Explanations",
+          "type": "array"
+        },
+        "basis": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Basis",
+          "type": "array"
+        },
+        "assumptions": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Assumptions",
+          "type": "array"
+        },
+        "information_needed": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Information Needed",
+          "type": "array"
+        },
+        "what_would_weaken_this": {
+          "items": {
+            "type": "string"
+          },
+          "title": "What Would Weaken This",
+          "type": "array"
+        },
+        "limits": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Limits",
+          "type": "array"
+        },
+        "historical_claims": {
+          "items": {
+            "$ref": "#/$defs/Claim"
+          },
+          "title": "Historical Claims",
+          "type": "array"
+        }
+      },
+      "required": [
+        "possible_explanations",
+        "basis",
+        "assumptions",
+        "information_needed",
+        "what_would_weaken_this",
+        "limits"
+      ],
+      "title": "HypothesisDraft",
+      "type": "object"
+    },
+    "HypothesisEnvelope": {
+      "additionalProperties": false,
+      "properties": {
+        "possible_explanations": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Possible Explanations",
+          "type": "array"
+        },
+        "basis": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Basis",
+          "type": "array"
+        },
+        "assumptions": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Assumptions",
+          "type": "array"
+        },
+        "information_needed": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Information Needed",
+          "type": "array"
+        },
+        "what_would_weaken_this": {
+          "items": {
+            "type": "string"
+          },
+          "title": "What Would Weaken This",
+          "type": "array"
+        },
+        "limits": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Limits",
+          "type": "array"
+        },
+        "historical_claims": {
+          "items": {
+            "$ref": "#/$defs/Claim"
+          },
+          "title": "Historical Claims",
+          "type": "array"
+        },
+        "answer_id": {
+          "format": "uuid",
+          "title": "Answer Id",
+          "type": "string"
+        },
+        "run_id": {
+          "format": "uuid",
+          "title": "Run Id",
+          "type": "string"
+        },
+        "parent_answer_id": {
+          "format": "uuid",
+          "title": "Parent Answer Id",
+          "type": "string"
+        },
+        "state_revision": {
+          "title": "State Revision",
+          "type": "integer"
+        },
+        "mode": {
+          "const": "HYPOTHESIS",
+          "default": "HYPOTHESIS",
+          "title": "Mode",
+          "type": "string"
+        },
+        "unverified": {
+          "const": true,
+          "default": true,
+          "title": "Unverified",
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "possible_explanations",
+        "basis",
+        "assumptions",
+        "information_needed",
+        "what_would_weaken_this",
+        "limits",
+        "answer_id",
+        "run_id",
+        "parent_answer_id",
+        "state_revision"
+      ],
+      "title": "HypothesisEnvelope",
+      "type": "object"
+    },
+    "Mention": {
+      "additionalProperties": false,
+      "properties": {
+        "value": {
+          "title": "Value",
+          "type": "string"
+        },
+        "text": {
+          "title": "Text",
+          "type": "string"
+        },
+        "start": {
+          "minimum": 0,
+          "title": "Start",
+          "type": "integer"
+        },
+        "end": {
+          "exclusiveMinimum": 0,
+          "title": "End",
+          "type": "integer"
+        },
+        "kind": {
+          "title": "Kind",
+          "type": "string"
+        }
+      },
+      "required": [
+        "value",
+        "text",
+        "start",
+        "end",
+        "kind"
+      ],
+      "title": "Mention",
+      "type": "object"
+    },
+    "MessageRequest": {
+      "additionalProperties": false,
+      "properties": {
+        "text": {
+          "maxLength": 10000,
+          "minLength": 1,
+          "title": "Text",
+          "type": "string"
+        },
+        "idempotency_key": {
+          "format": "uuid",
+          "title": "Idempotency Key",
+          "type": "string"
+        },
+        "expected_revision": {
+          "minimum": 0,
+          "title": "Expected Revision",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "text",
+        "idempotency_key",
+        "expected_revision"
+      ],
+      "title": "MessageRequest",
+      "type": "object"
+    },
+    "ParsedCorpus": {
+      "additionalProperties": false,
+      "properties": {
+        "manifest": {
+          "$ref": "#/$defs/CorpusManifest"
+        },
+        "records": {
+          "items": {
+            "$ref": "#/$defs/RecordSnapshot"
+          },
+          "title": "Records",
+          "type": "array"
+        }
+      },
+      "required": [
+        "manifest",
+        "records"
+      ],
+      "title": "ParsedCorpus",
+      "type": "object"
+    },
+    "PublicEvent": {
+      "additionalProperties": false,
+      "properties": {
+        "protocol_version": {
+          "const": "maintenance/v1",
+          "default": "maintenance/v1",
+          "title": "Protocol Version",
+          "type": "string"
+        },
+        "run_id": {
+          "format": "uuid",
+          "title": "Run Id",
+          "type": "string"
+        },
+        "sequence": {
+          "minimum": 1,
+          "title": "Sequence",
+          "type": "integer"
+        },
+        "type": {
+          "enum": [
+            "run_started",
+            "query_interpreted",
+            "search_started",
+            "search_completed",
+            "tool_started",
+            "tool_completed",
+            "evidence_ready",
+            "validation_started",
+            "board_updated",
+            "answer_validated",
+            "run_cancelled",
+            "run_failed",
+            "done"
+          ],
+          "title": "Type",
+          "type": "string"
+        },
+        "created_at": {
+          "format": "date-time",
+          "title": "Created At",
+          "type": "string"
+        },
+        "data": {
+          "additionalProperties": true,
+          "title": "Data",
+          "type": "object"
+        }
+      },
+      "required": [
+        "run_id",
+        "sequence",
+        "type",
+        "data"
+      ],
+      "title": "PublicEvent",
+      "type": "object"
+    },
+    "ReceiptSupport": {
+      "additionalProperties": false,
+      "properties": {
+        "kind": {
+          "enum": [
+            "aggregate_receipt",
+            "search_comparison"
+          ],
+          "title": "Kind",
+          "type": "string"
+        },
+        "receipt_id": {
+          "format": "uuid",
+          "title": "Receipt Id",
+          "type": "string"
+        },
+        "result_keys": {
+          "items": {
+            "type": "string"
+          },
+          "minItems": 1,
+          "title": "Result Keys",
+          "type": "array"
+        }
+      },
+      "required": [
+        "kind",
+        "receipt_id",
+        "result_keys"
+      ],
+      "title": "ReceiptSupport",
+      "type": "object"
+    },
+    "RecordSnapshot": {
+      "additionalProperties": false,
+      "properties": {
+        "corpus_id": {
+          "format": "uuid",
+          "title": "Corpus Id",
+          "type": "string"
+        },
+        "record_id": {
+          "pattern": "^(aviation|facility):[^:]+$",
+          "title": "Record Id",
+          "type": "string"
+        },
+        "source_id": {
+          "title": "Source Id",
+          "type": "string"
+        },
+        "domain": {
+          "enum": [
+            "aviation",
+            "facility"
+          ],
+          "title": "Domain",
+          "type": "string"
+        },
+        "csv_row": {
+          "minimum": 2,
+          "title": "Csv Row",
+          "type": "integer"
+        },
+        "original_fields": {
+          "additionalProperties": {
+            "type": "string"
+          },
+          "title": "Original Fields",
+          "type": "object"
+        },
+        "problem_raw": {
+          "title": "Problem Raw",
+          "type": "string"
+        },
+        "action_raw": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Action Raw"
+        },
+        "problem_normalized": {
+          "title": "Problem Normalized",
+          "type": "string"
+        },
+        "action_normalized": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Action Normalized"
+        },
+        "normalization_version": {
+          "default": "reviewed/v1",
+          "title": "Normalization Version",
+          "type": "string"
+        },
+        "annotations": {
+          "additionalProperties": true,
+          "title": "Annotations",
+          "type": "object"
+        },
+        "duplicate_key": {
+          "title": "Duplicate Key",
+          "type": "string"
+        },
+        "source_file_sha256": {
+          "title": "Source File Sha256",
+          "type": "string"
+        },
+        "field_sha256": {
+          "additionalProperties": {
+            "type": "string"
+          },
+          "title": "Field Sha256",
+          "type": "object"
+        },
+        "source_model": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Source Model"
+        },
+        "applicability": {
+          "default": "unknown",
+          "enum": [
+            "unknown",
+            "generic",
+            "applicable",
+            "mismatch"
+          ],
+          "title": "Applicability",
+          "type": "string"
+        }
+      },
+      "required": [
+        "corpus_id",
+        "record_id",
+        "source_id",
+        "domain",
+        "csv_row",
+        "original_fields",
+        "problem_raw",
+        "action_raw",
+        "problem_normalized",
+        "action_normalized",
+        "duplicate_key",
+        "source_file_sha256",
+        "field_sha256"
+      ],
+      "title": "RecordSnapshot",
+      "type": "object"
+    },
+    "SearchFilters": {
+      "additionalProperties": false,
+      "properties": {
+        "component": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Component"
+        },
+        "symptom": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Symptom"
+        }
+      },
+      "title": "SearchFilters",
+      "type": "object"
+    },
+    "SearchHit": {
+      "additionalProperties": false,
+      "properties": {
+        "corpus_id": {
+          "format": "uuid",
+          "title": "Corpus Id",
+          "type": "string"
+        },
+        "record_id": {
+          "title": "Record Id",
+          "type": "string"
+        },
+        "rrf_score": {
+          "title": "Rrf Score",
+          "type": "number"
+        },
+        "channel_ranks": {
+          "additionalProperties": {
+            "type": "integer"
+          },
+          "title": "Channel Ranks",
+          "type": "object"
+        },
+        "channel_scores": {
+          "additionalProperties": {
+            "type": "number"
+          },
+          "title": "Channel Scores",
+          "type": "object"
+        },
+        "compatibility": {
+          "$ref": "#/$defs/Compatibility"
+        },
+        "duplicate_ids": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Duplicate Ids",
+          "type": "array"
+        },
+        "duplicate_count": {
+          "title": "Duplicate Count",
+          "type": "integer"
+        },
+        "reranker_score": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Reranker Score"
+        }
+      },
+      "required": [
+        "corpus_id",
+        "record_id",
+        "rrf_score",
+        "channel_ranks",
+        "channel_scores",
+        "compatibility",
+        "duplicate_ids",
+        "duplicate_count"
+      ],
+      "title": "SearchHit",
+      "type": "object"
+    },
+    "SearchResult": {
+      "additionalProperties": false,
+      "properties": {
+        "search_id": {
+          "format": "uuid",
+          "title": "Search Id",
+          "type": "string"
+        },
+        "protocol_version": {
+          "const": "maintenance/v1",
+          "default": "maintenance/v1",
+          "title": "Protocol Version",
+          "type": "string"
+        },
+        "spec": {
+          "$ref": "#/$defs/SearchSpec"
+        },
+        "hits": {
+          "items": {
+            "$ref": "#/$defs/SearchHit"
+          },
+          "title": "Hits",
+          "type": "array"
+        },
+        "channels": {
+          "additionalProperties": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          },
+          "title": "Channels",
+          "type": "object"
+        },
+        "versions": {
+          "additionalProperties": {
+            "type": "string"
+          },
+          "title": "Versions",
+          "type": "object"
+        },
+        "timings_ms": {
+          "additionalProperties": {
+            "type": "number"
+          },
+          "title": "Timings Ms",
+          "type": "object"
+        },
+        "degraded_branches": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Degraded Branches",
+          "type": "array"
+        },
+        "limitations": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Limitations",
+          "type": "array"
+        },
+        "fixture_only": {
+          "default": false,
+          "title": "Fixture Only",
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "spec",
+        "hits",
+        "channels",
+        "versions",
+        "timings_ms"
+      ],
+      "title": "SearchResult",
+      "type": "object"
+    },
+    "SearchSpec": {
+      "additionalProperties": false,
+      "properties": {
+        "query_raw": {
+          "maxLength": 2000,
+          "minLength": 1,
+          "title": "Query Raw",
+          "type": "string"
+        },
+        "query_normalized": {
+          "default": "",
+          "title": "Query Normalized",
+          "type": "string"
+        },
+        "domain": {
+          "enum": [
+            "aviation",
+            "facility"
+          ],
+          "title": "Domain",
+          "type": "string"
+        },
+        "corpus_ids": {
+          "items": {
+            "format": "uuid",
+            "type": "string"
+          },
+          "title": "Corpus Ids",
+          "type": "array"
+        },
+        "intent": {
+          "default": "fault",
+          "enum": [
+            "fault",
+            "action_history"
+          ],
+          "title": "Intent",
+          "type": "string"
+        },
+        "explicit_components": {
+          "items": {
+            "$ref": "#/$defs/Mention"
+          },
+          "title": "Explicit Components",
+          "type": "array"
+        },
+        "symptoms": {
+          "items": {
+            "$ref": "#/$defs/Mention"
+          },
+          "title": "Symptoms",
+          "type": "array"
+        },
+        "location_mentions": {
+          "items": {
+            "$ref": "#/$defs/Mention"
+          },
+          "title": "Location Mentions",
+          "type": "array"
+        },
+        "number_mentions": {
+          "items": {
+            "$ref": "#/$defs/Mention"
+          },
+          "title": "Number Mentions",
+          "type": "array"
+        },
+        "negation_spans": {
+          "items": {
+            "$ref": "#/$defs/Mention"
+          },
+          "title": "Negation Spans",
+          "type": "array"
+        },
+        "ambiguous_terms": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Ambiguous Terms",
+          "type": "array"
+        },
+        "requested_fact_type": {
+          "default": "historical_cases",
+          "title": "Requested Fact Type",
+          "type": "string"
+        },
+        "aircraft_profile_revision": {
+          "default": 0,
+          "minimum": 0,
+          "title": "Aircraft Profile Revision",
+          "type": "integer"
+        },
+        "filters": {
+          "$ref": "#/$defs/SearchFilters"
+        },
+        "top_k": {
+          "default": 6,
+          "maximum": 10,
+          "minimum": 1,
+          "title": "Top K",
+          "type": "integer"
+        },
+        "quality_mode": {
+          "default": false,
+          "title": "Quality Mode",
+          "type": "boolean"
+        },
+        "collapse_duplicates": {
+          "default": true,
+          "title": "Collapse Duplicates",
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "query_raw",
+        "domain"
+      ],
+      "title": "SearchSpec",
+      "type": "object"
+    },
+    "ServiceScope": {
+      "additionalProperties": false,
+      "properties": {
+        "owner_id": {
+          "format": "uuid",
+          "title": "Owner Id",
+          "type": "string"
+        },
+        "corpus_ids": {
+          "items": {
+            "format": "uuid",
+            "type": "string"
+          },
+          "minItems": 1,
+          "title": "Corpus Ids",
+          "type": "array"
+        },
+        "session_id": {
+          "anyOf": [
+            {
+              "format": "uuid",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Session Id"
+        },
+        "run_id": {
+          "anyOf": [
+            {
+              "format": "uuid",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Run Id"
+        }
+      },
+      "required": [
+        "owner_id",
+        "corpus_ids"
+      ],
+      "title": "ServiceScope",
+      "type": "object"
+    },
+    "SessionSnapshot": {
+      "additionalProperties": false,
+      "properties": {
+        "session_id": {
+          "format": "uuid",
+          "title": "Session Id",
+          "type": "string"
+        },
+        "domain": {
+          "enum": [
+            "aviation",
+            "facility"
+          ],
+          "title": "Domain",
+          "type": "string"
+        },
+        "title": {
+          "title": "Title",
+          "type": "string"
+        },
+        "state_revision": {
+          "minimum": 0,
+          "title": "State Revision",
+          "type": "integer"
+        },
+        "aircraft_profile": {
+          "additionalProperties": true,
+          "title": "Aircraft Profile",
+          "type": "object"
+        },
+        "board": {
+          "items": {
+            "$ref": "#/$defs/BoardItem"
+          },
+          "title": "Board",
+          "type": "array"
+        },
+        "messages": {
+          "items": {
+            "additionalProperties": true,
+            "type": "object"
+          },
+          "title": "Messages",
+          "type": "array"
+        },
+        "answers": {
+          "items": {
+            "anyOf": [
+              {
+                "$ref": "#/$defs/AnswerEnvelope"
+              },
+              {
+                "$ref": "#/$defs/HypothesisEnvelope"
+              }
+            ]
+          },
+          "title": "Answers",
+          "type": "array"
+        },
+        "active_run_id": {
+          "anyOf": [
+            {
+              "format": "uuid",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Active Run Id"
+        }
+      },
+      "required": [
+        "session_id",
+        "domain",
+        "title",
+        "state_revision",
+        "aircraft_profile",
+        "board",
+        "messages",
+        "answers"
+      ],
+      "title": "SessionSnapshot",
+      "type": "object"
+    },
+    "SupportSpan": {
+      "additionalProperties": false,
+      "properties": {
+        "corpus_id": {
+          "format": "uuid",
+          "title": "Corpus Id",
+          "type": "string"
+        },
+        "record_id": {
+          "title": "Record Id",
+          "type": "string"
+        },
+        "field": {
+          "enum": [
+            "PROBLEM",
+            "ACTION",
+            "DESCRIPTION"
+          ],
+          "title": "Field",
+          "type": "string"
+        },
+        "start": {
+          "minimum": 0,
+          "title": "Start",
+          "type": "integer"
+        },
+        "end": {
+          "exclusiveMinimum": 0,
+          "title": "End",
+          "type": "integer"
+        },
+        "quote": {
+          "title": "Quote",
+          "type": "string"
+        },
+        "source_sha256": {
+          "description": "SHA256 of decoded raw field encoded as UTF-8",
+          "title": "Source Sha256",
+          "type": "string"
+        },
+        "kind": {
+          "const": "log_span",
+          "default": "log_span",
+          "title": "Kind",
+          "type": "string"
+        },
+        "evidence_id": {
+          "format": "uuid",
+          "title": "Evidence Id",
+          "type": "string"
+        },
+        "support_kind": {
+          "default": "direct_quote",
+          "enum": [
+            "direct_quote",
+            "faithful_paraphrase",
+            "reported_check"
+          ],
+          "title": "Support Kind",
+          "type": "string"
+        }
+      },
+      "required": [
+        "corpus_id",
+        "record_id",
+        "field",
+        "start",
+        "end",
+        "quote",
+        "source_sha256",
+        "evidence_id"
+      ],
+      "title": "SupportSpan",
+      "type": "object"
+    }
+  },
+  "title": "Maintenance v1 shared contracts",
+  "x-contract-version": "maintenance/v1"
+}
