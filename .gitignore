@@ -16,3 +16,5 @@ __pycache__/
 *.pdf
 *.pptx
 generate_presentation.py
+.vercel
+.env*

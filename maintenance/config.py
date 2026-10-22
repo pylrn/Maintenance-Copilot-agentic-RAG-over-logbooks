@@ -25,9 +25,11 @@ class Settings(BaseSettings):
     gemini_base_url: Literal[
         "https://generativelanguage.googleapis.com/v1beta/openai/"
     ] = "https://generativelanguage.googleapis.com/v1beta/openai/"
-    gemini_model: str = "gemini-3.5-flash"
+    gemini_model: str = "gemini-3.5-flash-lite"
     llm_provider: Literal["auto", "deepseek", "gemini"] = "auto"
     model_allowlist: list[str] = [
+        "gemini-3.5-flash-lite",
+        "gemini-3.1-flash-lite",
         "gemini-3.5-flash",
         "gemini-3.7-flash",
         "gemini-3.8-flash",

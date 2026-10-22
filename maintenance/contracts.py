@@ -232,6 +232,9 @@ class DraftAnswer(Contract):
     limitation_refs: list[str] = Field(default_factory=list)
     clarification_ref: str | None = None
     component_refs: list[str] = Field(default_factory=list)
+    summary: str | None = None
+    what_can_be_concluded: list[str] = Field(default_factory=list)
+    what_cannot_be_concluded: list[str] = Field(default_factory=list)
 
 
 class AllowedAction(Contract):
@@ -252,6 +255,9 @@ class AnswerEnvelope(Contract):
     clarification: str | None = None
     visual_refs: list[str] = Field(default_factory=list)
     allowed_actions: list[AllowedAction] = Field(default_factory=list)
+    summary: str | None = None
+    what_can_be_concluded: list[str] = Field(default_factory=list)
+    what_cannot_be_concluded: list[str] = Field(default_factory=list)
 
 
 class HypothesisDraft(Contract):
@@ -262,6 +268,9 @@ class HypothesisDraft(Contract):
     what_would_weaken_this: list[str]
     limits: list[str]
     historical_claims: list[Claim] = Field(default_factory=list)
+    summary: str | None = None
+    what_can_be_concluded: list[str] = Field(default_factory=list)
+    what_cannot_be_concluded: list[str] = Field(default_factory=list)
 
 
 class HypothesisEnvelope(HypothesisDraft):

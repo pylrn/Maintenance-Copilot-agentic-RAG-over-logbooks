@@ -71,6 +71,9 @@ def render_extractive_answer(
     limitations: list[str] | None = None,
     missing: list[str] | None = None,
     clarification: str | None = None,
+    summary: str | None = None,
+    what_can_be_concluded: list[str] | None = None,
+    what_cannot_be_concluded: list[str] | None = None,
 ) -> AnswerEnvelope:
     """Builds a strictly grounded extractive answer directly from validated evidence snapshots."""
     answer_id = uuid4()
@@ -92,6 +95,13 @@ def render_extractive_answer(
             else "Clarification needed to search historical maintenance records."
         )
         missing.append("No matching records found in authorized corpus.")
+        no_ev_summary = summary or "No historical maintenance records found matching this fault complaint."
+        no_ev_can = what_can_be_concluded or [
+            "No evidence found for this complaint in the historical records."
+        ]
+        no_ev_cannot = what_cannot_be_concluded or [
+            "Cannot conclude component involvement, defect mechanism, or corrective actions due to lack of matching records in the authorized dataset."
+        ]
         return AnswerEnvelope(
             answer_id=answer_id,
             run_id=run_id,
@@ -104,6 +114,9 @@ def render_extractive_answer(
             clarification=clarification,
             visual_refs=[],
             allowed_actions=[],
+            summary=no_ev_summary,
+            what_can_be_concluded=no_ev_can,
+            what_cannot_be_concluded=no_ev_cannot,
         )
 
     # Group evidence by record
@@ -204,6 +217,49 @@ def render_extractive_answer(
 
     allowed_actions = build_allowed_actions(answer_id, state_revision, unique_recs, mode)
 
+    # Dynamic synthesis of conclusions and summary directly from actual retrieved evidence
+    if not what_can_be_concluded:
+        what_can_be_concluded = []
+        distinct_acts = list(act_quotes_map.keys())
+        if distinct_acts:
+            cleaned_acts = []
+            for a in distinct_acts[:3]:
+                c = a.strip().rstrip(".")
+                if c:
+                    cleaned_acts.append(f"<strong>{c}</strong>")
+            if cleaned_acts:
+                what_can_be_concluded.append(
+                    f"Technicians responding to these complaints documented corrective actions including: {', '.join(cleaned_acts)}."
+                )
+            checks = [
+                a for a in distinct_acts
+                if any(k in a.upper() for k in ["LEAK", "CHECK", "CK", "RAN", "OPS", "TEST"])
+            ]
+            if checks:
+                what_can_be_concluded.append(
+                    f"Post-maintenance operational runs and leak checks were recorded in history (e.g. <code>{checks[0][:60]}</code>)."
+                )
+        if not what_can_be_concluded:
+            what_can_be_concluded.append(
+                f"Historical records confirm recorded maintenance activity associated with complaint terms across {len(unique_recs)} case(s)."
+            )
+
+    if not what_cannot_be_concluded:
+        what_cannot_be_concluded = [
+            "MaintNet research records omit specific airframe/engine serial applicability; historical records do not certify applicability to your specific aircraft.",
+            "Historical log entries document past technician actions as written; they do not replace approved Aircraft Maintenance Manual (AMM) procedures or guarantee permanent root-cause elimination.",
+        ]
+
+    if not summary:
+        distinct_probs = list(prob_quotes_map.keys())
+        prob_desc = f'"{distinct_probs[0][:60]}"' if distinct_probs else query_raw
+        act_summary = (
+            f'with recorded corrective actions such as "{list(act_quotes_map.keys())[0][:50]}"'
+            if act_quotes_map
+            else "with recorded historical maintenance interventions."
+        )
+        summary = f"Based on {len(unique_recs)} distinct matching log record(s), historical complaints report {prob_desc} {act_summary}."
+
     return AnswerEnvelope(
         answer_id=answer_id,
         run_id=run_id,
@@ -216,4 +272,7 @@ def render_extractive_answer(
         clarification=clarification,
         visual_refs=visual_refs,
         allowed_actions=allowed_actions,
+        summary=summary,
+        what_can_be_concluded=what_can_be_concluded,
+        what_cannot_be_concluded=what_cannot_be_concluded,
     )

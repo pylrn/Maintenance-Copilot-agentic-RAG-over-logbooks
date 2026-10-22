@@ -439,9 +439,11 @@ function renderAnswer(rawAnswer, container) {
   const synthesisCard = node('div', 'answer-synthesis-card');
 
   // A. What the Evidence Says
-  const evidenceSummary = answer.findings?.length
-    ? `Based on ${answer.findings.length} distinct matching log record(s), historical complaints report defect conditions focused on the left-hand engine assembly, including the engine hoisting loop, cylinder intake tubes, and magneto mounting locations.`
-    : (answer.summary || 'Historical log review complete.');
+  const evidenceSummary = answer.summary || (answer.findings?.length
+    ? `Based on ${answer.findings.length} distinct matching log record(s), historical complaints report relevant defect conditions with recorded technician interventions.`
+    : (answer.status === 'insufficient_evidence'
+        ? 'No historical maintenance records found matching this fault complaint.'
+        : 'Historical log review complete.'));
 
   const summarySection = node('div', 'synthesis-block');
   summarySection.innerHTML = `<h4 class="synthesis-title">📋 What the Evidence Actually Says</h4><p class="synthesis-text">${escapeHtml(evidenceSummary)}</p>`;
@@ -451,24 +453,38 @@ function renderAnswer(rawAnswer, container) {
   // B. What Can Be Concluded & What Cannot Be Concluded
   const conclGrid = node('div', 'conclusions-grid');
 
+  const canItems = (answer.what_can_be_concluded && answer.what_can_be_concluded.length > 0)
+    ? answer.what_can_be_concluded
+    : (answer.status === 'insufficient_evidence'
+        ? ['No evidence found for this complaint in the historical records.']
+        : ['Historical records document relevant maintenance activity.']);
+
   const canConclude = node('div', 'conclusion-col can-conclude');
   canConclude.innerHTML = `
     <h5>✓ What Can Be Concluded</h5>
     <ul>
-      <li>Technicians responding to these complaints primarily addressed them by <strong>replacing intake/flange gaskets</strong>, <strong>tightening top crankcase bolts</strong>, and <strong>resealing magneto interfaces</strong>.</li>
-      <li>Post-maintenance ground engine runs and leak checks were documented as <code>LEAK CK GOOD</code> following these interventions.</li>
+      ${canItems.map(item => `<li>${item}</li>`).join('')}
     </ul>
   `;
   linkifyContainer(canConclude);
+
+  const cannotItems = (answer.what_cannot_be_concluded && answer.what_cannot_be_concluded.length > 0)
+    ? answer.what_cannot_be_concluded
+    : (answer.status === 'insufficient_evidence'
+        ? ['Cannot conclude component involvement, defect mechanism, or corrective actions due to lack of matching records in the authorized dataset.']
+        : [
+            'Historical records omit specific airframe/engine serial applicability; historical records do not certify applicability to your specific aircraft.',
+            'Historical log entries document past technician actions as written; they do not replace approved Aircraft Maintenance Manual (AMM) procedures.'
+          ]);
 
   const cannotConclude = node('div', 'conclusion-col cannot-conclude');
   cannotConclude.innerHTML = `
     <h5>⚠️ What Cannot Be Concluded</h5>
     <ul>
-      <li>MaintNet research records omit specific airframe/engine serial applicability; historical records do <em>not</em> certify applicability to your specific aircraft.</li>
-      <li>A logged leak check does not establish permanent root-cause elimination or replace approved Aircraft Maintenance Manual (AMM) procedures.</li>
+      ${cannotItems.map(item => `<li>${item}</li>`).join('')}
     </ul>
   `;
+  linkifyContainer(cannotConclude);
   conclGrid.append(canConclude, cannotConclude);
   synthesisCard.append(conclGrid);
 

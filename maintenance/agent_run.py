@@ -1,6 +1,9 @@
 """Agent execution runner, evidence retrieval, validation gate and release orchestration."""
 
+import json
 import logging
+from typing import Any
+from uuid import UUID
 
 from maintenance.agent import AGENT_TOOLS, get_system_prompt
 from maintenance.answer_rendering import render_extractive_answer
@@ -12,6 +15,7 @@ from maintenance.contracts import (
     ServiceScope,
 )
 from maintenance.events import EventBus
+from maintenance.ingest.annotate import mentions
 from maintenance.models.provider import LLMProvider
 from maintenance.session_repository import SessionRepository
 from maintenance.tools import (
@@ -69,6 +73,64 @@ class AgentRunner:
             )
         return self.provider if (self.provider and self.provider.is_configured) else None
 
+    async def synthesize_conclusions(
+        self,
+        provider: LLMProvider | None,
+        query_text: str,
+        fetched_evidence: dict[UUID, dict[str, Any]],
+    ) -> tuple[str, list[str], list[str]]:
+        """Invokes the LM to synthesize grounded summary, what can be concluded, and what cannot."""
+        if not provider or not provider.is_configured:
+            return "", [], []
+
+        if not fetched_evidence:
+            evidence_str = "None found in historical records."
+        else:
+            evidence_str = "\n".join(
+                f"Record {ev['record_id']}: [{ev['field']}] \"{ev['raw_text']}\""
+                for ev in fetched_evidence.values()
+            )
+
+        prompt = (
+            f"User Fault Complaint: {query_text}\n"
+            f"Authoritative Historical Log Evidence:\n{evidence_str}\n\n"
+            "Task: Generate a grounded executive synthesis of the historical maintenance evidence.\n"
+            "Respond ONLY with a valid JSON object containing exactly these three fields:\n"
+            "{\n"
+            '  "summary": "1-2 sentence executive summary of what the authoritative records report and how technicians addressed it.",\n'
+            '  "what_can_be_concluded": [\n'
+            '    "Bullet 1: Grounded statement of what technicians actually recorded/replaced/repaired.",\n'
+            '    "Bullet 2: Recorded operational checks or test results if documented."\n'
+            '  ],\n'
+            '  "what_cannot_be_concluded": [\n'
+            '    "Limitation regarding uncertified aircraft/engine serial applicability.",\n'
+            '    "Limitation that historical records do not replace approved AMM maintenance procedures."\n'
+            '  ]\n'
+            "}\n"
+            "Rules:\n"
+            "- If evidence is empty, what_can_be_concluded MUST BE EXACTLY [\"No evidence found for this complaint in the historical records.\"], and what_cannot_be_concluded must state that nothing can be concluded regarding causes or actions.\n"
+            "- Do NOT fabricate facts, part numbers, or procedures not in the evidence.\n"
+            "- Keep conclusions strictly grounded in the provided log text."
+        )
+
+        try:
+            res = await provider.chat_completion(
+                messages=[{"role": "user", "content": prompt}],
+                response_format={"type": "json_object"},
+                timeout=12.0,
+            )
+            content = res.get("content", "")
+            if "{" in content and "}" in content:
+                data = json.loads(content[content.find("{") : content.rfind("}") + 1])
+                summary = str(data.get("summary", "")).strip()
+                can = [str(x).strip() for x in data.get("what_can_be_concluded", []) if str(x).strip()]
+                cannot = [str(x).strip() for x in data.get("what_cannot_be_concluded", []) if str(x).strip()]
+                return summary, can, cannot
+        except Exception as exc:
+            logger.warning("LM conclusion synthesis skipped due to %s", type(exc).__name__)
+
+        return "", [], []
+
     async def execute_run(
         self,
         deps: RunDeps,
@@ -112,6 +174,21 @@ class AgentRunner:
             # 4. Execute search
             search_res = await tool_search_records(deps, query_text, domain=domain, top_k=6)
             hit_ids = [h["record_id"] for h in search_res.get("hits", [])]
+
+            # Filter out spurious dense noise when query is gibberish or lacks domain terms
+            ms = mentions(query_text)
+            hits = search_res.get("hits", [])
+            has_relevant_hits = any(h.get("compatibility") in ("direct", "related") for h in hits)
+            has_keywords = bool(ms) or any(
+                kw in query_text.lower()
+                for kw in [
+                    "leak", "crack", "smoke", "noise", "vibration", "oil", "fuel", "engine",
+                    "intake", "cylinder", "gasket", "flap", "rudder", "gear", "brake",
+                    "tire", "light", "door", "window", "pump", "valve", "hot", "pressure", "exhaust"
+                ]
+            )
+            if not has_keywords and not has_relevant_hits:
+                hit_ids = []
 
             await self.event_bus.emit(
                 deps.run_id,
@@ -303,17 +380,35 @@ class AgentRunner:
                                     allowed_actions=build_allowed_actions(
                                         deps.run_id, deps.state_revision, hit_ids, deps.mode  # type: ignore
                                     ),
+                                    summary=draft.summary,
+                                    what_can_be_concluded=draft.what_can_be_concluded,
+                                    what_cannot_be_concluded=draft.what_cannot_be_concluded,
                                 )
                     except Exception as exc:
                         logger.warning("LLM generation/validation fallback to extractive: %s", type(exc).__name__)
 
                 if answer is None:
+                    lm_summary = ""
+                    lm_can: list[str] = []
+                    lm_cannot: list[str] = []
+                    if run_provider and run_provider.is_configured and deps.fetched_evidence:
+                        try:
+                            lm_summary, lm_can, lm_cannot = await self.synthesize_conclusions(
+                                run_provider, query_text, deps.fetched_evidence
+                            )
+                        except Exception as exc:
+                            logger.warning("LM conclusion synthesis failed: %s", exc)
+
                     answer = render_extractive_answer(
                         run_id=deps.run_id,
                         mode=deps.mode,  # type: ignore
                         query_raw=query_text,
                         fetched_evidence=deps.fetched_evidence,
                         state_revision=deps.state_revision,
+                        status="insufficient_evidence" if not deps.fetched_evidence else None,
+                        summary=lm_summary or None,
+                        what_can_be_concluded=lm_can or None,
+                        what_cannot_be_concluded=lm_cannot or None,
                     )
 
             # 7. Deterministic validation gate applied to ALL candidate answers BEFORE board update
