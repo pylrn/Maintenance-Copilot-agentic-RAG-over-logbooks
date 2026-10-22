@@ -1,5 +1,6 @@
 // Complete proposed UI controller. Original source: ../reference/hybrid-search/.
 import { createApi, uid } from './api-client.mjs';
+import { detectAirframeSegments } from './airframe-mapping.mjs';
 import { renderComponentExplorer } from './component-explorer.mjs';
 const demo = new URLSearchParams(location.search).get('demo') === '1';
 const api = demo ? (await import('./demo-adapter.mjs')).createDemoApi() : createApi();
@@ -7,63 +8,6 @@ const $ = id => document.getElementById(id);
 const state = { session: null, capabilities: null, busy: false, run: null, cursor: 0, controller: null, records: [], turn: null };
 const storageKey = `maintenance-atlas-${demo ? 'demo' : 'live'}-session-pointer`;
 const labels = { CHALLENGE: 'Challenge answer', DISTINGUISH: 'Distinguish cases', SENSITIVITY: 'Search sensitivity', HYPOTHESIS: 'Possible solutions — unverified' };
-
-// Map problem/query keywords to 2D aircraft schematic SVG segments
-function detectAirframeSegments(text) {
-  const query = (text || '').toLowerCase();
-  const hits = [];
-
-  // Engine keywords
-  if (/cylinder|intake|engine|powerplant|manifold|gasket|prop|rocker|carburetor|fuel pump|spark plug|coolant|oil leak|thrust|blade/i.test(query)) {
-    if (/\bleft\b|l\/h|engine\s*#?\s*1\b/i.test(query)) {
-      hits.push({ id: 'seg-engine-l', name: 'Engine #1 (Left Powerplant)', component: 'engine-l' });
-    } else if (/\bright\b|r\/h|engine\s*#?\s*2\b/i.test(query)) {
-      hits.push({ id: 'seg-engine-r', name: 'Engine #2 (Right Powerplant)', component: 'engine-r' });
-    } else {
-      hits.push({ id: 'seg-engine-l', name: 'Engine — side unspecified', component: 'engine-l' });
-      hits.push({ id: 'seg-engine-r', name: 'Engine — side unspecified', component: 'engine-r' });
-    }
-  }
-
-  // Wing keywords (cracks, fuel tanks, flaps, slats, spars)
-  if (/wing|crack|slat|flap|aileron|spoiler|fuel tank|spar|rib|skin/i.test(query)) {
-    if (/left|l\/h/i.test(query)) {
-      hits.push({ id: 'seg-wing-l-tank', name: 'Left Wing Main Box & Fuel Tank', component: 'wing-l' });
-      hits.push({ id: 'seg-wing-l-slats', name: 'Left Wing Leading Edge', component: 'wing-l' });
-    } else {
-      hits.push({ id: 'seg-wing-r-tank', name: 'Right Wing Main Box & Fuel Tank', component: 'wing-r' });
-      hits.push({ id: 'seg-wing-r-slats', name: 'Right Wing Leading Edge', component: 'wing-r' });
-    }
-  }
-
-  // Avionics / Flight deck
-  if (/cockpit|avionics|windshield|instrument|mfd|pfd|pedal|display|breaker/i.test(query)) {
-    hits.push({ id: 'seg-cockpit', name: 'Flight Deck & Windshield Section', component: 'cockpit' });
-    hits.push({ id: 'seg-avionics', name: 'Forward Avionics & Instruments Bay', component: 'avionics' });
-  }
-
-  // Nose & Radar
-  if (/nose|radome|radar|nose gear|steer|pitot/i.test(query)) {
-    hits.push({ id: 'seg-nose', name: 'Radome / Nose Radar Fairing', component: 'nose' });
-  }
-
-  // Empennage & Rudder & Elevators
-  if (/tail|rudder|vertical fin|fin/i.test(query)) {
-    hits.push({ id: 'seg-rudder', name: 'Vertical Stabilizer & Rudder Surface', component: 'empennage' });
-  }
-  if (/elevator|stabilizer|horizontal/i.test(query)) {
-    hits.push({ id: 'seg-tail-r', name: 'Right Horizontal Stabilizer & Elevator', component: 'empennage' });
-  }
-  if (/apu|tail cone|exhaust/i.test(query)) {
-    hits.push({ id: 'seg-apu', name: 'APU Fire Containment & Tail Cone', component: 'apu' });
-  }
-  if (/fuselage|cabin|door|window|keel|center box/i.test(query)) {
-    hits.push({ id: 'seg-center-box', name: 'Center Wing Box & Keel Beam', component: 'center-box' });
-    hits.push({ id: 'seg-fuselage-fwd', name: 'Forward Fuselage Section', component: 'fuselage' });
-  }
-
-  return hits;
-}
 
 let activeDetectedHits = [];
 let currentFaultContext = '';
@@ -86,7 +30,8 @@ function updateAirframeHighlight(text) {
     });
     if (dot) dot.classList.add('active');
     if (label) {
-      label.textContent = `Query mentions: ${activeDetectedHits.map(d => d.name).join(', ')} · select a component to explore`;
+      const names = [...new Set(activeDetectedHits.map(d => d.name.replace(/ · .*/, '')))];
+      label.textContent = `${names.join(' / ')} · select a highlighted region to look inside`;
       label.classList.add('alert');
     }
   } else if (text && text.trim().length > 0) {
