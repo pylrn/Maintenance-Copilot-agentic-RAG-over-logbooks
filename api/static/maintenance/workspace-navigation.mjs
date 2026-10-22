@@ -4,7 +4,7 @@ document.querySelectorAll('[data-destination]').forEach(button=>button.addEventL
  document.querySelectorAll('[data-destination]').forEach(n=>{n.classList.remove('active');n.removeAttribute('aria-current');});button.classList.add('active');button.setAttribute('aria-current','page');
  const target=button.dataset.destination;$('viewName').textContent={home:'Overview',issue:'Investigate an issue',airframe:'Aircraft explorer',features:'All features'}[target];
  if(target==='home')window.scrollTo({top:0,behavior:'smooth'});
- if(target==='issue')go('issueComposer','heroInput');
+ if(target==='issue')go('chatSection','chatInput');
  if(target==='airframe')go('planeDiagnosticWrap');
  if(target==='features') {
  $('panelTitle').textContent='Everything you can do with Atlas';$('panelEyebrow').textContent='YOUR TOOLKIT · DEMO WORKSPACE';const body=$('panelBody');body.replaceChildren();const grid=document.createElement('div');grid.className='feature-directory';
@@ -12,6 +12,5 @@ document.querySelectorAll('[data-destination]').forEach(button=>button.addEventL
  for(const [title,description,where] of features){const card=document.createElement('article');card.className='directory-item';for(const [tag,text] of [['strong',title],['p',description],['small',where]]){const n=document.createElement(tag);n.textContent=text;card.append(n);}grid.append(card);}body.append(grid);$('panelDialog').showModal();
  }
 }));
-document.querySelectorAll('[data-scenario]').forEach(button=>button.addEventListener('click',()=>{const input=$('heroInput');input.value=button.dataset.scenario;input.dispatchEvent(new Event('input',{bubbles:true}));$('heroForm').requestSubmit();}));
 // Reflect the selected tool in the breadcrumb without duplicating its controller.
 for(const [id,label] of [['explorerBtn','Search records'],['historyBtn','History'],['pinsBtn','Saved evidence'],['settingsBtn','Settings']]) $(id).addEventListener('click',()=>{$('viewName').textContent=label;});

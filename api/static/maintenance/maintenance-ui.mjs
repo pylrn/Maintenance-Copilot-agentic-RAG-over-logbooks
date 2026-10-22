@@ -74,7 +74,7 @@ function updateAirframeHighlight(text) {
   allSegs.forEach(el => {
     el.classList.remove('highlight-alert', 'highlight-warn');
   });
-  
+
   const dot = $('planeStatusDot');
   const label = $('planeActiveHighlight');
   activeDetectedHits = detectAirframeSegments(text);
@@ -99,13 +99,21 @@ function updateAirframeHighlight(text) {
       label.classList.remove('alert');
     }
   }
+  const container = $('drilldownContainer');
+  if (!container.hidden && container.dataset.component) {
+    const mentioned = activeDetectedHits.some(hit => hit.id === container.dataset.component);
+    renderComponentExplorer(container.dataset.component, container.dataset.name, mentioned ? text : '');
+  }
 }
 
 // Sub-component templates for Drill-Down Views
 function renderDrillDown(componentType, hitName) {
+  $('drilldownContainer').dataset.component = componentType;
+  $('drilldownContainer').dataset.name = hitName;
   $('planeSvgContainer').hidden = true;
   $('drilldownContainer').hidden = false;
-  renderComponentExplorer(componentType, hitName, currentFaultContext);
+  const mentioned = activeDetectedHits.some(hit => hit.id === componentType);
+  renderComponentExplorer(componentType, hitName, mentioned ? currentFaultContext : '');
 }
 
 function initAirframeInteractions() {
@@ -143,13 +151,13 @@ async function protect(task) {
 }
 function setBusy(value) {
   state.busy = value; $('shell').classList.toggle('is-busy', value);
-  for (const id of ['chatInput', 'heroInput', 'searchBtn', 'reportBtn', 'uploadBtn', 'newSessionBtn', 'historyBtn', 'agentModelSelect', 'domainSelect', 'topK', 'qualitySelect', 'duplicatesSelect']) $(id).disabled = value;
+  for (const id of ['chatInput', 'searchBtn', 'reportBtn', 'uploadBtn', 'newSessionBtn', 'historyBtn', 'agentModelSelect', 'domainSelect', 'topK', 'qualitySelect', 'duplicatesSelect']) $(id).disabled = value;
   document.querySelectorAll('.answer-actions button,.record-actions button').forEach(el => { el.disabled = value; });
-  $('chatSubmit').disabled = value; $('heroForm').querySelector('button').disabled = value;
+  $('chatSubmit').disabled = value;
   $('stopBtn').hidden = !value; $('resumeBtn').hidden = true;
 }
 function searchSpec(query) { return { query, domain: $('domainSelect').value || 'aviation', top_k: Math.max(1, Math.min(20, Number($('topK').value) || 5)), quality: $('qualitySelect').value, duplicate_policy: $('duplicatesSelect').value }; }
-function activate() { 
+function activate() {
   // Keep the aircraft component locator visible in the workspace
   // $('shell').classList.add('chat-active');
   $('thread').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
@@ -301,9 +309,9 @@ async function receive(event) {
   const keepFollowing = nearBottom(); const data = event.data || {};
   switch (event.type) {
     case 'run_started': status(demo ? 'demo · playing simulated activity…' : 'copilot investigating…'); break;
-    case 'query_interpreted': 
-      $('liveSpecCard').hidden = false; 
-      $('liveSpecCard').textContent = `Search: ${data.query || ''} · domain: ${data.domain || 'unknown'} · aircraft applicability: ${data.applicability || 'unknown'}`; 
+    case 'query_interpreted':
+      $('liveSpecCard').hidden = false;
+      $('liveSpecCard').textContent = `Search: ${data.query || ''} · domain: ${data.domain || 'unknown'} · aircraft applicability: ${data.applicability || 'unknown'}`;
       updateAirframeHighlight(data.query || '');
       break;
     case 'search_started': status('searching source records…'); break;
@@ -333,8 +341,8 @@ async function watchRun(runId, after = 0) {
     finishTurn(); setBusy(false); $('resumeBtn').hidden = !state.run;
     // While disconnected, prevent a second message from creating a competing run.
     if (state.run) {
-      for (const id of ['chatSubmit', 'chatInput', 'heroInput', 'uploadBtn', 'searchBtn', 'reportBtn']) $(id).disabled = true;
-      $('heroForm').querySelector('button').disabled = true; $('stopBtn').hidden = false;
+      for (const id of ['chatSubmit', 'chatInput', 'uploadBtn', 'searchBtn', 'reportBtn']) $(id).disabled = true;
+       $('stopBtn').hidden = false;
       document.querySelectorAll('.answer-actions button,.record-actions button').forEach(value => { value.disabled = true; });
     }
   }
@@ -347,7 +355,7 @@ async function sendMessage(text) {
   try {
     const run = await api.message(state.session.session_id, { message: text, model: $('agentModelSelect').value,
       search_spec: searchSpec(text), idempotency_key: uid(), expected_revision: state.session.revision });
-    state.session.revision = run.session_revision; $('chatSection').scrollIntoView({ behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'instant' : 'smooth', block: 'start' }); userMessage(text); state.turn = newTurn(); $('chatInput').value = ''; $('heroInput').value = '';
+    state.session.revision = run.session_revision; $('chatSection').scrollIntoView({ behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'instant' : 'smooth', block: 'start' }); userMessage(text); state.turn = newTurn(); $('chatInput').value = '';
     await watchRun(run.run_id);
   } catch (error) {
     setBusy(false);
@@ -381,12 +389,13 @@ async function restore(id) {
   state.controller?.abort(); state.run = null; state.session = value; localStorage.setItem(storageKey, id);
   $('thread').replaceChildren(); $('shell').classList.toggle('chat-active', value.messages.length > 0);
   for (const message of value.messages) { if (message.kind === 'user') userMessage(message.text); if (message.kind === 'answer') renderAnswer(message.answer, $('thread')); }
+  updateAirframeHighlight(value.last_query || '');
   state.records = value.records || []; $('evidenceWorkspace').hidden = !value.messages.length; $('workspace').classList.toggle('has-evidence', Boolean(value.messages.length));
   renderRecords(state.records); renderBoard(value.board); renderPins(); $('panelDialog').close();
   $('liveSpecCard').hidden = true; setBusy(false); status(demo ? 'demo · ready — simulated records only' : 'copilot ready — keep investigating');
   if (value.active_run) { state.turn = newTurn(); await watchRun(value.active_run.run_id, 0); }
 }
-async function newSession() { if (state.busy) return; const value = await api.createSession($('domainSelect').value || 'aviation'); await restore(value.session_id); $('directResults').replaceChildren(); }
+async function newSession() { if (state.busy) return; const value = await api.createSession($('domainSelect').value || 'aviation'); await restore(value.session_id); $('directResults').replaceChildren(); $('chatInput').focus(); }
 async function directSearch() {
   if (state.busy || state.run) return; const query = $('queryText').value.trim(); if (!query) throw new Error('Enter a search complaint.');
   setBusy(true); status('searching records without an LLM answer…'); notice();
@@ -398,13 +407,9 @@ async function exportHandover() {
   const text = await api.handover(state.session.session_id); const url = URL.createObjectURL(new Blob([text], { type: 'text/markdown;charset=utf-8' }));
   const link = document.createElement('a'); link.href = url; link.download = `${demo ? 'SIMULATED-' : ''}maintenance-handover.md`; link.click(); setTimeout(() => URL.revokeObjectURL(url), 1000);
 }
-$('heroInput').addEventListener('input', e => {
-  updateAirframeHighlight(e.target.value);
-});
 $('chatInput').addEventListener('input', e => {
   updateAirframeHighlight(e.target.value);
 });
-$('heroForm').addEventListener('submit', event => { event.preventDefault(); protect(() => sendMessage($('heroInput').value)); });
 $('chatForm').addEventListener('submit', event => { event.preventDefault(); protect(() => sendMessage($('chatInput').value)); });
 $('searchBtn').addEventListener('click', () => protect(directSearch));
 $('reportBtn').addEventListener('click', () => protect(() => sendMessage(($('aircraftInput').value.trim() ? `User-reported aircraft / engine: ${$('aircraftInput').value.trim()}\n` : '') + $('reportText').value)));
@@ -423,7 +428,7 @@ document.querySelectorAll('[data-drawer]').forEach(toggle => toggle.addEventList
   $(toggle.dataset.drawer).hidden = open; toggle.setAttribute('aria-expanded', String(!open));
 }));
 document.querySelectorAll('[data-tab]').forEach(tab => tab.addEventListener('click', () => {
-  $('evidencePanel').hidden = tab.dataset.tab !== 'evidence'; 
+  $('evidencePanel').hidden = tab.dataset.tab !== 'evidence';
   $('boardPanel').hidden = tab.dataset.tab !== 'board';
   if ($('airframePanel')) {
     $('airframePanel').hidden = tab.dataset.tab !== 'airframe';
@@ -471,11 +476,6 @@ async function boot() {
     for (const model of capabilities.models || []) { const option = node('option', '', model.label || model.id); option.value = model.id; $('agentModelSelect').append(option); }
     for (const domain of capabilities.domains || []) { const option = node('option', '', domain); option.value = domain; $('domainSelect').append(option); }
     $('qualitySelect').querySelector('[value="rerank"]').disabled = !capabilities.rerank_available;
-    for (const example of capabilities.examples || []) $('starters').append(button(example.query, () => {
-      $('heroInput').value = example.query;
-      updateAirframeHighlight(example.query);
-      sendMessage(example.query);
-    }, 'chip'));
     $('agentModelSelect').disabled = !capabilities.models?.length;
     if (!capabilities.models?.length || !capabilities.domains?.length) throw new Error('The service has no configured model or source domain.');
     const saved = localStorage.getItem(storageKey);
