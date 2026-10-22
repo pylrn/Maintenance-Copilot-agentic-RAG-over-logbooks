@@ -136,8 +136,8 @@
   cursor: pointer;
 }
 .plane-seg:hover {
-  fill: #f5f0e6;
-  stroke: var(--rust);
+  fill: #e0f2fe;
+  stroke: #0284c7;
 }
 /* Highlight in Vivid Aviation Red when an issue/damage is detected */
 .plane-seg.highlight-alert {

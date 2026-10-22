@@ -14,12 +14,14 @@ class Settings(BaseSettings):
     port: int = 8000
     database_url: SecretStr | None = None
     session_signing_secret: SecretStr | None = None
+    gemini_api_key: SecretStr | None = None
+    gemini_model: str = "gemini-2.5-flash"
     deepseek_api_key: SecretStr | None = None
     deepseek_base_url: Literal["https://api.deepseek.com"] = "https://api.deepseek.com"
     deepseek_model: str = "deepseek-flash"
-    model_allowlist: list[str] = ["deepseek-flash"]
-    embedding_model: Literal["BAAI/bge-small-en-v1.5"] = "BAAI/bge-small-en-v1.5"
-    embedding_dim: Literal[384] = 384
+    model_allowlist: list[str] = ["deepseek-flash", "gemini-2.5-flash"]
+    embedding_model: str = "BAAI/bge-small-en-v1.5"
+    embedding_dim: int = 384
     embedding_revision: str = ""
     embedding_query_prefix: str = "Represent this sentence for searching relevant passages: "
     model_cache_dir: Path = Path("models")
@@ -43,12 +45,12 @@ class Settings(BaseSettings):
     def secure_production(self):
         if self.db_pool_min > self.db_pool_max:
             raise ValueError("invalid pool limits")
-        if self.deepseek_model not in self.model_allowlist:
+        if self.deepseek_model not in self.model_allowlist and self.gemini_model not in self.model_allowlist:
             raise ValueError("model not in allowlist")
         if self.rerank_enabled and not self.rerank_revision:
             raise ValueError("reranker revision required")
         if self.app_env == "production":
-            for key in ["database_url", "session_signing_secret", "deepseek_api_key"]:
+            for key in ["database_url", "session_signing_secret"]:
                 value = getattr(self, key)
                 if (
                     not value

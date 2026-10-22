@@ -42,7 +42,9 @@ function detectAirframeSegments(text) {
 
 function updateAirframeHighlight(text) {
   const allSegs = document.querySelectorAll('.plane-seg');
-  allSegs.forEach(el => el.classList.remove('highlight-alert', 'highlight-warn'));
+  allSegs.forEach(el => {
+    el.classList.remove('highlight-alert', 'highlight-warn');
+  });
   
   const dot = $('planeStatusDot');
   const label = $('planeActiveHighlight');
@@ -50,21 +52,22 @@ function updateAirframeHighlight(text) {
 
   if (detected.length > 0) {
     detected.forEach(hit => {
-      const el = document.getElementById(hit.id);
-      if (el) el.classList.add('highlight-alert');
+      // Check both main and side panel silhouettes
+      const els = document.querySelectorAll(`#${hit.id}`);
+      els.forEach(el => el.classList.add('highlight-alert'));
     });
     if (dot) dot.classList.add('active');
     if (label) {
-      label.textContent = `ALERT: Fault localized to ${detected.map(d => d.name).join(', ')}`;
+      label.textContent = `ALERT: Damage/Fault localized to ${detected.map(d => d.name).join(', ')}`;
       label.classList.add('alert');
     }
   } else if (text && text.trim().length > 0) {
-    // Generic advisory highlight on engine / airframe
-    const fallback = document.getElementById('seg-engine-r');
-    if (fallback) fallback.classList.add('highlight-warn');
+    // Default to engine/fuselage indicator if generic error
+    const els = document.querySelectorAll('#seg-engine-r');
+    els.forEach(el => el.classList.add('highlight-alert'));
     if (dot) dot.classList.add('active');
     if (label) {
-      label.textContent = `General airframe search active: ${text.slice(0, 45)}...`;
+      label.textContent = `FAULT DETECTED: Localized to Engine / Airframe (${text.slice(0, 40)}...)`;
       label.classList.add('alert');
     }
   } else {
@@ -92,7 +95,11 @@ function setBusy(value) {
   $('stopBtn').hidden = !value; $('resumeBtn').hidden = true;
 }
 function searchSpec(query) { return { query, domain: $('domainSelect').value || 'aviation', top_k: Math.max(1, Math.min(20, Number($('topK').value) || 5)), quality: $('qualitySelect').value, duplicate_policy: $('duplicatesSelect').value }; }
-function activate() { $('shell').classList.add('chat-active'); }
+function activate() { 
+  // Keep the aircraft component locator visible in the workspace
+  // $('shell').classList.add('chat-active');
+  $('thread').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+}
 function nearBottom() { return document.documentElement.scrollHeight - window.scrollY - window.innerHeight < 240; }
 function follow(element, shouldFollow) { if (shouldFollow) element.scrollIntoView({ block: 'nearest', behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'instant' : 'smooth' }); }
 function panel(title, eyebrow = '') {
@@ -282,6 +289,7 @@ async function sendMessage(text) {
   text = text.trim(); if (!text || state.busy || state.run) return;
   if (!state.session) throw new Error('The backend is unavailable. Start the server or open the explicit demo link below.');
   notice(); activate(); setBusy(true);
+  updateAirframeHighlight(text);
   try {
     const run = await api.message(state.session.session_id, { message: text, model: $('agentModelSelect').value,
       search_spec: searchSpec(text), idempotency_key: uid(), expected_revision: state.session.revision });
@@ -328,6 +336,7 @@ async function newSession() { if (state.busy) return; const value = await api.cr
 async function directSearch() {
   if (state.busy || state.run) return; const query = $('queryText').value.trim(); if (!query) throw new Error('Enter a search complaint.');
   setBusy(true); status('searching records without an LLM answer…'); notice();
+  updateAirframeHighlight(query);
   try { const result = await api.search(searchSpec(query)); $('directResults').append(node('h2', 'results-title', 'Retrieved records')); renderRecords(result.records || [], $('directResults')); $('directResults').scrollIntoView({ block: 'nearest' }); }
   finally { setBusy(false); status(demo ? 'demo · ready — simulated records only' : 'copilot ready — keep investigating'); }
 }
@@ -335,6 +344,12 @@ async function exportHandover() {
   const text = await api.handover(state.session.session_id); const url = URL.createObjectURL(new Blob([text], { type: 'text/markdown;charset=utf-8' }));
   const link = document.createElement('a'); link.href = url; link.download = `${demo ? 'SIMULATED-' : ''}maintenance-handover.md`; link.click(); setTimeout(() => URL.revokeObjectURL(url), 1000);
 }
+$('heroInput').addEventListener('input', e => {
+  updateAirframeHighlight(e.target.value);
+});
+$('chatInput').addEventListener('input', e => {
+  updateAirframeHighlight(e.target.value);
+});
 $('heroForm').addEventListener('submit', event => { event.preventDefault(); protect(() => sendMessage($('heroInput').value)); });
 $('chatForm').addEventListener('submit', event => { event.preventDefault(); protect(() => sendMessage($('chatInput').value)); });
 $('searchBtn').addEventListener('click', () => protect(directSearch));
@@ -402,7 +417,11 @@ async function boot() {
     for (const model of capabilities.models || []) { const option = node('option', '', model.label || model.id); option.value = model.id; $('agentModelSelect').append(option); }
     for (const domain of capabilities.domains || []) { const option = node('option', '', domain); option.value = domain; $('domainSelect').append(option); }
     $('qualitySelect').querySelector('[value="rerank"]').disabled = !capabilities.rerank_available;
-    for (const example of capabilities.examples || []) $('starters').append(button(example.query, () => sendMessage(example.query), 'chip'));
+    for (const example of capabilities.examples || []) $('starters').append(button(example.query, () => {
+      $('heroInput').value = example.query;
+      updateAirframeHighlight(example.query);
+      sendMessage(example.query);
+    }, 'chip'));
     $('agentModelSelect').disabled = !capabilities.models?.length;
     if (!capabilities.models?.length || !capabilities.domains?.length) throw new Error('The service has no configured model or source domain.');
     const saved = localStorage.getItem(storageKey);

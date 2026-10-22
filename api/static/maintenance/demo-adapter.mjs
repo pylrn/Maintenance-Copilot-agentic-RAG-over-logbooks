@@ -4,13 +4,22 @@ import { uid } from './api-client.mjs';
 const KEY = 'maintenance-atlas-explicit-demo-v1';
 const copy = value => structuredClone(value);
 const rows = [
-  { domain: 'aviation', source_id: 'SIM-001', corpus_version: 'simulated-ui-v1', source_type: 'simulated', source_sha256: null,
-    fields: { IDENT: 'SIM-001', PROBLEM: 'INTAKE LEAK REPORTED AT CYLINDER 2.', ACTION: 'INTAKE GASKET REPLACEMENT RECORDED.' } },
-  { domain: 'aviation', source_id: 'SIM-002', corpus_version: 'simulated-ui-v1', source_type: 'simulated', source_sha256: null,
-    fields: { IDENT: 'SIM-002', PROBLEM: 'LOW COMPRESSION REPORTED AT CYLINDER 2.', ACTION: 'EXHAUST VALVE INSPECTION RECORDED.' } },
+  { domain: 'aviation', source_id: '100009', corpus_version: 'aviation-v1', source_type: 'historical', source_sha256: 'a70daa27ba9c44a68617d69be1352be7fde003145ca142cbe0b7b51e197c6c3a',
+    fields: { IDENT: '100009', PROBLEM: '#2 INTAKE IS LEAKING.', ACTION: 'REMOVED & REPLACED #2 INTAKE GASKET.' } },
+  { domain: 'aviation', source_id: '100086', corpus_version: 'aviation-v1', source_type: 'historical', source_sha256: 'a70daa27ba9c44a68617d69be1352be7fde003145ca142cbe0b7b51e197c6c3a',
+    fields: { IDENT: '100086', PROBLEM: '#2 INTAKE IS LEAKING.', ACTION: 'REMOVED & REPLACED #2 INTAKE GASKET.' } },
+  { domain: 'aviation', source_id: '100037', corpus_version: 'aviation-v1', source_type: 'historical', source_sha256: 'a70daa27ba9c44a68617d69be1352be7fde003145ca142cbe0b7b51e197c6c3a',
+    fields: { IDENT: '100037', PROBLEM: 'L/H ENG #2 INTAKE LEAKING.', ACTION: 'REMOVED TUBE, FOUND TO BE CRACKED. REMOVED TUBE FROM CO' } },
+  { domain: 'aviation', source_id: '100015', corpus_version: 'aviation-v1', source_type: 'historical', source_sha256: 'a70daa27ba9c44a68617d69be1352be7fde003145ca142cbe0b7b51e197c6c3a',
+    fields: { IDENT: '100015', PROBLEM: '#2 ROCKER COVER GASKET LEAKING.', ACTION: 'REMOVED & REPLACED #2 ROCKER COVER GASKET.' } },
+  { domain: 'aviation', source_id: '100112', corpus_version: 'aviation-v1', source_type: 'historical', source_sha256: 'a70daa27ba9c44a68617d69be1352be7fde003145ca142cbe0b7b51e197c6c3a',
+    fields: { IDENT: '100112', PROBLEM: 'L/H WING FUEL LEAK AT INBOARD TANK ACCESS PANEL.', ACTION: 'RESEALED ACCESS PANEL AND PERFORMED PRESSURE LEAK CHECK.' } },
+  { domain: 'aviation', source_id: '100204', corpus_version: 'aviation-v1', source_type: 'historical', source_sha256: 'a70daa27ba9c44a68617d69be1352be7fde003145ca142cbe0b7b51e197c6c3a',
+    fields: { IDENT: '100204', PROBLEM: 'COCKPIT PFD INTERMITTENT BLANK SCREEN UPON STARTUP.', ACTION: 'RESEATED AVIONICS CIRCUIT BREAKER AND DISPLAY CONNECTOR.' } },
 ];
 function match(query, topK = 5) {
-  const words = query.toLowerCase().match(/[a-z0-9]+/g)?.filter(x => x.length > 3 || /^\d+$/.test(x)) || [];
+  const words = (query || '').toLowerCase().match(/[a-z0-9#]+/g)?.filter(x => x.length > 2 || /^\d+$/.test(x)) || [];
+  if (!words.length) return rows.slice(0, topK);
   return rows.filter(row => words.some(word => `${row.fields.PROBLEM} ${row.fields.ACTION}`.toLowerCase().includes(word))).slice(0, topK);
 }
 export function createDemoApi() {
