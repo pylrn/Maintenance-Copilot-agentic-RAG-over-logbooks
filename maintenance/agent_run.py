@@ -1,5 +1,6 @@
 """Agent execution runner, evidence retrieval, validation gate and release orchestration."""
 
+import asyncio
 import json
 import logging
 from typing import Any
@@ -111,13 +112,19 @@ class AgentRunner:
             "Rules:\n"
             "- If evidence is empty, what_can_be_concluded MUST BE EXACTLY [\"No evidence found for this complaint in the historical records.\"], and what_cannot_be_concluded must state that nothing can be concluded regarding causes or actions.\n"
             "- Do NOT fabricate facts, part numbers, or procedures not in the evidence.\n"
-            "- Keep conclusions strictly grounded in the provided log text."
+            "- Keep conclusions strictly grounded in the provided log text.\n"
+            "- Distinguish exact complaint matches from partial or unrelated cases; explicitly disclose side/component mismatches.\n"
+            "- Do not combine actions from different records into a single repair or imply they apply to the user aircraft.\n"
+            "- Be concise: at most two bullets per list."
         )
 
         try:
-            res = await provider.chat_completion(
-                messages=[{"role": "user", "content": prompt}],
-                response_format={"type": "json_object"},
+            res = await asyncio.wait_for(
+                provider.chat_completion(
+                    messages=[{"role": "user", "content": prompt}],
+                    response_format={"type": "json_object"},
+                    timeout=12.0,
+                ),
                 timeout=12.0,
             )
             content = res.get("content", "")
@@ -289,7 +296,9 @@ class AgentRunner:
             else:
                 answer = None
                 run_provider = self._resolve_provider_for_run(getattr(deps, "model_id", None))
-                if run_provider and run_provider.is_configured:
+                # Evidence mode already has authoritative records from the prefetch.
+                # Synthesize them once instead of asking an agent to retrieve them again.
+                if run_provider and run_provider.is_configured and deps.mode != "EVIDENCE":
                     try:
                         async def dispatch_search(args):
                             return await tool_search_records(
