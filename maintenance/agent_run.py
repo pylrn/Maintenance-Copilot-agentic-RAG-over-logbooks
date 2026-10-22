@@ -18,6 +18,7 @@ from maintenance.events import EventBus
 from maintenance.ingest.annotate import mentions
 from maintenance.models.provider import LLMProvider
 from maintenance.session_repository import SessionRepository
+from maintenance.telemetry import observed, trace_info
 from maintenance.tools import (
     RunDeps,
     tool_get_records,
@@ -131,6 +132,9 @@ class AgentRunner:
 
         return "", [], []
 
+    @observed("agent.run", "agent",
+        metadata=lambda self, deps, query_text, domain="aviation": {"run_id": str(deps.run_id), "session_id": str(deps.session_id), "mode": deps.mode, "domain": domain, "state_revision": deps.state_revision},
+        result_metadata=lambda answer: {"status": answer.status, "claim_count": len(answer.claims)})
     async def execute_run(
         self,
         deps: RunDeps,
@@ -144,7 +148,7 @@ class AgentRunner:
                 deps.run_id,
                 seq,
                 "run_started",
-                {"mode": deps.mode, "session_id": str(deps.session_id)},
+                {"mode": deps.mode, "session_id": str(deps.session_id), "telemetry": trace_info(run_id=deps.run_id)},
             )
             seq += 1
 
@@ -489,6 +493,7 @@ class AgentRunner:
                     "headline": answer.headline,
                     "claims_count": len(answer.claims),
                     "new_state_revision": new_rev,
+                    "telemetry": trace_info(run_id=deps.run_id),
                     "envelope": envelope_data,
                     "answer": envelope_data,
                 },

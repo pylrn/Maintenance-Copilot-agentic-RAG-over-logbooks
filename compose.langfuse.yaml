@@ -1,0 +1,19 @@
+# Docker Compose override for Langfuse telemetry overlay
+#
+# Validated invocation with base compose:
+#   docker compose --env-file .env --env-file .env.langfuse -f compose.yaml -f compose.langfuse.yaml config --quiet
+#   docker compose --env-file .env --env-file .env.langfuse -f compose.yaml -f compose.langfuse.yaml up -d api
+#
+# Works seamlessly with either local database (compose.yaml) or Supabase (compose.supabase.yaml).
+# The application receives configuration via environment variables without directly reading private secret files.
+
+services:
+  api:
+    environment:
+      LANGFUSE_ENABLED: ${LANGFUSE_ENABLED:-true}
+      LANGFUSE_PUBLIC_KEY: ${LANGFUSE_PUBLIC_KEY:-}
+      LANGFUSE_SECRET_KEY: ${LANGFUSE_SECRET_KEY:-}
+      LANGFUSE_BASE_URL: ${LANGFUSE_BASE_URL:-https://jp.cloud.langfuse.com}
+      LANGFUSE_PROJECT_ID: ${LANGFUSE_PROJECT_ID:-cmvjf4dgo007iad0i5g0mw7f2}
+      LANGFUSE_ENVIRONMENT: ${LANGFUSE_ENVIRONMENT:-production}
+      OTEL_SERVICE_NAME: maintenance-atlas

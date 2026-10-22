@@ -156,6 +156,7 @@ class StageTrace(Contract):
 
 
 class SearchTrace(Contract):
+    telemetry: dict[str, str] = Field(default_factory=dict)
     stages: list[StageTrace] = Field(default_factory=list)
     stage_timings_ms: dict[str, float] = Field(default_factory=dict)
     stage_counts: dict[str, int] = Field(default_factory=dict)

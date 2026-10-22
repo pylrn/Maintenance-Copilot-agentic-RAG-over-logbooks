@@ -47,6 +47,12 @@ class Settings(BaseSettings):
     rerank_model: str = "cross-encoder/ms-marco-MiniLM-L6-v2"
     rerank_revision: str = ""
     langfuse_enabled: bool = False
+    langfuse_public_key: str = ""
+    langfuse_secret_key: SecretStr | None = None
+    langfuse_base_url: Literal["https://jp.cloud.langfuse.com"] = "https://jp.cloud.langfuse.com"
+    langfuse_environment: str = "development"
+    langfuse_project_id: str = ""
+
     db_pool_min: int = Field(default=2, ge=1, le=5)
     db_pool_max: int = Field(default=5, ge=1, le=10)
     max_upload_bytes: int = 5 * 1024 * 1024

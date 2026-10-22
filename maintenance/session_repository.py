@@ -13,6 +13,7 @@ from maintenance.contracts import (
     Mode,
     SessionSnapshot,
 )
+from maintenance.telemetry import observed
 
 
 class SessionRepository:
@@ -381,6 +382,7 @@ class SessionRepository:
             )
             return row["owner_id"] if row else None
 
+    @observed("persistence.evidence")
     async def save_evidence_snapshots(
         self,
         run_id: UUID,
@@ -408,6 +410,7 @@ class SessionRepository:
                     sha,
                 )
 
+    @observed("persistence.answer_and_state")
     async def commit_answer_and_state(
         self,
         run_id: UUID,

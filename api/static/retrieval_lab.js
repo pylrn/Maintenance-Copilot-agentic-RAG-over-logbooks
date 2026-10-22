@@ -229,6 +229,21 @@ function initQueryRunner() {
 
 async function renderSearchResults(data, clientMs = 0) {
   if (!data) return;
+  const oldTrace = document.getElementById('langfuseSearchTrace');
+  if (oldTrace) oldTrace.remove();
+  const traceUrl = data.trace?.telemetry?.trace_url;
+  if (traceUrl) {
+    try {
+      const url = new URL(traceUrl);
+      if (url.origin === 'https://jp.cloud.langfuse.com' && url.pathname.startsWith('/project/')) {
+        const link = document.createElement('a');
+        link.id = 'langfuseSearchTrace'; link.href = url.href;
+        link.textContent = 'View Langfuse search trace ↗';
+        link.target = '_blank'; link.rel = 'noopener noreferrer';
+        document.getElementById('timingBanner')?.append(link);
+      }
+    } catch { /* Invalid telemetry URL must not interrupt a search. */ }
+  }
   currentHits = data.hits || [];
   currentHighlightedIds = new Set(currentHits.map((h) => h.record_id));
 

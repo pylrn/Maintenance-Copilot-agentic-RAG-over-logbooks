@@ -8,6 +8,8 @@ from urllib.parse import urlparse
 from openai import AsyncOpenAI
 from pydantic import SecretStr
 
+from maintenance.telemetry import observation, observed
+
 logger = logging.getLogger("maintenance.provider")
 
 PROVIDER_ENDPOINTS = {
@@ -89,6 +91,7 @@ class LLMProvider:
         key_status = "configured" if self.is_configured else "unconfigured"
         return f"<LLMProvider type={self.provider_type} model={self.model_name} key={key_status}>"
 
+    @observed("llm.request")
     async def chat_completion(
         self,
         messages: list[dict[str, Any]],
@@ -117,7 +120,7 @@ class LLMProvider:
             kwargs["response_format"] = response_format
 
         try:
-            response = await self.client.chat.completions.create(**kwargs)
+            response = await self._traced_completion(**kwargs)
         except Exception as exc:
             # If rate-limited on gemini model, attempt gemini-3.5-flash-lite fallback
             if (
@@ -130,7 +133,7 @@ class LLMProvider:
                     kwargs.get("model"),
                 )
                 kwargs["model"] = "gemini-3.5-flash-lite"
-                response = await self.client.chat.completions.create(**kwargs)
+                response = await self._traced_completion(**kwargs)
             else:
                 logger.error("LLM provider completion error (%s): %s", self.provider_type, type(exc).__name__)
                 raise
@@ -162,6 +165,16 @@ class LLMProvider:
                 "completion_tokens": response.usage.completion_tokens if response.usage else 0,
             },
         }
+
+    async def _traced_completion(self, **kwargs):
+        with observation("llm.generation", "generation", requested_model=kwargs.get("model"), provider=self.provider_type) as span:
+            response = await self.client.chat.completions.create(**kwargs)
+            usage = response.usage
+            effective_model = getattr(response, "model", None) or kwargs.get("model")
+            span.update(model=effective_model,
+                usage={"input": usage.prompt_tokens, "output": usage.completion_tokens} if usage else None,
+                metadata={"effective_model": effective_model, "fallback": effective_model != self.model_name})
+            return response
 
     async def roundtrip_tool_loop(
         self,

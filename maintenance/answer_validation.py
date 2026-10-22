@@ -12,6 +12,7 @@ from maintenance.contracts import (
     ReceiptSupport,
     SupportSpan,
 )
+from maintenance.telemetry import observed
 
 FORBIDDEN_CAUSAL_PHRASES = [
     "permanently resolved",
@@ -186,6 +187,7 @@ def validate_claim(
     return errors
 
 
+@observed("validation.draft", "guardrail", result_metadata=lambda r: {"valid": r.is_valid, "validation_scope": "claims_and_source_spans"})
 def validate_draft(
     draft: DraftAnswer,
     fetched_evidence: dict[UUID, dict[str, Any]],
@@ -217,6 +219,7 @@ def validate_draft(
     return ValidationResult(is_valid=(len(all_errors) == 0), errors=all_errors)
 
 
+@observed("validation.answer", "guardrail", result_metadata=lambda r: {"valid": r.is_valid, "validation_scope": "claims_and_source_spans_not_free_synthesis"})
 def validate_answer(
     answer: AnswerEnvelope,
     fetched_evidence: dict[UUID, dict[str, Any]],

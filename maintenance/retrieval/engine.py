@@ -17,6 +17,7 @@ from maintenance.retrieval.bm25 import BM25Index
 from maintenance.retrieval.compatibility import assess
 from maintenance.retrieval.dense import exact_cosine, normalized_matrix
 from maintenance.retrieval.fusion import fuse_ranked_ids
+from maintenance.telemetry import observation, observed, trace_info
 
 WEIGHTS = {"bm25_raw": 0.5, "bm25_normalized": 0.5, "dense": 1.0}
 
@@ -121,6 +122,9 @@ class RetrievalEngine:
                 raise LookupError("corpus not available")
             yield from self.corpora[cid].records
 
+    @observed("retrieval.search", "retriever",
+        metadata=lambda self, spec, scope: {"domain": spec.domain, "input_characters": len(spec.query_raw), "quality_mode": spec.quality_mode, "intent": spec.intent},
+        result_metadata=lambda r: {"search_id": str(r.search_id), "hit_count": len(r.hits), "record_ids": [h.record_id for h in r.hits], "stage_timings_ms": r.timings_ms, "stage_counts": r.trace.stage_counts if r.trace else {}, "degraded_branches": r.degraded_branches})
     async def search(self, spec: SearchSpec, scope: ServiceScope):
         start = time.perf_counter()
         ids = self._ids(spec, scope)
@@ -153,17 +157,19 @@ class RetrievalEngine:
             t_emb = time.perf_counter()
             query = None
             emb_cache_hit = False
-            if "dense" in self.channels:
-                q_cache_key = (spec.query_normalized, self.encoder.revision)
-                if q_cache_key in self._query_cache:
-                    query = self._query_cache[q_cache_key]
-                    emb_cache_hit = True
-                else:
-                    query = await asyncio.to_thread(
-                        self.encoder.encode_queries, [spec.query_normalized]
-                    )
-                    if len(self._query_cache) < 500:
-                        self._query_cache[q_cache_key] = query
+            with observation("retrieval.embedding", "embedding", model=self.encoder.model_id, dimensions=self.encoder.dimension) as emb_span:
+                if "dense" in self.channels:
+                    q_cache_key = (spec.query_normalized, self.encoder.revision)
+                    if q_cache_key in self._query_cache:
+                        query = self._query_cache[q_cache_key]
+                        emb_cache_hit = True
+                    else:
+                        query = await asyncio.to_thread(
+                            self.encoder.encode_queries, [spec.query_normalized]
+                        )
+                        if len(self._query_cache) < 500:
+                            self._query_cache[q_cache_key] = query
+                emb_span.update(metadata={"embedding_cache_hit": emb_cache_hit})
             embedding_ms = (time.perf_counter() - t_emb) * 1000
 
             result, metrics = await asyncio.to_thread(
@@ -173,49 +179,51 @@ class RetrievalEngine:
             rerank_status = "skipped"
             rerank_pool_size = 0
             t_rerank = time.perf_counter()
-            if spec.quality_mode:
-                if self.reranker is None:
-                    result.degraded_branches.append("reranker_unavailable")
-                    rerank_status = "unavailable"
-                elif self._reranker_busy:
-                    result.degraded_branches.append("reranker_busy")
-                    rerank_status = "busy"
-                else:
-                    pool = result.hits[:20]
-                    rerank_pool_size = len(pool)
-                    rows = {f"{r.corpus_id}/{r.record_id}": r for r in self.scoped_records(scope)}
-                    pairs = [
-                        (spec.query_raw, rows[f"{h.corpus_id}/{h.record_id}"].problem_raw)
-                        for h in pool
-                    ]
-                    self._reranker_busy = True
-                    loop = asyncio.get_running_loop()
-                    fut = loop.run_in_executor(None, self.reranker.score, pairs)
+            with observation("retrieval.rerank") as rerank_span:
+                if spec.quality_mode:
+                    if self.reranker is None:
+                        result.degraded_branches.append("reranker_unavailable")
+                        rerank_status = "unavailable"
+                    elif self._reranker_busy:
+                        result.degraded_branches.append("reranker_busy")
+                        rerank_status = "busy"
+                    else:
+                        pool = result.hits[:20]
+                        rerank_pool_size = len(pool)
+                        rows = {f"{r.corpus_id}/{r.record_id}": r for r in self.scoped_records(scope)}
+                        pairs = [
+                            (spec.query_raw, rows[f"{h.corpus_id}/{h.record_id}"].problem_raw)
+                            for h in pool
+                        ]
+                        self._reranker_busy = True
+                        loop = asyncio.get_running_loop()
+                        fut = loop.run_in_executor(None, self.reranker.score, pairs)
 
-                    def _done_cb(f):
-                        self._reranker_busy = False
+                        def _done_cb(f):
+                            self._reranker_busy = False
+                            try:
+                                f.exception()
+                            except Exception:
+                                pass
+
+                        fut.add_done_callback(_done_cb)
                         try:
-                            f.exception()
+                            scores = await asyncio.wait_for(asyncio.shield(fut), timeout=1.5)
+                            for h, score in zip(pool, scores, strict=True):
+                                h.reranker_score = float(score)
+                            order = {"direct": 0, "related": 1, "tangential": 2}
+                            result.hits = sorted(
+                                pool,
+                                key=lambda h: (order[h.compatibility.tier], -h.reranker_score, h.record_id),
+                            )
+                            rerank_status = "executed"
+                        except asyncio.TimeoutError:
+                            result.degraded_branches.append("reranker_timeout")
+                            rerank_status = "timeout"
                         except Exception:
-                            pass
-
-                    fut.add_done_callback(_done_cb)
-                    try:
-                        scores = await asyncio.wait_for(asyncio.shield(fut), timeout=1.5)
-                        for h, score in zip(pool, scores, strict=True):
-                            h.reranker_score = float(score)
-                        order = {"direct": 0, "related": 1, "tangential": 2}
-                        result.hits = sorted(
-                            pool,
-                            key=lambda h: (order[h.compatibility.tier], -h.reranker_score, h.record_id),
-                        )
-                        rerank_status = "executed"
-                    except asyncio.TimeoutError:
-                        result.degraded_branches.append("reranker_timeout")
-                        rerank_status = "timeout"
-                    except Exception:
-                        result.degraded_branches.append("reranker_error")
-                        rerank_status = "error"
+                            result.degraded_branches.append("reranker_error")
+                            rerank_status = "error"
+                rerank_span.update(metadata={"status": rerank_status, "record_count": rerank_pool_size})
             rerank_ms = (time.perf_counter() - t_rerank) * 1000
 
         t_topk = time.perf_counter()
@@ -338,6 +346,7 @@ class RetrievalEngine:
             ),
         ]
         result.trace = SearchTrace(
+            telemetry=trace_info(),
             stages=stages,
             stage_timings_ms={s.stage: s.duration_ms for s in stages},
             stage_counts={s.stage: s.count_out or 0 for s in stages},
@@ -347,6 +356,7 @@ class RetrievalEngine:
         )
         return result
 
+    @observed("retrieval.recall_and_fusion", "retriever")
     def _retrieve(self, spec, ids, representation, query):
         channel_rows = {name: [] for name in self.channels}
         records = {}
@@ -384,15 +394,18 @@ class RetrievalEngine:
             paths = {}
             if "bm25_raw" in self.channels:
                 t0 = time.perf_counter()
-                paths["bm25_raw"] = raw.search(spec.query_raw, len(corpus.records))
+                with observation("retrieval.bm25_raw"):
+                    paths["bm25_raw"] = raw.search(spec.query_raw, len(corpus.records))
                 raw_bm25_ms += (time.perf_counter() - t0) * 1000
             if "bm25_normalized" in self.channels:
                 t0 = time.perf_counter()
-                paths["bm25_normalized"] = norm.search(spec.query_normalized, len(corpus.records))
+                with observation("retrieval.bm25_normalized"):
+                    paths["bm25_normalized"] = norm.search(spec.query_normalized, len(corpus.records))
                 norm_bm25_ms += (time.perf_counter() - t0) * 1000
             if "dense" in self.channels and query is not None:
                 t0 = time.perf_counter()
-                paths["dense"] = exact_cosine(self.matrices[key], query[0], len(corpus.records))
+                with observation("retrieval.dense_cosine"):
+                    paths["dense"] = exact_cosine(self.matrices[key], query[0], len(corpus.records))
                 dense_ms += (time.perf_counter() - t0) * 1000
 
             for name, rows in paths.items():
@@ -411,7 +424,8 @@ class RetrievalEngine:
         scores = {name: dict(rows) for name, rows in channel_rows.items()}
 
         t_fusion = time.perf_counter()
-        fused = fuse_ranked_ids(channels, WEIGHTS)
+        with observation("retrieval.fusion"):
+            fused = fuse_ranked_ids(channels, WEIGHTS)
         fusion_ms = (time.perf_counter() - t_fusion) * 1000
 
         t_post_compat = time.perf_counter()
