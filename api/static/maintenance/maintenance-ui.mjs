@@ -11,36 +11,61 @@ const labels = { CHALLENGE: 'Challenge answer', DISTINGUISH: 'Distinguish cases'
 function detectAirframeSegments(text) {
   const query = (text || '').toLowerCase();
   const hits = [];
-  if (/cylinder|intake|engine|powerplant|manifold|gasket|prop|rocker|carburetor|fuel pump|spark plug/i.test(query)) {
-    if (/left|l\/h|#1|#3|engine 1/i.test(query)) hits.push({ id: 'seg-engine-l', name: 'Engine #1 (Left Powerplant)' });
-    else hits.push({ id: 'seg-engine-r', name: 'Engine #2 (Right Powerplant)' });
+
+  // Engine keywords
+  if (/cylinder|intake|engine|powerplant|manifold|gasket|prop|rocker|carburetor|fuel pump|spark plug|coolant|oil leak|thrust|blade/i.test(query)) {
+    if (/left|l\/h|#1|#3|engine 1/i.test(query)) {
+      hits.push({ id: 'seg-engine-l', name: 'Engine #1 (Left Turbofan Powerplant)', component: 'engine-l' });
+    } else {
+      hits.push({ id: 'seg-engine-r', name: 'Engine #2 (Right Turbofan Powerplant)', component: 'engine-r' });
+    }
   }
-  if (/wing|slat|flap|aileron|spoiler|fuel tank/i.test(query)) {
-    if (/left|l\/h/i.test(query)) hits.push({ id: 'seg-wing-l-inboard', name: 'Left Inboard Wing' });
-    else hits.push({ id: 'seg-wing-r-inboard', name: 'Right Inboard Wing' });
+
+  // Wing keywords (cracks, fuel tanks, flaps, slats, spars)
+  if (/wing|crack|slat|flap|aileron|spoiler|fuel tank|spar|rib|skin/i.test(query)) {
+    if (/left|l\/h/i.test(query)) {
+      hits.push({ id: 'seg-wing-l-tank', name: 'Left Wing Main Box & Fuel Tank', component: 'wing-l' });
+      hits.push({ id: 'seg-wing-l-slats', name: 'Left Wing Leading Edge', component: 'wing-l' });
+    } else {
+      hits.push({ id: 'seg-wing-r-tank', name: 'Right Wing Main Box & Fuel Tank', component: 'wing-r' });
+      hits.push({ id: 'seg-wing-r-slats', name: 'Right Wing Leading Edge', component: 'wing-r' });
+    }
   }
-  if (/cockpit|avionics|windshield|instrument|mfd|pfd|pedal/i.test(query)) {
-    hits.push({ id: 'seg-cockpit', name: 'Cockpit & Forward Avionics' });
+
+  // Avionics / Flight deck
+  if (/cockpit|avionics|windshield|instrument|mfd|pfd|pedal|display|breaker/i.test(query)) {
+    hits.push({ id: 'seg-cockpit', name: 'Flight Deck & Windshield Section', component: 'cockpit' });
+    hits.push({ id: 'seg-avionics', name: 'Forward Avionics & Instruments Bay', component: 'avionics' });
   }
-  if (/nose|radome|radar|nose gear|steer/i.test(query)) {
-    hits.push({ id: 'seg-nose', name: 'Radome / Nose Cone' });
+
+  // Nose & Radar
+  if (/nose|radome|radar|nose gear|steer|pitot/i.test(query)) {
+    hits.push({ id: 'seg-nose', name: 'Radome / Nose Radar Fairing', component: 'nose' });
   }
+
+  // Empennage & Rudder & Elevators
   if (/tail|rudder|vertical fin|fin/i.test(query)) {
-    hits.push({ id: 'seg-rudder', name: 'Vertical Stabilizer & Rudder' });
+    hits.push({ id: 'seg-rudder', name: 'Vertical Stabilizer & Rudder Surface', component: 'empennage' });
   }
   if (/elevator|stabilizer|horizontal/i.test(query)) {
-    hits.push({ id: 'seg-tail-r', name: 'Right Horizontal Stabilizer' });
+    hits.push({ id: 'seg-tail-r', name: 'Right Horizontal Stabilizer & Elevator', component: 'empennage' });
   }
-  if (/apu|tail cone/i.test(query)) {
-    hits.push({ id: 'seg-apu', name: 'APU & Tail Cone' });
+  if (/apu|tail cone|exhaust/i.test(query)) {
+    hits.push({ id: 'seg-apu', name: 'APU Fire Containment & Tail Cone', component: 'apu' });
   }
-  if (/fuselage|cabin|door|window|keel/i.test(query)) {
-    hits.push({ id: 'seg-fuselage-mid', name: 'Center Fuselage Section' });
+  if (/fuselage|cabin|door|window|keel|center box/i.test(query)) {
+    hits.push({ id: 'seg-center-box', name: 'Center Wing Box & Keel Beam', component: 'center-box' });
+    hits.push({ id: 'seg-fuselage-fwd', name: 'Forward Fuselage Section', component: 'fuselage' });
   }
+
   return hits;
 }
 
+let activeDetectedHits = [];
+let currentFaultContext = '';
+
 function updateAirframeHighlight(text) {
+  currentFaultContext = text;
   const allSegs = document.querySelectorAll('.plane-seg');
   allSegs.forEach(el => {
     el.classList.remove('highlight-alert', 'highlight-warn');
@@ -48,34 +73,193 @@ function updateAirframeHighlight(text) {
   
   const dot = $('planeStatusDot');
   const label = $('planeActiveHighlight');
-  const detected = detectAirframeSegments(text);
+  activeDetectedHits = detectAirframeSegments(text);
 
-  if (detected.length > 0) {
-    detected.forEach(hit => {
-      // Check both main and side panel silhouettes
-      const els = document.querySelectorAll(`#${hit.id}`);
+  if (activeDetectedHits.length > 0) {
+    activeDetectedHits.forEach(hit => {
+      const els = document.querySelectorAll('#' + hit.id);
       els.forEach(el => el.classList.add('highlight-alert'));
     });
     if (dot) dot.classList.add('active');
     if (label) {
-      label.textContent = `ALERT: Damage/Fault localized to ${detected.map(d => d.name).join(', ')}`;
+      label.textContent = `ALERT: Damage/Fault localized to ${activeDetectedHits.map(d => d.name).join(', ')} — CLICK component for structural drill-down`;
       label.classList.add('alert');
     }
   } else if (text && text.trim().length > 0) {
-    // Default to engine/fuselage indicator if generic error
     const els = document.querySelectorAll('#seg-engine-r');
     els.forEach(el => el.classList.add('highlight-alert'));
     if (dot) dot.classList.add('active');
     if (label) {
-      label.textContent = `FAULT DETECTED: Localized to Engine / Airframe (${text.slice(0, 40)}...)`;
+      label.textContent = `FAULT DETECTED: Localized to Engine / Airframe (${text.slice(0, 40)}...) — CLICK for structural breakdown`;
       label.classList.add('alert');
     }
   } else {
     if (dot) dot.classList.remove('active');
     if (label) {
-      label.textContent = 'All systems nominal · awaiting fault input';
+      label.textContent = 'All systems nominal · click any component to inspect structural breakdown';
       label.classList.remove('alert');
     }
+  }
+}
+
+// Sub-component templates for Drill-Down Views
+function renderDrillDown(componentType, hitName) {
+  const container = $('drilldownContainer');
+  const svgWrap = $('planeSvgContainer');
+  const canvas = $('drilldownCanvas');
+  const title = $('drilldownTitle');
+  const badge = $('drilldownBadge');
+  const text = $('drilldownText');
+
+  svgWrap.hidden = true;
+  container.hidden = false;
+
+  const isWing = componentType.includes('wing');
+  const isEngine = componentType.includes('engine');
+  const isCockpit = componentType.includes('cockpit') || componentType.includes('avionics');
+
+  if (isWing) {
+    title.textContent = `INTERNAL STRUCTURAL INSPECTION: ${hitName.toUpperCase()}`;
+    badge.className = 'drilldown-diag-badge alert';
+    badge.textContent = 'DEFECT LOCALIZED: WING STATION 240';
+    text.innerHTML = `<strong>Structural Integrity Report:</strong> Micro-fractures and surface cracks detected across the <em>Middle Wing Spar Box (Upper Skin)</em> directly above the engine pylon mount. Rib 14 shows ultrasonic stress signatures. Inspection required prior to further flight.`;
+
+    canvas.innerHTML = `
+      <svg viewBox="0 0 700 280" width="100%" height="100%">
+        <!-- Wing Outline Canvas -->
+        <path d="M 50,40 L 650,90 L 630,220 L 70,240 Z" fill="#fdfcf8" stroke="#a39a8c" stroke-width="2" />
+        
+        <!-- Rib Structures -->
+        <g stroke="#d5cfc4" stroke-width="1.5">
+          <line x1="120" y1="46" x2="135" y2="235" />
+          <line x1="190" y1="52" x2="200" y2="230" />
+          <line x1="260" y1="58" x2="265" y2="225" />
+          <line x1="330" y1="64" x2="330" y2="220" />
+          <line x1="400" y1="70" x2="395" y2="215" />
+          <line x1="470" y1="76" x2="460" y2="210" />
+          <line x1="540" y1="82" x2="525" y2="205" />
+        </g>
+
+        <!-- Main Spar Lines -->
+        <path d="M 60,85 L 640,120" stroke="#788b9c" stroke-width="3" stroke-dasharray="6,3" />
+        <path d="M 65,185 L 635,180" stroke="#788b9c" stroke-width="3" stroke-dasharray="6,3" />
+
+        <!-- Segment: Inboard Root -->
+        <rect class="sub-seg" x="65" y="70" width="120" height="130" rx="4" data-sub="Wing Inboard Root" />
+        <!-- Segment: Mid Wing Box (Target Cracks) -->
+        <rect class="sub-seg fault-active" x="200" y="80" width="190" height="110" rx="4" data-sub="Mid-Wing Spar & Skin (Cracks)" />
+        <!-- Segment: Outboard Aileron / Tip -->
+        <rect class="sub-seg" x="405" y="95" width="220" height="95" rx="4" data-sub="Outboard Tank & Tip" />
+
+        <!-- Crack Glyphs on the Middle Wing Section -->
+        <g stroke="#ffffff" stroke-width="2.5" stroke-linecap="round">
+          <path d="M 270,120 L 285,135 L 280,145 L 295,160" />
+          <path d="M 310,110 L 320,125 L 315,140" />
+          <path d="M 250,135 L 260,150" />
+        </g>
+
+        <!-- Engine Pylon Reference Indicator -->
+        <rect x="250" y="215" width="90" height="25" rx="4" fill="#081726" />
+        <text x="295" y="232" fill="#fff" font-family="'IBM Plex Mono', monospace" font-size="10" text-anchor="middle">PYLON ATTACH</text>
+
+        <!-- Labels -->
+        <text x="125" y="140" fill="#7a8b9c" font-family="'IBM Plex Mono', monospace" font-size="11" text-anchor="middle">INBOARD ROOT</text>
+        <text x="295" y="105" fill="#ffffff" font-family="'Archivo', sans-serif" font-weight="700" font-size="12" text-anchor="middle">FRACTURE ZONE: MID-SPAR BOX</text>
+        <text x="515" y="150" fill="#7a8b9c" font-family="'IBM Plex Mono', monospace" font-size="11" text-anchor="middle">OUTBOARD SECTION</text>
+      </svg>
+    `;
+  } else if (isEngine) {
+    title.textContent = `INTERNAL STRUCTURAL INSPECTION: ${hitName.toUpperCase()}`;
+    badge.className = 'drilldown-diag-badge alert';
+    badge.textContent = 'DEFECT LOCALIZED: COMPRESSOR & COOLANT LINE';
+    text.innerHTML = `<strong>Turbofan Diagnostic Report:</strong> Coolant / fluid manifold seepage detected at the <em>High-Pressure Compressor Stage 2</em> line junction, dripping onto the bypass fan stator blades. Gasket deformation and cracked seal ring noted.`;
+
+    canvas.innerHTML = `
+      <svg viewBox="0 0 700 280" width="100%" height="100%">
+        <!-- Engine Nacelle Casing -->
+        <path d="M 80,50 L 580,50 Q 640,140 580,230 L 80,230 Q 30,140 80,50 Z" fill="#fdfcf8" stroke="#a39a8c" stroke-width="2" />
+
+        <!-- 1. Fan Blades Section -->
+        <rect class="sub-seg" x="90" y="65" width="90" height="150" rx="6" data-sub="Bypass Fan Rotor & Stator" />
+        
+        <!-- 2. Low Pressure Compressor -->
+        <rect class="sub-seg" x="195" y="80" width="90" height="120" rx="4" data-sub="Low-Pressure Compressor" />
+
+        <!-- 3. High Pressure Compressor & Coolant Line (Target Fault) -->
+        <rect class="sub-seg fault-active" x="300" y="75" width="115" height="130" rx="4" data-sub="HP Compressor & Coolant Seal" />
+
+        <!-- 4. Combustor & Fuel Nozzles -->
+        <rect class="sub-seg" x="430" y="85" width="85" height="110" rx="4" data-sub="Combustor Section" />
+
+        <!-- 5. Turbine & Exhaust Nozzle -->
+        <rect class="sub-seg" x="530" y="95" width="70" height="90" rx="4" data-sub="Turbine & Exhaust Nozzle" />
+
+        <!-- Fluid Leakage Graphic Overlay -->
+        <path d="M 350,90 Q 340,130 355,165" stroke="#ffffff" stroke-width="3" stroke-linecap="round" fill="none" />
+        <circle cx="355" cy="170" r="5" fill="#ffffff" />
+        <path d="M 370,110 L 375,145" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round" />
+
+        <!-- Rotor Centerline -->
+        <line x1="60" y1="140" x2="620" y2="140" stroke="#c25f38" stroke-width="2" stroke-dasharray="5,4" />
+
+        <!-- Labels -->
+        <text x="135" y="145" fill="#7a8b9c" font-family="'IBM Plex Mono', monospace" font-size="11" text-anchor="middle">FAN BLADES</text>
+        <text x="240" y="145" fill="#7a8b9c" font-family="'IBM Plex Mono', monospace" font-size="10" text-anchor="middle">LP COMP</text>
+        <text x="358" y="102" fill="#ffffff" font-family="'Archivo', sans-serif" font-weight="700" font-size="11" text-anchor="middle">COOLANT LEAK / GASKET</text>
+        <text x="472" y="145" fill="#7a8b9c" font-family="'IBM Plex Mono', monospace" font-size="10" text-anchor="middle">COMBUSTOR</text>
+        <text x="565" y="145" fill="#7a8b9c" font-family="'IBM Plex Mono', monospace" font-size="10" text-anchor="middle">TURBINE</text>
+      </svg>
+    `;
+  } else {
+    // Default Cockpit / Avionics / Airframe drilldown
+    title.textContent = `INTERNAL STRUCTURAL INSPECTION: ${hitName.toUpperCase()}`;
+    badge.className = 'drilldown-diag-badge alert';
+    badge.textContent = 'AVIONICS & HARNESS CHECK';
+    text.innerHTML = `<strong>Avionics Diagnostics:</strong> Intermittent bus connectivity and signal drop on <em>Primary Flight Display Main Bus 1</em>. Circuit breaker CB-14 tripped with connector corrosion detected.`;
+
+    canvas.innerHTML = `
+      <svg viewBox="0 0 700 280" width="100%" height="100%">
+        <rect x="80" y="40" width="540" height="200" rx="12" fill="#fdfcf8" stroke="#a39a8c" stroke-width="2" />
+        <rect class="sub-seg fault-active" x="120" y="70" width="130" height="140" rx="6" data-sub="PFD Display Unit 1" />
+        <rect class="sub-seg" x="280" y="70" width="130" height="140" rx="6" data-sub="Navigation Display" />
+        <rect class="sub-seg" x="440" y="70" width="140" height="140" rx="6" data-sub="Engine Indications (EICAS)" />
+        <text x="185" y="145" fill="#fff" font-family="'Archivo', sans-serif" font-weight="700" font-size="12" text-anchor="middle">PFD 1 (BLANK)</text>
+        <text x="345" y="145" fill="#7a8b9c" font-family="'IBM Plex Mono', monospace" font-size="12" text-anchor="middle">NAV DISPLAY</text>
+        <text x="510" y="145" fill="#7a8b9c" font-family="'IBM Plex Mono', monospace" font-size="12" text-anchor="middle">EICAS DISPLAY</text>
+      </svg>
+    `;
+  }
+
+  // Add click handlers on sub-segments inside the drill-down canvas
+  canvas.querySelectorAll('.sub-seg').forEach(el => {
+    el.addEventListener('click', () => {
+      canvas.querySelectorAll('.sub-seg').forEach(s => s.classList.remove('fault-active'));
+      el.classList.add('fault-active');
+      const subName = el.getAttribute('data-sub') || 'Selected Sub-component';
+      badge.textContent = 'INSPECTING: ' + subName.toUpperCase();
+      text.textContent = `Telemetry confirmed for ${subName}. Inspection logs, sensor voltages and mechanical clearances nominal except flagged fault areas.`;
+    });
+  });
+}
+
+function initAirframeInteractions() {
+  const planeSvg = $('planeSvg');
+  if (planeSvg) {
+    planeSvg.querySelectorAll('.plane-seg').forEach(seg => {
+      seg.addEventListener('click', () => {
+        const segId = seg.id;
+        const segName = seg.getAttribute('data-name') || segId;
+        renderDrillDown(segId, segName);
+      });
+    });
+  }
+
+  const backBtn = $('drilldownBackBtn');
+  if (backBtn) {
+    backBtn.addEventListener('click', () => {
+      $('drilldownContainer').hidden = true;
+      $('planeSvgContainer').hidden = false;
+    });
   }
 }
 
@@ -427,6 +611,7 @@ async function boot() {
     const saved = localStorage.getItem(storageKey);
     if (saved) { try { await restore(saved); } catch (error) { if (error.status === 404 || demo) await newSession(); else throw error; } }
     else await newSession();
+    initAirframeInteractions();
   } catch (error) {
     status('backend unavailable'); $('coverage').textContent = 'Source catalogue unavailable';
     notice(error.message + ' For the labeled simulated preview, open this URL with ?demo=1. Live mode never falls back to fixtures.');
