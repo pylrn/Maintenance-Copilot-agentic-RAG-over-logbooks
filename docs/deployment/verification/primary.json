@@ -1,0 +1,68 @@
+{
+  "url": "https://maintenance-copilot-dun.vercel.app",
+  "checks": [
+    {
+      "path": "/",
+      "http": 200
+    },
+    {
+      "path": "/maintenance/",
+      "http": 200
+    },
+    {
+      "path": "/deployment-status.json",
+      "http": 200
+    },
+    {
+      "path": "/maintenance/deployment-config.mjs",
+      "http": 200
+    },
+    {
+      "path": "/api/maintenance/v1/health",
+      "http": 200
+    },
+    {
+      "query": "intake leak",
+      "status": "supported_historical",
+      "sse_events": [
+        "run_started",
+        "query_interpreted",
+        "search_started",
+        "search_completed",
+        "tool_started",
+        "tool_completed",
+        "evidence_ready",
+        "validation_started",
+        "board_updated",
+        "answer_validated",
+        "done"
+      ],
+      "run_id": "7c9bda76-b04f-4c7d-979c-8b010743efb3"
+    },
+    {
+      "query": "CYL #99 intake leak",
+      "status": "insufficient_evidence",
+      "sse_events": [
+        "run_started",
+        "query_interpreted",
+        "search_started",
+        "search_completed",
+        "tool_started",
+        "tool_completed",
+        "evidence_ready",
+        "validation_started",
+        "board_updated",
+        "answer_validated",
+        "done"
+      ],
+      "run_id": "74d003d1-ca4f-4e5d-a9cd-dbd6679481c2"
+    }
+  ],
+  "assets_checked": 5,
+  "cookie": {
+    "secure": true,
+    "httponly": true,
+    "samesite": "strict"
+  },
+  "untrusted_origin_http": 403
+}

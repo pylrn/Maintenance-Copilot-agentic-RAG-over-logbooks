@@ -58,3 +58,16 @@ This is a working local-backend development connection, not an always-on hosted 
 - HTTPS cookie Secure/HttpOnly/SameSite, origin rejection, actual deployment mode and linked GitHub main branch.
 
 Browser automation was unavailable in the current Work settings. Deployment checks use real HTTPS requests and static dependency checks; no browser-rendering claim is made.
+
+## Verified deployment — 22 October 2026
+
+Implementation commit: `5d030ae`. Both GitHub-linked Vercel deployments succeeded.
+
+- Primary: https://maintenance-copilot-dun.vercel.app/maintenance/
+- Secondary: https://nexaiimplimentation.vercel.app/maintenance/
+- Public primary query regression: **10/10 passed**, including evidence, abstention and original source quote/hash checks.
+- Both public domains passed asset, health, session-cookie, streaming-completion, supported-answer, insufficient-evidence and rejected-origin checks.
+- Local checks: **132 Python tests passed, 1 skipped; 14 JavaScript tests passed**.
+- These deployment checks used `extractive/v1`; no model API quota was consumed. They verify the deployment path, not live model performance.
+
+Machine-readable results are in `verification/primary.json`, `verification/secondary.json` and `verification/query-regression.json`. Browser rendering was not checked because local browser automation was disabled. The computer/tunnel availability requirements above still apply.

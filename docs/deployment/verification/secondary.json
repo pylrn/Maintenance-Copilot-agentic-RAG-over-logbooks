@@ -1,0 +1,68 @@
+{
+  "url": "https://nexaiimplimentation.vercel.app",
+  "checks": [
+    {
+      "path": "/",
+      "http": 200
+    },
+    {
+      "path": "/maintenance/",
+      "http": 200
+    },
+    {
+      "path": "/deployment-status.json",
+      "http": 200
+    },
+    {
+      "path": "/maintenance/deployment-config.mjs",
+      "http": 200
+    },
+    {
+      "path": "/api/maintenance/v1/health",
+      "http": 200
+    },
+    {
+      "query": "intake leak",
+      "status": "supported_historical",
+      "sse_events": [
+        "run_started",
+        "query_interpreted",
+        "search_started",
+        "search_completed",
+        "tool_started",
+        "tool_completed",
+        "evidence_ready",
+        "validation_started",
+        "board_updated",
+        "answer_validated",
+        "done"
+      ],
+      "run_id": "26596ebd-3755-4000-a8dd-ea66eb9f9b74"
+    },
+    {
+      "query": "CYL #99 intake leak",
+      "status": "insufficient_evidence",
+      "sse_events": [
+        "run_started",
+        "query_interpreted",
+        "search_started",
+        "search_completed",
+        "tool_started",
+        "tool_completed",
+        "evidence_ready",
+        "validation_started",
+        "board_updated",
+        "answer_validated",
+        "done"
+      ],
+      "run_id": "7ae03c50-0506-4a58-86a2-74988b0eab28"
+    }
+  ],
+  "assets_checked": 5,
+  "cookie": {
+    "secure": true,
+    "httponly": true,
+    "samesite": "strict"
+  },
+  "untrusted_origin_http": 403
+}
