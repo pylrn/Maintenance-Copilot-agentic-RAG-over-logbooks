@@ -32,7 +32,7 @@ Core evidence semantics remain: logs establish recorded PROBLEM/ACTION text, not
 
 ## 3. What is actually working in the frontend
 
-The explicit demo uses `?demo=1`, eight invented `DEMO-*` records, and browser localStorage. It does not query Supabase, run an embedding model/LLM, or demonstrate a production evidence gate.
+The explicit demo uses `?demo=1`, 18 invented `DEMO-*` records, and browser localStorage. It does not query Supabase, run an embedding model/LLM, or demonstrate a production evidence gate.
 
 Working demo interactions include issue submission, related demo records, original-record/citation dialogs, pins, browser demo history, board display, simulated public activity, contextual action buttons, text/Markdown upload, and handover export. Some action modes are intentionally explanatory placeholders, not functioning comparison/hypothesis engines. Demo PDF extraction is unavailable. Browser history is not server-authoritative persistence.
 
@@ -43,7 +43,7 @@ Aircraft explorer:
 - UI mention mapping for side aliases (left/right, LH/RH, L/H/R/H, port/starboard), engine numbering and named controls. Unspecified wing side highlights both. Cylinder numbers do not select an engine side.
 - This is bounded keyword mapping, not a diagnosis engine, calibrated classifier or verified aircraft component catalog. Complex negation, multiple faults and ambiguous natural language need further work.
 - Six separate wing profiles: slats (surface/support track/nose interface), flaps (panel/linkage/track-carriage), ailerons (panel/hinges/control connection), spoilers (raised panel/actuator/hinge), tank region (enclosure/spars-ribs/access/feed-vent), winglet (shell/root/reinforcement).
-- Generic educational engine, avionics and other-structure cutaways remain. Not every one of the 33 exterior regions has a unique internal profile.
+- Ten additional regional profiles now cover nose/radome, cockpit glazing, avionics bay, forward cabin, aft cabin, center box, tail cone/APU, horizontal stabilizer, elevator and rudder. Each has distinct geometry, three internal callouts and component-specific issue context. Landing gear, doors and pylons still use the generic structural view; not all 33 regions have unique internals. Engine retains its lubrication cutaway.
 - Red internal areas identify illustrative candidates. The compact box follows the selected internal part and says its condition is unverified. Educational references are distinct from log citations.
 
 ## 4. File map
@@ -57,10 +57,12 @@ Aircraft explorer:
 | `api/static/maintenance/airframe-mapping.mjs` | Query-to-exterior-region mention mapping |
 | `api/static/maintenance/component-explorer.mjs` | Internal renderer and conditional educational scenarios |
 | `api/static/maintenance/wing-profiles.mjs` | Six distinct wing diagrams, catalogs and profile-specific scenario context |
+| `api/static/maintenance/airframe-profiles.mjs` | Ten additional regional cutaways, internal parts, issue rules and examples |
+| `api/static/maintenance/demo-component-cases.mjs` | Ten invented regional records, selected through the same region mapping |
 | `api/static/maintenance/workspace-navigation.mjs` | Sidebar navigation and feature directory |
 | `api/static/maintenance/atlas-workspace.css` | Latest layout/design/animation overrides; loaded last |
 | `api/static/maintenance/maintenance.css`, `talent-base.css` | Retained base styles; do not casually remove them before consolidating dependencies |
-| `tests/ui/airframe-mapping.test.mjs` | Node regression checks for mapping, real SVG IDs and wing profiles |
+| `tests/ui/airframe-mapping.test.mjs`, `tests/ui/airframe-profiles.test.mjs` | Node regression checks for mapping, real SVG IDs, regional geometry and demo matches |
 | `maintenance/contracts.py`, `contracts/v1/` | Existing canonical Python contracts/schema artifacts; not identical to the current demo view model |
 | `api/main.py`, `api/routes/search.py`, `api/routes/records.py` | Existing backend composition/search/source endpoints |
 | `docs/p1/PERSON_2_HANDOFF.md` | P1 service/lifecycle/auth interface handoff |
@@ -78,7 +80,7 @@ python -m http.server 8765 --bind 127.0.0.1 --directory api/static/maintenance
 
 Open http://localhost:8765/?demo=1 . That port serves the static preview only. Omitting `demo=1` selects the live adapter; there is no silent fallback to invented evidence.
 
-Examples to type manually (sample cards were intentionally removed): `Engine 1 oil leak`, `left wing flap stuck`, `RH aileron jammed`, `wings fuel leak`, `cockpit display blank`.
+Examples to type manually (sample cards were intentionally removed): `Engine 1 oil leak`, `left wing flap stuck`, `RH aileron jammed`, `wings fuel leak`, `cockpit display blank`, `Radome crack near the attachment ring`, `Forward cabin window seal leak`, `Aft cabin pressure leak`, `APU exhaust vibration in tail cone`, `Left horizontal stabilizer crack`, `Right elevator stiff movement`, `Rudder hinge excessive play`.
 
 Current demo DB key: `maintenance-atlas-explicit-demo-v2`. Session pointer key: `maintenance-atlas-demo-session-pointer`. Preserve or explicitly reset only this app's demo storage when testing; never clear unrelated browser data.
 
@@ -128,7 +130,7 @@ SSE envelope is `protocol_version='maintenance/v1'`, run UUID, positive monotoni
 
 ## 8. How to integrate evidence into the aircraft red box
 
-Currently there is no live log-to-internal-part binding. `airframe-mapping.mjs` maps user text to exterior IDs. `wing-profiles.mjs` and `issueScenario()` provide static educational context. They must not become authoritative evidence merely because a matching record is returned.
+Currently there is no live log-to-internal-part binding. `airframe-mapping.mjs` maps user text to exterior IDs. `wing-profiles.mjs`, `airframe-profiles.mjs` and `issueScenario()` provide static educational context. They must not become authoritative evidence merely because a matching record is returned.
 
 Agree a reviewed catalog and mapping revision with P1. Preserve existing exterior IDs (`seg-wing-l-flaps`, etc.) or provide an explicit migration; local profile arrays use numeric callout indices, which are not durable backend component identifiers yet.
 
@@ -152,7 +154,7 @@ No deployment or live end-to-end/provider validation is claimed by this frontend
 
 ## 10. Verification and commit trail
 
-Latest frontend feature commit before this document: `654c1dc`. Earlier commits on the same branch:
+The branch includes the original feature series through `654c1dc`, handover commit `caf2be3`, and the regional-cutaway update documented in `docs/p2/regional-cutaways.md`. Read the current files and branch HEAD for the latest baseline. Earlier commits on the same branch:
 
 - `738100b`: initial component explorer and conditional oil-loss view.
 - `248a695`: sidebar, palette and guided UI overhaul.
@@ -163,16 +165,16 @@ Latest frontend feature commit before this document: `654c1dc`. Earlier commits 
 Run from the repository root:
 
 ```powershell
-node --test tests/ui/airframe-mapping.test.mjs
+node --test tests/ui/airframe-mapping.test.mjs tests/ui/airframe-profiles.test.mjs
 node --check api/static/maintenance/maintenance-ui.mjs
 node --check api/static/maintenance/component-explorer.mjs
 node --check api/static/maintenance/wing-profiles.mjs
 git diff --check
 ```
 
-Six Node tests passed in the frontend session. Browser checks covered single issue submission, citations, directory/settings, six wing profiles, spoiler mouse selection, keyboard callouts, selected-part updates, wing side highlighting, animation styles, and 390/1440 px layouts without horizontal overflow or observed console errors. These are frontend/demo checks, not live backend acceptance. Reduced-motion overrides were reviewed in CSS.
+Ten Node tests passed after the regional-cutaway update. All ten new regional views were opened in the browser, and new nose/rudder demo results and selected-part context were checked. Browser checks covered single issue submission, citations, directory/settings, six wing profiles, spoiler mouse selection, keyboard callouts, selected-part updates, wing side highlighting, animation styles, and 390/1440 px layouts without horizontal overflow or observed console errors. These are frontend/demo checks, not live backend acceptance. Reduced-motion overrides were reviewed in CSS.
 
-Screenshots: `docs/p2/previews/aircraft-explorer.png`, `compact-wing-detail.png`, `flap-cutaway.png`, plus earlier previews. P1's older retrieval/evaluation reports remain under `docs/p1/`; do not present those as new Supabase or agent validation.
+Screenshots: `docs/p2/previews/aircraft-explorer.png`, `compact-wing-detail.png`, `flap-cutaway.png`, `nose-cutaway.png`, `rudder-cutaway.png`, plus earlier previews. P1's older retrieval/evaluation reports remain under `docs/p1/`; do not present those as new Supabase or agent validation.
 
 ## 11. Pasteable context for Kushaan's agent
 

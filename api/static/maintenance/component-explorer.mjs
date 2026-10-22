@@ -1,3 +1,4 @@
+import { getAirframeProfile, airframeProfileScenario } from './airframe-profiles.mjs';
 import { getWingProfile, wingProfileScenario } from './wing-profiles.mjs';
 // Authored illustrative geometry. No sensor, source-record, or aircraft-model authority.
 const source = 'https://www.faa.gov/sites/faa.gov/files/regulations_policies/handbooks_manuals/aviation/FAA-H-8083-32-AMT-Powerplant-Vol-2.pdf';
@@ -51,10 +52,11 @@ function diagram(kind, profile = null) {
 }
 export function renderComponentExplorer(component, name, query) {
  const kind = /engine/.test(component)?'engine':/wing/.test(component)?'wing':/cockpit|avionics/.test(component)?'avionics':'structure';
- const profile = getWingProfile(component);
+ const airframeProfile = getAirframeProfile(component);
+ const profile = getWingProfile(component) || airframeProfile;
  const items = profile?.parts || catalogs[kind];
  const genericScenario = issueScenario(kind, query);
- let scenario = profile ? wingProfileScenario(profile, query) : genericScenario;
+ let scenario = airframeProfile ? airframeProfileScenario(airframeProfile, query) : profile ? wingProfileScenario(profile, query) : genericScenario;
  if(profile?.key === 'tank' && genericScenario) {
    if(/fuel/i.test(query) && /leak|loss/i.test(query)) scenario={...genericScenario,parts:[0,2,3],initial:2};
    else if(/crack|fracture/i.test(query)) scenario={...genericScenario,parts:[1],initial:1};
