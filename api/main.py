@@ -226,11 +226,32 @@ def create_app(settings=None, search_engine=None):
         }
 
     @app.get("/maintenance")
+    @app.get("/maintenance/")
     async def product():
-        path = ROOT / "api/static/maintenance.html"
+        path = ROOT / "api/static/maintenance/index.html"
         if not path.exists() or not app.state.workflows_ready:
             raise HTTPException(503, "person_two_ui_pending")
-        return FileResponse(path)
+        return FileResponse(
+            path,
+            headers={
+                "Cache-Control": "no-cache, no-store, must-revalidate",
+                "Pragma": "no-cache",
+                "Expires": "0",
+            },
+        )
+
+    @app.get("/maintenance/{file_path:path}")
+    async def maintenance_asset(file_path: str):
+        maintenance_root = (ROOT / "api/static/maintenance").resolve()
+        asset_path = (maintenance_root / file_path).resolve()
+        if not str(asset_path).startswith(str(maintenance_root)):
+            raise HTTPException(403, "forbidden")
+        if asset_path.is_file():
+            return FileResponse(asset_path)
+        index_path = maintenance_root / "index.html"
+        if index_path.is_file():
+            return FileResponse(index_path)
+        raise HTTPException(404, "not_found")
 
     @app.get("/retrieval-lab")
     async def retrieval_lab():

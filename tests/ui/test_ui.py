@@ -16,23 +16,27 @@ def test_maintenance_page_and_assets_served():
     app.state.workflows_ready = True
     client = TestClient(app)
 
-    # Check /maintenance serves HTML
+    # Check /maintenance and /maintenance/ serve new Atlas HTML
     resp = client.get("/maintenance")
     assert resp.status_code == 200
-    assert "MAINTENANCE" in resp.text
-    assert "Aviation Maintenance Copilot" in resp.text
+    assert "Maintenance Atlas" in resp.text
+    assert "atlas-workspace.css" in resp.text
 
-    # Check static CSS
-    css_resp = client.get("/static/maintenance.css")
+    resp_slash = client.get("/maintenance/")
+    assert resp_slash.status_code == 200
+    assert "Maintenance Atlas" in resp_slash.text
+
+    # Check static modular CSS
+    css_resp = client.get("/static/maintenance/atlas-workspace.css")
     assert css_resp.status_code == 200
-    assert "--navy-950" in css_resp.text
+    assert "--teal-950" in css_resp.text or "atlas" in css_resp.text
 
-    # Check static JS
-    js_resp = client.get("/static/maintenance.js")
+    # Check static ES module
+    js_resp = client.get("/static/maintenance/airframe-mapping.mjs")
     assert js_resp.status_code == 200
-    assert "initNewSession" in js_resp.text
+    assert "detectAirframeSegments" in js_resp.text
 
-    # Check SVG schematic
+    # Check SVG schematic remains accessible
     svg_resp = client.get("/static/assets/engine-concept.svg")
     assert svg_resp.status_code == 200
     assert "engine-concept-svg" in svg_resp.text
