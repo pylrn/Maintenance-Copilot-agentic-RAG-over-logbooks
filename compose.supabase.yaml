@@ -1,0 +1,21 @@
+# Optional Docker Compose override for managed PostgreSQL / Supabase
+#
+# Validated invocation (uses both env files so base db interpolation succeeds, then targets api service):
+#   docker compose --env-file .env --env-file .env.supabase -f compose.yaml -f compose.supabase.yaml config --quiet
+#   docker compose --env-file .env --env-file .env.supabase -f compose.yaml -f compose.supabase.yaml up -d api
+#
+services:
+  api:
+    environment:
+      DATABASE_URL: ${DATABASE_URL:?Set DATABASE_URL in environment or .env file}
+      DATABASE_SCHEMA: ${DATABASE_SCHEMA:-maintenance}
+      VECTOR_SCHEMA: ${VECTOR_SCHEMA:-extensions}
+      DATABASE_SSL_ROOT_CERT: /app/certs/supabase-root-2021.crt
+      STATEMENT_CACHE_SIZE: ${DATABASE_STATEMENT_CACHE_SIZE:-0}
+      LLM_PROVIDER: ${LLM_PROVIDER:-gemini}
+      GEMINI_API_KEY: ${GEMINI_API_KEY:-}
+      GEMINI_BASE_URL: ${GEMINI_BASE_URL:-https://generativelanguage.googleapis.com/v1beta/openai/}
+      GEMINI_MODEL: ${GEMINI_MODEL:-gemini-3.8-flash}
+    volumes:
+      - ./data/certs:/app/certs:ro
+    depends_on: !reset []

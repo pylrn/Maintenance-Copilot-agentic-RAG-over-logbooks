@@ -10,11 +10,11 @@ from pathlib import Path
 from uuid import UUID
 
 from fastapi import FastAPI
-from fastapi.responses import FileResponse, JSONResponse
+from fastapi.responses import FileResponse, JSONResponse, RedirectResponse
 from fastapi.staticfiles import StaticFiles
 from starlette.exceptions import HTTPException
 
-from api.routes import records, search
+from api.routes import lab, records, search
 from maintenance.auth import IdentitySigner
 from maintenance.config import Settings
 from maintenance.db import Database
@@ -42,6 +42,10 @@ def create_app(settings=None, search_engine=None):
                     settings.database_url.get_secret_value(),
                     settings.db_pool_min,
                     settings.db_pool_max,
+                    schema=settings.database_schema,
+                    vector_schema=settings.vector_schema,
+                    ssl_root_cert=settings.database_ssl_root_cert,
+                    statement_cache_size=settings.statement_cache_size,
                 )
                 await db.open()
                 app.state.db = db
@@ -74,6 +78,7 @@ def create_app(settings=None, search_engine=None):
                             Reranker, settings.rerank_revision, settings.model_cache_dir
                         )
                     app.state.search_engine = RetrievalEngine(corpora, matrices, encoder, reranker)
+                    await asyncio.to_thread(encoder.encode_queries, ["warmup"])
             except Exception as exc:
                 # Never include exception text; a driver error may contain connection details.
                 app.state.startup_errors.append(type(exc).__name__)
@@ -102,6 +107,9 @@ def create_app(settings=None, search_engine=None):
     app.state.settings = settings
     app.state.search_engine = search_engine
     app.state.workflows_ready = False
+    app.state.workflow_capabilities = {}
+    app.state.db = None
+    app.state.startup_errors = []
     secret = (
         settings.session_signing_secret.get_secret_value()
         if settings.session_signing_secret
@@ -110,6 +118,7 @@ def create_app(settings=None, search_engine=None):
     app.state.identity_signer = IdentitySigner(secret, settings.owner_cookie_max_age)
     app.include_router(search.router, prefix=PREFIX)
     app.include_router(records.router, prefix=PREFIX)
+    app.include_router(lab.router, prefix=PREFIX + "/lab")
     if workflows:
         app.include_router(workflows.router, prefix=PREFIX)
 
@@ -159,6 +168,11 @@ def create_app(settings=None, search_engine=None):
         return JSONResponse(
             {
                 "ready": ready,
+                "app_ready": bool(
+                    ready
+                    and app.state.workflows_ready
+                    and app.state.workflow_capabilities.get("agent_ready", False)
+                ),
                 "retrieval_ready": retrieval,
                 "database_ready": db_ready,
                 "workflows_ready": app.state.workflows_ready,
@@ -170,6 +184,22 @@ def create_app(settings=None, search_engine=None):
     @app.get(PREFIX + "/capabilities")
     async def capabilities():
         engine = app.state.search_engine
+        provider = getattr(app.state, "provider", None)
+        if provider is not None:
+            is_provider_configured = provider.is_configured
+        elif settings.llm_provider == "gemini":
+            is_provider_configured = bool(
+                settings.gemini_api_key
+                and settings.gemini_api_key.get_secret_value()
+                and not settings.gemini_api_key.get_secret_value().startswith("REPLACE")
+            )
+        else:
+            is_provider_configured = bool(
+                settings.deepseek_api_key
+                and settings.deepseek_api_key.get_secret_value()
+                and not settings.deepseek_api_key.get_secret_value().startswith("REPLACE")
+            )
+
         return {
             "protocol_version": "maintenance/v1",
             "workflows_ready": app.state.workflows_ready,
@@ -180,18 +210,78 @@ def create_app(settings=None, search_engine=None):
             if engine
             else [],
             "configured_models": settings.model_allowlist,
-            "provider_configured": bool(settings.deepseek_api_key),
-            "enabled_modes": [],
-            "visuals_available": False,
+            "provider_configured": is_provider_configured,
+            "enabled_modes": list(app.state.workflow_capabilities.get("enabled_modes", []))
+            if app.state.workflows_ready
+            else [],
+            "visuals_available": bool(
+                app.state.workflows_ready
+                and app.state.workflow_capabilities.get("visuals_available", False)
+            ),
+            "agent_ready": bool(
+                app.state.workflows_ready
+                and app.state.workflow_capabilities.get("agent_ready", False)
+            ),
             "reranker_available": bool(engine and engine.reranker),
         }
 
+    @app.get("/")
+    async def root():
+        return RedirectResponse("/maintenance/", status_code=307)
+
     @app.get("/maintenance")
+    @app.get("/maintenance/")
     async def product():
-        path = ROOT / "api/static/maintenance.html"
-        if not path.exists():
+        path = ROOT / "api/static/maintenance/index.html"
+        if not path.exists() or not app.state.workflows_ready:
             raise HTTPException(503, "person_two_ui_pending")
-        return FileResponse(path)
+        return FileResponse(
+            path,
+            headers={
+                "Cache-Control": "no-cache, no-store, must-revalidate",
+                "Pragma": "no-cache",
+                "Expires": "0",
+            },
+        )
+
+    @app.get("/maintenance/{file_path:path}")
+    async def maintenance_asset(file_path: str):
+        maintenance_root = (ROOT / "api/static/maintenance").resolve()
+        asset_path = (maintenance_root / file_path).resolve()
+        if not str(asset_path).startswith(str(maintenance_root)):
+            raise HTTPException(403, "forbidden")
+        if asset_path.is_file():
+            return FileResponse(asset_path)
+        index_path = maintenance_root / "index.html"
+        if index_path.is_file():
+            return FileResponse(index_path)
+        raise HTTPException(404, "not_found")
+
+    @app.get("/retrieval-lab")
+    async def retrieval_lab():
+        path = ROOT / "api/static/retrieval_lab.html"
+        if not path.exists():
+            raise HTTPException(404, "retrieval_lab_not_found")
+        return FileResponse(
+            path,
+            headers={
+                "Cache-Control": "no-cache, no-store, must-revalidate",
+                "Pragma": "no-cache",
+                "Expires": "0",
+            },
+        )
+
+    @app.get("/{file_name}")
+    async def root_fallback_asset(file_name: str):
+        maintenance_root = (ROOT / "api/static/maintenance").resolve()
+        asset_path = (maintenance_root / file_name).resolve()
+        if str(asset_path).startswith(str(maintenance_root)) and asset_path.is_file():
+            return FileResponse(asset_path)
+        static_root = (ROOT / "api/static").resolve()
+        static_asset = (static_root / file_name).resolve()
+        if str(static_asset).startswith(str(static_root)) and static_asset.is_file():
+            return FileResponse(static_asset)
+        raise HTTPException(404, "not_found")
 
     static = ROOT / "api/static"
     if static.is_dir():

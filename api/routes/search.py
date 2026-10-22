@@ -18,5 +18,5 @@ async def search(spec: SearchSpec, request: Request, owner: UUID = Depends(requi
     )
     try:
         return await engine.search(spec, scope)
-    except (TimeoutError, ConnectionError, RuntimeError) as exc:
+    except (TimeoutError, ConnectionError, RuntimeError, ValueError) as exc:
         raise HTTPException(503, "retrieval_unavailable") from exc

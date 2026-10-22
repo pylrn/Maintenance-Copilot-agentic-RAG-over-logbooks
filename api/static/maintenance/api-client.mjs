@@ -81,14 +81,25 @@ export function createApi() {
     listSessions: () => request('/sessions'),
     session: id => request(`/sessions/${encodeURIComponent(id)}`),
     createSession: domain => mutate('/sessions', { domain }),
-    message: (id, payload) => mutate(`/sessions/${encodeURIComponent(id)}/messages`, payload),
+    message: (id, payload) => mutate(`/sessions/${encodeURIComponent(id)}/messages`, {
+      text: payload.text || payload.message || '',
+      idempotency_key: payload.idempotency_key || uid(),
+      model: payload.model,
+      corpus_version: payload.corpus_version,
+      parameters: payload.parameters || (payload.search_spec ? { search_spec: payload.search_spec } : {}),
+      expected_revision: payload.expected_revision,
+    }),
     action: (id, payload) => mutate(`/sessions/${encodeURIComponent(id)}/actions`, payload),
     search: spec => mutate('/search', spec),
     cancel: runId => mutate(`/runs/${encodeURIComponent(runId)}/cancel`, {}),
-    record: support => request(`/records/${encodeURIComponent(support.domain)}/${encodeURIComponent(support.source_id)}?corpus_version=${encodeURIComponent(support.corpus_version)}`),
-    pin: (id, record, selected, revision) => mutate(
-      `/sessions/${encodeURIComponent(id)}/pins/${encodeURIComponent(record.domain)}/${encodeURIComponent(record.source_id)}`,
-      { corpus_version: record.corpus_version, expected_revision: revision }, selected ? 'PUT' : 'DELETE'),
+    record: support => request(`/records/${encodeURIComponent(support.domain)}/${encodeURIComponent(support.source_id)}?corpus_id=${encodeURIComponent(support.corpus_id || support.corpus_version || '')}`),
+    pins: id => request(`/sessions/${encodeURIComponent(id)}/pins`),
+    pin: (id, record, selected, revision = 0) => {
+      const path = `/sessions/${encodeURIComponent(id)}/pins/${encodeURIComponent(record.domain)}/${encodeURIComponent(record.source_id)}`;
+      return selected
+        ? mutate(path, { expected_revision: revision ?? 0, user_note: null }, 'PUT')
+        : request(path, { method: 'DELETE' });
+    },
     upload: (id, file, revision) => {
       const body = new FormData(); body.set('file', file); body.set('expected_revision', String(revision));
       return request(`/sessions/${encodeURIComponent(id)}/attachments`, { method: 'POST', body });
@@ -113,7 +124,7 @@ export function createApi() {
             const event = checkedEvent(frame, runId, cursor);
             if (!event) continue;
             await onEvent(event); cursor = event.sequence;
-            if (event.type === 'done') return;
+            if (['done', 'run_cancelled', 'run_failed'].includes(event.type)) return;
           }
           throw new Error('Event stream disconnected');
         } catch (error) {

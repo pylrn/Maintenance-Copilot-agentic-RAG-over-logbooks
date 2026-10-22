@@ -1,0 +1,175 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Maintenance Atlas — Aviation Maintenance Copilot</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800&family=Newsreader:ital,opsz,wght@1,6..72,400;1,6..72,500&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/static/maintenance.css">
+</head>
+<body>
+  <div class="maintenance-shell">
+    <header class="topbar">
+      <div class="topbar-inner">
+        <a href="/maintenance" class="brand" aria-label="Maintenance Atlas home">
+          <span class="brand-main">MAINTENANCE</span>
+          <span class="brand-rule"></span>
+          <span class="brand-sub">Atlas</span>
+        </a>
+        <div class="top-actions">
+          <span class="status-pill" id="platformStatus"><span class="status-dot active"></span>Copilot Ready</span>
+          <span class="status-pill" id="pinCountPill">Pins · <span id="pinCount">0</span></span>
+          <button class="btn-secondary" id="newSessionBtn" type="button">+ New Session</button>
+          <button class="btn-secondary" id="sessionsModalBtn" type="button">History</button>
+        </div>
+      </div>
+    </header>
+
+    <main>
+      <section class="hero" id="heroSection">
+        <div class="hero-kicker">Aviation Maintenance Copilot</div>
+        <h1>Maintenance history. <em>Explained.</em></h1>
+        <p class="hero-copy">Describe a fault in plain language. Compare recorded cases, inspect exact source evidence spans, and see what is still unknown.</p>
+
+        <form class="ai-search" id="faultForm">
+          <span class="ai-mark">✻</span>
+          <input class="ai-input" id="faultInput" autocomplete="off" placeholder="Cylinder #2 intake leaking — find similar recorded cases...">
+          <button class="send-round" id="faultSubmit" type="submit" title="Investigate complaint">→</button>
+        </form>
+
+        <div class="quick-examples">
+          <button class="example-chip" type="button" data-query="Cylinder #2 intake leaking. Any similar history?">Cylinder #2 intake leaking</button>
+          <button class="example-chip" type="button" data-query="#2 rocker cover gasket leaking. Similar historical actions?">Rocker cover gasket leaking</button>
+          <button class="example-chip" type="button" data-query="What is the torque spec in ft-lbs for intake flange bolts?">Torque spec (Unsupported check)</button>
+        </div>
+
+        <div class="control-bar">
+          <div class="control-group">
+            <span>Domain:</span>
+            <select class="select-pill" id="domainSelect">
+              <option value="aviation" selected>Aviation Logs (6,169 records)</option>
+              <option value="facility">Baltimore Facility (200 records)</option>
+            </select>
+          </div>
+          <div class="control-group">
+            <span>Aircraft Profile:</span>
+            <select class="select-pill" id="aircraftSelect">
+              <option value="" selected>Generic Horizontally-Opposed Piston</option>
+              <option value="Cessna 172 Skyhawk">Cessna 172 Skyhawk (Lycoming O-320)</option>
+              <option value="Piper PA-28 Cherokee">Piper PA-28 (Lycoming O-360)</option>
+            </select>
+          </div>
+          <div class="control-group">
+            <span>Model:</span>
+            <span class="status-pill" style="color:#2d3748; background:#fff; border-color:#cbd5e0;" id="modelPill">deepseek-flash</span>
+          </div>
+        </div>
+
+        <div class="feature-grid" id="featureGrid">
+          <article class="feature-card">
+            <div class="feature-bar"></div>
+            <div class="feature-title">Cited historical evidence</div>
+            <div class="feature-copy">Every statement links to exact raw problem/action log spans and source hashes.</div>
+          </article>
+          <article class="feature-card">
+            <div class="feature-bar"></div>
+            <div class="feature-title">Compare &amp; investigate</div>
+            <div class="feature-copy">Distinguish component differences, test search sensitivity, and challenge findings.</div>
+          </article>
+          <article class="feature-card">
+            <div class="feature-bar"></div>
+            <div class="feature-title">Explicit hypothesis separation</div>
+            <div class="feature-copy">Conceptual ideas stay clearly unverified and never contaminate verified evidence.</div>
+          </article>
+        </div>
+      </section>
+
+      <!-- Active Workspace -->
+      <div class="workspace-container" id="workspaceContainer" style="display:none;">
+        <!-- Left: Stream & Answers -->
+        <div class="stream-panel" id="streamPanel">
+          <div id="answersContainer"></div>
+
+          <!-- Follow-up input form -->
+          <form class="ai-search" id="followUpForm" style="margin-top:16px;">
+            <span class="ai-mark">✻</span>
+            <input class="ai-input" id="followUpInput" autocomplete="off" placeholder="Refine the complaint, compare cases, or ask what is missing...">
+            <button class="send-round" type="submit" title="Send message">→</button>
+          </form>
+        </div>
+
+        <!-- Right: Tabs (Evidence, Visual, Board, Activity) -->
+        <aside class="tabs-panel">
+          <nav class="tabs-header" role="tablist">
+            <button class="tab-btn active" data-tab="evidence" role="tab">Evidence (<span id="evidenceCount">0</span>)</button>
+            <button class="tab-btn" data-tab="visual" role="tab">Visual</button>
+            <button class="tab-btn" data-tab="board" role="tab">Board</button>
+            <button class="tab-btn" data-tab="activity" role="tab">Activity</button>
+          </nav>
+
+          <div class="tab-content" id="tabContent">
+            <!-- Tab: Evidence Drawer -->
+            <div class="tab-pane" id="pane-evidence">
+              <div id="evidenceList">
+                <p style="font-size:12.5px; color:var(--muted);">Click any citation pill in an answer to inspect exact raw records with highlighted source spans.</p>
+              </div>
+            </div>
+
+            <!-- Tab: Visual 2D Schematic -->
+            <div class="tab-pane" id="pane-visual" style="display:none;">
+              <div id="visualContainer" style="min-height:300px; border:1px solid var(--line); border-radius:8px; overflow:hidden;"></div>
+              <div id="componentInfoBox" style="margin-top:12px; font-size:12.5px; background:var(--sand); padding:10px; border-radius:6px; display:none;">
+                <div style="font-weight:700; color:var(--navy-950);" id="compInfoName"></div>
+                <div style="margin-top:4px; color:#4a5568;" id="compInfoText"></div>
+                <div style="margin-top:6px; font-size:11px; color:var(--muted);" id="compInfoCite"></div>
+              </div>
+            </div>
+
+            <!-- Tab: Investigation Board -->
+            <div class="tab-pane" id="pane-board" style="display:none;">
+              <div class="board-columns">
+                <div>
+                  <div class="board-col-title known">Known (User Observations) <span id="boardKnownCount">0</span></div>
+                  <div id="boardKnownList"></div>
+                </div>
+                <div>
+                  <div class="board-col-title reported">Reported in History <span id="boardReportedCount">0</span></div>
+                  <div id="boardReportedList"></div>
+                </div>
+                <div>
+                  <div class="board-col-title missing">Missing / Gaps <span id="boardMissingCount">0</span></div>
+                  <div id="boardMissingList"></div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Tab: Activity Rail -->
+            <div class="tab-pane" id="pane-activity" style="display:none;">
+              <div class="activity-rail" id="activityList">
+                <div style="color:var(--muted);">Public tool operations and event traces will appear here.</div>
+              </div>
+            </div>
+          </div>
+        </aside>
+      </div>
+    </main>
+  </div>
+
+  <!-- Handover Modal Dialog -->
+  <dialog id="handoverDialog" style="border:1px solid var(--line-strong); border-radius:12px; padding:24px; max-width:680px; width:90%; box-shadow:var(--shadow-card);">
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px;">
+      <h3 style="margin:0; font-size:18px; color:var(--navy-950);">Investigation Handover</h3>
+      <button id="closeHandoverBtn" style="background:none; border:none; font-size:20px; cursor:pointer;">✕</button>
+    </div>
+    <div class="handover-box" id="handoverContent"></div>
+    <div style="display:flex; justify-content:flex-end; gap:10px; margin-top:16px;">
+      <button class="act-btn" id="copyHandoverBtn" type="button">Copy Markdown</button>
+      <button class="act-btn" id="downloadHandoverBtn" type="button">Download</button>
+    </div>
+  </dialog>
+
+  <script src="/static/maintenance.js"></script>
+</body>
+</html>

@@ -1,5 +1,5 @@
 {
-  "catalog_version": "1.0",
+  "catalog_version": "2026.1",
   "components": [
     {
       "component_id": "engine_general",
@@ -12,10 +12,18 @@
     {
       "component_id": "cylinder_assembly",
       "canonical_name": "Cylinder Assembly",
-      "parent_id": "engine_general",
-      "synonyms": ["cylinder", "jug", "cyl"],
-      "review_status": "approved",
-      "curated_explanation": "Combustion chamber assembly comprising barrel, head, valves, and spark plug ports."
+      "parent_id": null,
+      "synonyms": ["cyl", "cylinder", "jug", "power cylinder"],
+      "knowledge_source_ids": ["faa-h-8083-32b-ch01"],
+      "review_status": "reviewed"
+    },
+    {
+      "component_id": "intake_system",
+      "canonical_name": "Intake System",
+      "parent_id": null,
+      "synonyms": ["intake", "intake manifold", "induction system", "intake pipes"],
+      "knowledge_source_ids": ["faa-h-8083-32b-ch01"],
+      "review_status": "reviewed"
     },
     {
       "component_id": "intake_manifold",
@@ -26,12 +34,36 @@
       "curated_explanation": "Directs fuel-air charge from carburetor or servo to cylinder intake ports. Prone to gasket leaks and flange cracks."
     },
     {
+      "component_id": "intake_gasket",
+      "canonical_name": "Intake Gasket / Seal",
+      "parent_id": "intake_system",
+      "synonyms": ["intake gasket", "intake seal", "flange gasket", "induction gasket"],
+      "knowledge_source_ids": ["faa-h-8083-32b-ch01"],
+      "review_status": "reviewed"
+    },
+    {
+      "component_id": "intake_pipe",
+      "canonical_name": "Intake Pipe / Tube",
+      "parent_id": "intake_system",
+      "synonyms": ["intake tube", "induction tube", "intake pipe"],
+      "knowledge_source_ids": ["faa-h-8083-32b-ch01"],
+      "review_status": "reviewed"
+    },
+    {
       "component_id": "rocker_cover",
-      "canonical_name": "Rocker Box Cover & Gasket",
+      "canonical_name": "Rocker Cover & Gasket",
       "parent_id": "cylinder_assembly",
       "synonyms": ["rocker cover", "valve cover", "rocker box", "rocker cover gasket"],
-      "review_status": "approved",
-      "curated_explanation": "Encloses the overhead valve gear (rocker arms and valve springs) on each cylinder head. Gaskets are prone to oil seepage."
+      "knowledge_source_ids": ["faa-h-8083-32b-ch01"],
+      "review_status": "reviewed"
+    },
+    {
+      "component_id": "exhaust_system",
+      "canonical_name": "Exhaust System",
+      "parent_id": null,
+      "synonyms": ["exhaust", "exhaust manifold", "riser", "muffler", "tailpipe"],
+      "knowledge_source_ids": ["faa-h-8083-32b-ch03"],
+      "review_status": "reviewed"
     },
     {
       "component_id": "exhaust_manifold",
@@ -42,12 +74,44 @@
       "curated_explanation": "Routes high-temperature combustion exhaust gases overboard or to turbocharger."
     },
     {
+      "component_id": "crankcase",
+      "canonical_name": "Crankcase",
+      "parent_id": null,
+      "synonyms": ["crankcase", "engine case", "block"],
+      "knowledge_source_ids": ["faa-h-8083-32b-ch01"],
+      "review_status": "reviewed"
+    },
+    {
+      "component_id": "baffle_assembly",
+      "canonical_name": "Cooling Baffles & Seals",
+      "parent_id": null,
+      "synonyms": ["baffle", "cooling baffle", "baffle seal", "cylinder baffle"],
+      "knowledge_source_ids": ["faa-h-8083-32b-ch06"],
+      "review_status": "reviewed"
+    },
+    {
       "component_id": "baffle_cooling",
       "canonical_name": "Engine Cooling Baffles & Seals",
       "parent_id": "engine_general",
       "synonyms": ["baffle", "inter-cylinder baffle", "cooling seal", "air deflector"],
       "review_status": "approved",
       "curated_explanation": "Directs cooling air across cylinder cooling fins to maintain operating cylinder head temperatures."
+    },
+    {
+      "component_id": "fuel_system",
+      "canonical_name": "Fuel Induction & Metering",
+      "parent_id": null,
+      "synonyms": ["fuel injector", "injector nozzle", "carburetor", "fuel line", "primer"],
+      "knowledge_source_ids": ["faa-h-8083-32b-ch02"],
+      "review_status": "reviewed"
+    },
+    {
+      "component_id": "oil_system",
+      "canonical_name": "Oil Lubrication System",
+      "parent_id": null,
+      "synonyms": ["oil filter", "oil cooler", "oil line", "sump", "oil pressure sensor"],
+      "knowledge_source_ids": ["faa-h-8083-32b-ch04"],
+      "review_status": "reviewed"
     }
   ]
 }

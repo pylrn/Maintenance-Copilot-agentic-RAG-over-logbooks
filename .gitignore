@@ -13,3 +13,6 @@ __pycache__/
 /uploads/
 *.egg-info/
 .worktrees/
+*.pdf
+*.pptx
+generate_presentation.py

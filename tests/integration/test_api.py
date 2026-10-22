@@ -96,3 +96,42 @@ def test_health_on_database_loss_returns_redacted_not_ready():
         assert response.status_code == 503
         assert response.json()["database_ready"] is False
         assert "sensitive" not in response.text
+
+
+def test_capabilities_report_only_initialized_workflow_features():
+    cl, _ = client()
+    with cl:
+        before = cl.get("/api/maintenance/v1/capabilities").json()
+        assert before["enabled_modes"] == []
+        cl.app.state.workflows_ready = True
+        cl.app.state.workflow_capabilities = {
+            "enabled_modes": ["EVIDENCE", "DISTINGUISH"],
+            "visuals_available": True,
+            "agent_ready": True,
+        }
+        after = cl.get("/api/maintenance/v1/capabilities").json()
+        assert after["enabled_modes"] == ["EVIDENCE", "DISTINGUISH"]
+        assert after["visuals_available"] is True
+        assert after["agent_ready"] is True
+        cl.app.state.workflows_ready = False
+        unavailable = cl.get("/api/maintenance/v1/capabilities").json()
+        assert unavailable["enabled_modes"] == []
+        assert unavailable["agent_ready"] is False
+
+
+def test_search_does_not_leak_validation_details_on_engine_failure():
+    cl, _ = client()
+    with cl:
+
+        async def fail(*args):
+            raise ValueError("internal embedding details")
+
+        cl.app.state.search_engine.search = fail
+        response = cl.post(
+            "/api/maintenance/v1/search",
+            json={"query_raw": "leak", "domain": "aviation"},
+            headers={"Origin": "http://localhost:8000"},
+        )
+        assert response.status_code == 503
+        assert response.json()["error"] == "retrieval_unavailable"
+        assert "internal embedding details" not in response.text

@@ -1,30 +1,34 @@
-// UI fixtures ONLY: these two rows, their matches and their events are simulated.
+// UI fixtures ONLY: all rows, their matches and their events are simulated.
 // No MaintNet file, retrieval engine, LLM, validator or production database is used.
 import { uid } from './api-client.mjs';
+import { componentDemoRows, matchComponentDemoRows } from './demo-component-cases.mjs';
 const KEY = 'maintenance-atlas-explicit-demo-v2';
 const copy = value => structuredClone(value);
 const rows = [
-  { domain: 'aviation', source_id: 'DEMO-001', corpus_version: 'aviation-v1', source_type: 'historical', source_sha256: null,
+  { domain: 'aviation', source_id: 'DEMO-001', corpus_version: 'aviation-v1', source_type: 'simulated', source_sha256: null,
     fields: { IDENT: 'DEMO-001', PROBLEM: '#2 INTAKE IS LEAKING.', ACTION: 'REMOVED & REPLACED #2 INTAKE GASKET.' } },
-  { domain: 'aviation', source_id: 'DEMO-002', corpus_version: 'aviation-v1', source_type: 'historical', source_sha256: null,
+  { domain: 'aviation', source_id: 'DEMO-002', corpus_version: 'aviation-v1', source_type: 'simulated', source_sha256: null,
     fields: { IDENT: 'DEMO-002', PROBLEM: '#2 INTAKE IS LEAKING.', ACTION: 'REMOVED & REPLACED #2 INTAKE GASKET.' } },
-  { domain: 'aviation', source_id: 'DEMO-003', corpus_version: 'aviation-v1', source_type: 'historical', source_sha256: null,
+  { domain: 'aviation', source_id: 'DEMO-003', corpus_version: 'aviation-v1', source_type: 'simulated', source_sha256: null,
     fields: { IDENT: 'DEMO-003', PROBLEM: 'L/H ENG #2 INTAKE LEAKING.', ACTION: 'REMOVED TUBE, FOUND TO BE CRACKED. REMOVED TUBE FROM CO' } },
-  { domain: 'aviation', source_id: 'DEMO-004', corpus_version: 'aviation-v1', source_type: 'historical', source_sha256: null,
+  { domain: 'aviation', source_id: 'DEMO-004', corpus_version: 'aviation-v1', source_type: 'simulated', source_sha256: null,
     fields: { IDENT: 'DEMO-004', PROBLEM: '#2 ROCKER COVER GASKET LEAKING.', ACTION: 'REMOVED & REPLACED #2 ROCKER COVER GASKET.' } },
-  { domain: 'aviation', source_id: 'DEMO-005', corpus_version: 'aviation-v1', source_type: 'historical', source_sha256: null,
+  { domain: 'aviation', source_id: 'DEMO-005', corpus_version: 'aviation-v1', source_type: 'simulated', source_sha256: null,
     fields: { IDENT: 'DEMO-005', PROBLEM: 'L/H WING FUEL LEAK AT INBOARD TANK ACCESS PANEL.', ACTION: 'RESEALED ACCESS PANEL AND PERFORMED PRESSURE LEAK CHECK.' } },
-  { domain: 'aviation', source_id: 'DEMO-006', corpus_version: 'aviation-v1', source_type: 'historical', source_sha256: null,
+  { domain: 'aviation', source_id: 'DEMO-006', corpus_version: 'aviation-v1', source_type: 'simulated', source_sha256: null,
     fields: { IDENT: 'DEMO-006', PROBLEM: 'COCKPIT PFD INTERMITTENT BLANK SCREEN UPON STARTUP.', ACTION: 'RESEATED AVIONICS CIRCUIT BREAKER AND DISPLAY CONNECTOR.' } },
 ];
 rows.push(
  {domain:'aviation',source_id:'DEMO-007',corpus_version:'demo-v2',source_type:'simulated',source_sha256:null,fields:{IDENT:'DEMO-007',PROBLEM:'OIL LEAK REPORTED BENEATH ENGINE 1. ORIGIN NOT CONFIRMED.',ACTION:'LOGGED OIL QUANTITY AND LEAK LOCATION FOR FURTHER ASSESSMENT.'}},
  {domain:'aviation',source_id:'DEMO-008',corpus_version:'demo-v2',source_type:'simulated',source_sha256:null,fields:{IDENT:'DEMO-008',PROBLEM:'OIL RESIDUE REPORTED NEAR AN ENGINE OIL LINE CONNECTION.',ACTION:'RECORDED CONNECTION AREA AS A POSSIBLE SOURCE. LEAK CAUSE AND OUTCOME NOT ESTABLISHED.'}}
 );
+rows.push(...componentDemoRows);
 function match(query, topK = 5) {
  const text=(query||'').toLowerCase();
  let selected;
- if (/oil/.test(text)) selected=rows.filter(r=>r.source_id==='DEMO-007'||r.source_id==='DEMO-008');
+ const componentMatches=matchComponentDemoRows(query);
+ if(componentMatches.length) selected=componentMatches;
+ else if (/oil/.test(text)) selected=rows.filter(r=>r.source_id==='DEMO-007'||r.source_id==='DEMO-008');
  else if (/wing|fuel leak/.test(text)) selected=rows.filter(r=>r.source_id==='DEMO-005');
  else if (/cockpit|display|screen|avionics/.test(text)) selected=rows.filter(r=>r.source_id==='DEMO-006');
  else {
@@ -95,7 +99,7 @@ export function createDemoApi() {
   }
   return {
     async capabilities() { return { models: [{ id: 'fixture-playback', label: 'simulated playback · no LLM' }],
-      domains: ['aviation'], corpus_summary: '8 invented demo records · live logbook connection in progress',
+      domains: ['aviation'], corpus_summary: `${rows.length} invented demo records · live logbook connection in progress`,
       examples: [{ query: 'Engine 1 oil leak', source_type: 'simulated' }, { query: 'Low compression at cylinder 2', source_type: 'simulated' }],
       rerank_available: false, visual_available: false, simulated: true }; },
     async listSessions() { return { items: Object.values(db.sessions).map(x => ({ session_id: x.session_id, title: x.title, revision: x.revision })).reverse() }; },

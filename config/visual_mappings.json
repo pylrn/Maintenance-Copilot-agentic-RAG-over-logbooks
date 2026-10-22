@@ -1,41 +1,126 @@
 {
-  "mappings_version": "1.0",
-  "asset_id": "engine-concept.svg",
+  "asset_id": "engine_concept_piston_2d",
+  "license": "CC-BY-4.0",
+  "attribution": "Maintenance Atlas reviewed schematic visual model",
+  "applicability": {
+    "engine_type": "reciprocating_opposed_piston",
+    "illustrative": true,
+    "model_bound": false
+  },
   "mappings": [
     {
       "component_id": "cylinder_assembly",
+      "hotspot_id": "node-cylinder-bank",
       "node_id": "node-cylinder",
       "mapping_kind": "region",
       "label": "Cylinder Assembly",
-      "reviewer": "person-2"
+      "source": "FAA-H-8083-32B",
+      "reviewer": "human_reviewed"
+    },
+    {
+      "component_id": "intake_system",
+      "hotspot_id": "node-intake-manifold",
+      "node_id": "node-intake",
+      "mapping_kind": "region",
+      "label": "Induction Plenum & Manifold",
+      "source": "FAA-H-8083-32B",
+      "reviewer": "human_reviewed"
     },
     {
       "component_id": "intake_manifold",
+      "hotspot_id": "node-intake-manifold",
       "node_id": "node-intake",
       "mapping_kind": "region",
       "label": "Intake Manifold & Gasket",
       "reviewer": "person-2"
     },
     {
+      "component_id": "intake_gasket",
+      "hotspot_id": "node-intake-gasket",
+      "node_id": "node-intake-gasket",
+      "mapping_kind": "hotspot",
+      "label": "Intake Gasket / Flange",
+      "source": "FAA-H-8083-32B",
+      "reviewer": "human_reviewed"
+    },
+    {
+      "component_id": "intake_pipe",
+      "hotspot_id": "node-intake-pipe",
+      "node_id": "node-intake-pipe",
+      "mapping_kind": "hotspot",
+      "label": "Intake Pipe / Induction Tube",
+      "source": "FAA-H-8083-32B",
+      "reviewer": "human_reviewed"
+    },
+    {
       "component_id": "rocker_cover",
+      "hotspot_id": "node-rocker-cover",
       "node_id": "node-rocker",
       "mapping_kind": "region",
       "label": "Rocker Box Cover & Gasket",
-      "reviewer": "person-2"
+      "source": "FAA-H-8083-32B",
+      "reviewer": "human_reviewed"
+    },
+    {
+      "component_id": "exhaust_system",
+      "hotspot_id": "node-exhaust-manifold",
+      "node_id": "node-exhaust",
+      "mapping_kind": "region",
+      "label": "Exhaust Manifold & Riser",
+      "source": "FAA-H-8083-32B",
+      "reviewer": "human_reviewed"
     },
     {
       "component_id": "exhaust_manifold",
+      "hotspot_id": "node-exhaust-manifold",
       "node_id": "node-exhaust",
       "mapping_kind": "region",
       "label": "Exhaust Manifold & Riser",
       "reviewer": "person-2"
     },
     {
+      "component_id": "crankcase",
+      "hotspot_id": "node-crankcase",
+      "node_id": "node-crankcase",
+      "mapping_kind": "region",
+      "label": "Crankcase",
+      "source": "FAA-H-8083-32B",
+      "reviewer": "human_reviewed"
+    },
+    {
+      "component_id": "baffle_assembly",
+      "hotspot_id": "node-cooling-baffles",
+      "node_id": "node-baffle",
+      "mapping_kind": "region",
+      "label": "Cooling Baffles & Air Shrouds",
+      "source": "FAA-H-8083-32B",
+      "reviewer": "human_reviewed"
+    },
+    {
       "component_id": "baffle_cooling",
+      "hotspot_id": "node-cooling-baffles",
       "node_id": "node-baffle",
       "mapping_kind": "region",
       "label": "Cooling Baffle & Air Deflector",
       "reviewer": "person-2"
+    },
+    {
+      "component_id": "fuel_system",
+      "hotspot_id": "node-fuel-injector",
+      "node_id": "node-fuel-injector",
+      "mapping_kind": "hotspot",
+      "label": "Fuel Injector / Primer Nozzle",
+      "source": "FAA-H-8083-32B",
+      "reviewer": "human_reviewed"
+    },
+    {
+      "component_id": "oil_system",
+      "hotspot_id": "node-oil-system",
+      "node_id": "node-oil-system",
+      "mapping_kind": "region",
+      "label": "Oil Sump & Filtration",
+      "source": "FAA-H-8083-32B",
+      "reviewer": "human_reviewed"
     }
   ]
 }

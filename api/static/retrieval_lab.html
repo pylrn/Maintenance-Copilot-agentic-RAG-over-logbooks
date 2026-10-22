@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Hybrid Search Admin — Retrieval Lab</title>
+  <link rel="stylesheet" href="/static/retrieval_lab.css?v=20261022b">
+</head>
+<body>
+  <!-- Header (Matching Hybrid Search Admin) -->
+  <header>
+    <div class="brand">
+      <div class="brand-badge">HS</div>
+      <div>
+        <div class="brand-title">Hybrid Search Admin</div>
+        <div class="brand-sub">local / BAAI/bge-small-en-v1.5 / 384d</div>
+      </div>
+    </div>
+
+    <div class="header-actions">
+      <nav class="nav-tabs" role="tablist">
+        <button class="nav-tab active" data-tab="pane-workbench" type="button">Retrieval Admin</button>
+        <button class="nav-tab" data-tab="pane-projection" type="button">2D Projection</button>
+        <button class="nav-tab" data-tab="pane-records" type="button">Corpus Records</button>
+        <button class="nav-tab" data-tab="pane-storage" type="button">Storage & Quota</button>
+      </nav>
+
+      <div class="header-links">
+        <button class="btn-header" id="headerRefreshBtn" type="button">Refresh</button>
+        <a class="btn-header" href="/docs" target="_blank">API docs</a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Body -->
+  <main>
+    <!-- 1. RETRIEVAL ADMIN WORKBENCH TAB (Persistent Split Layout) -->
+    <div class="tab-pane active" id="pane-workbench">
+      <div class="admin-workbench">
+        <!-- Persistent LEFT Sidebar -->
+        <aside class="admin-sidebar">
+          <div class="sidebar-heading">Query & Filters</div>
+
+          <div class="form-group">
+            <label for="queryInput">Search Query (Raw Text)</label>
+            <textarea id="queryInput" class="admin-input" placeholder="e.g. CYL #2 intake leaking oil...">CYL #2 intake leak</textarea>
+            <div class="sample-chips" style="margin-top:4px;">
+              <span class="sample-chip" data-query="CYL #2 intake leak" data-domain="aviation">CYL #2 leak</span>
+              <span class="sample-chip" data-query="baffle crack welded" data-domain="aviation">baffle crack</span>
+              <span class="sample-chip" data-query="battery flat charged" data-domain="aviation">battery flat</span>
+              <span class="sample-chip" data-query="motor overheating" data-domain="facility">motor overheat (fac)</span>
+              <span class="sample-chip" data-query="water leak under sink" data-domain="facility">water leak (fac)</span>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="domainSelect">Domain</label>
+            <select id="domainSelect" class="admin-input">
+              <option value="aviation" selected>Aviation Maintenance (6169)</option>
+              <option value="facility">Facility Maintenance (200)</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="intentSelect">Intent Representation</label>
+            <select id="intentSelect" class="admin-input">
+              <option value="fault" selected>fault (problem)</option>
+              <option value="action_history">action_history (problem + action)</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="topkInput">Top K Hits</label>
+            <input type="number" id="topkInput" class="admin-input" min="1" max="10" value="6">
+          </div>
+
+          <div class="form-group">
+            <label for="componentFilter">Component Filter</label>
+            <input type="text" id="componentFilter" class="admin-input" placeholder="e.g. cylinder, intake">
+          </div>
+
+          <div class="form-group">
+            <label for="symptomFilter">Symptom Filter</label>
+            <input type="text" id="symptomFilter" class="admin-input" placeholder="e.g. leak, crack">
+          </div>
+
+          <div class="checkbox-row">
+            <input type="checkbox" id="dedupCheck" checked>
+            <label for="dedupCheck">Collapse Duplicates</label>
+          </div>
+
+          <div class="checkbox-row">
+            <input type="checkbox" id="rerankCheck">
+            <label for="rerankCheck">Quality Rerank Mode</label>
+          </div>
+
+          <div style="margin-top:6px;display:flex;gap:6px;">
+            <button class="btn-primary" id="searchBtn" type="button" style="flex:1;">Search Records</button>
+            <button class="btn-header" id="clearBtn" type="button">Clear</button>
+          </div>
+        </aside>
+
+        <!-- Persistent RIGHT Content Area -->
+        <section class="admin-content">
+          <!-- Active Filter Chips -->
+          <div class="active-filters-bar" id="activeFiltersBar">
+            <span style="color:var(--text-dim);font-weight:600;">Active filters:</span>
+            <span class="filter-badge" id="filterDomainBadge">domain=aviation</span>
+            <span class="filter-badge" id="filterIntentBadge">intent=fault</span>
+            <span class="filter-badge" id="filterDedupBadge">collapse_duplicates=true</span>
+          </div>
+
+          <!-- Prominent Response Timing Banner -->
+          <div class="timing-banner" id="timingBanner">
+            <div style="font-weight:700;color:var(--text-main);">Pipeline Latency</div>
+            <div class="timing-metrics">
+              <div class="timing-item"><span>Client HTTP:</span><span id="timeClientVal">-</span></div>
+              <div class="timing-item"><span>Server Total:</span><span id="timeServerVal">-</span></div>
+              <div class="timing-item"><span>Embedding:</span><span id="timeEmbedVal">-</span></div>
+              <div class="timing-item"><span>Recall/Compatibility:</span><span id="timeRecallVal">-</span></div>
+              <div class="timing-item"><span>Rerank:</span><span id="timeRerankVal">-</span></div>
+              <div class="timing-item"><span>Degraded:</span><span id="degradedSummaryVal" style="color:var(--brand-green);">none</span></div>
+            </div>
+          </div>
+
+          <!-- Results Cards List -->
+          <div class="results-list" id="resultsList">
+            <div style="background:#fff;border:1px solid var(--border-light);border-radius:var(--radius-md);padding:40px;text-align:center;color:var(--text-dim);">
+              Ready to search. Enter a query on the left and click "Search Records".
+            </div>
+          </div>
+
+          <!-- Bottom Collapsible: Diagnostics Waterfall & Raw JSON -->
+          <div style="margin-top:20px;display:flex;flex-direction:column;gap:10px;">
+            <details class="accordion" id="stagesAccordion">
+              <summary>Measured Pipeline Stages Waterfall (12 stages) & Diagnostics</summary>
+              <div class="accordion-body">
+                <table class="records-table">
+                  <thead>
+                    <tr>
+                      <th>Stage</th>
+                      <th>Duration</th>
+                      <th>Status & Details</th>
+                      <th>In</th>
+                      <th>Out</th>
+                    </tr>
+                  </thead>
+                  <tbody id="stagesTableBody"></tbody>
+                </table>
+              </div>
+            </details>
+
+            <details class="accordion" id="rawJsonAccordion">
+              <summary>Raw SearchResult JSON & Telemetry (Candidate IDs, Channels, Facts)</summary>
+              <div class="accordion-body">
+                <div style="display:flex;gap:8px;margin-bottom:8px;">
+                  <button class="btn-header" id="copyJsonBtn" type="button">Copy Full JSON</button>
+                  <button class="btn-header" id="downloadJsonBtn" type="button">Download JSON</button>
+                  <button class="btn-header" id="exportFeedbackBtn" type="button">Export Human Feedback JSON</button>
+                </div>
+                <pre id="rawJsonPre" style="background:var(--bg-sidebar);padding:10px;border-radius:var(--radius-sm);border:1px solid var(--border-light);font-size:11px;font-family:var(--font-mono);max-height:350px;overflow:auto;word-break:break-all;white-space:pre-wrap;"></pre>
+              </div>
+            </details>
+          </div>
+        </section>
+      </div>
+    </div>
+
+    <!-- 2. 2D PROJECTION TAB (Light UI) -->
+    <div class="tab-pane" id="pane-projection" style="padding:16px 20px;">
+      <div class="card-light">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
+          <div>
+            <h2 style="font-size:15px;font-weight:700;">Deterministic Centered 2D PCA Corpus Projection</h2>
+            <div style="font-size:11px;color:var(--text-dim);">Inspection only — Not a retrieval score | Real Engine Dense Matrices (384d BGE-small-en-v1.5)</div>
+          </div>
+          <span class="tier-pill tier-direct">6369 Points (Zero Sampling)</span>
+        </div>
+
+        <div style="display:flex;gap:12px;align-items:center;margin-bottom:12px;flex-wrap:wrap;">
+          <div class="form-group" style="width:160px;">
+            <label for="projectionRepSelect">Representation</label>
+            <select id="projectionRepSelect" class="admin-input">
+              <option value="problem" selected>problem</option>
+              <option value="problem_action">problem_action</option>
+            </select>
+          </div>
+          <div class="form-group" style="width:160px;">
+            <label for="projectionDomainFilter">Domain Filter</label>
+            <select id="projectionDomainFilter" class="admin-input">
+              <option value="all" selected>All Domains</option>
+              <option value="aviation">Aviation (6169)</option>
+              <option value="facility">Facility (200)</option>
+            </select>
+          </div>
+          <div class="form-group" style="width:120px;">
+            <label for="projectionMaxPoints">Max Points</label>
+            <input type="number" id="projectionMaxPoints" class="admin-input" min="100" max="10000" value="10000">
+          </div>
+          <div style="padding-top:16px;">
+            <button class="btn-header" id="refreshProjectionBtn" type="button">Refresh Projection</button>
+          </div>
+
+          <div style="margin-left:auto;display:flex;gap:14px;font-size:11px;align-items:center;">
+            <span style="display:flex;align-items:center;gap:4px;"><span style="width:8px;height:8px;background:#2563eb;border-radius:50%;display:inline-block;"></span> Aviation</span>
+            <span style="display:flex;align-items:center;gap:4px;"><span style="width:8px;height:8px;background:#d97706;border-radius:50%;display:inline-block;"></span> Facility</span>
+            <span style="display:flex;align-items:center;gap:4px;"><span style="width:8px;height:8px;background:#e11d48;border-radius:50%;display:inline-block;"></span> Query Hits</span>
+          </div>
+        </div>
+
+        <div class="snippet-box" style="margin-bottom:12px;">
+          <div class="meta-grid">
+            <div><strong>Method:</strong> <span id="pcaMethodVal" style="font-family:var(--font-mono);">-</span></div>
+            <div><strong>Explained Variance:</strong> <span id="pcaVarVal" style="font-family:var(--font-mono);">-</span></div>
+            <div><strong>Model Revision:</strong> <span id="pcaRevisionVal" style="font-family:var(--font-mono);">-</span></div>
+            <div><strong>Source Hash:</strong> <span id="pcaSourceHashVal" style="font-family:var(--font-mono);">-</span></div>
+            <div><strong>Points Plotted:</strong> <span id="pcaPointsCountVal" style="font-family:var(--font-mono);font-weight:700;color:var(--brand-green);">-</span></div>
+          </div>
+        </div>
+
+        <div class="projection-container">
+          <canvas id="projectionCanvas"></canvas>
+        </div>
+        <div style="font-size:11px;color:var(--text-dim);margin-top:6px;display:flex;justify-content:space-between;">
+          <span>Drag to pan, scroll to zoom. Click any point to open authoritative record modal.</span>
+          <span>Query hits are highlighted in crimson with rings.</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- 3. CORPUS RECORDS BROWSER TAB (Light UI) -->
+    <div class="tab-pane" id="pane-records" style="padding:16px 20px;">
+      <div class="card-light">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
+          <h2 style="font-size:15px;font-weight:700;">Corpus Record Browser & Provenance</h2>
+          <span class="score-pill" id="recordsMetaChip">-</span>
+        </div>
+
+        <div style="display:grid;grid-template-columns:160px 1fr 140px;gap:12px;margin-bottom:12px;">
+          <div class="form-group">
+            <label for="browserDomainSelect">Domain</label>
+            <select id="browserDomainSelect" class="admin-input">
+              <option value="all" selected>All Domains</option>
+              <option value="aviation">Aviation</option>
+              <option value="facility">Facility</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="browserSearchInput">Text Search</label>
+            <input type="text" id="browserSearchInput" class="admin-input" placeholder="Search record ID, problem, action...">
+          </div>
+          <div class="form-group">
+            <label for="browserPageSizeSelect">Page Size</label>
+            <select id="browserPageSizeSelect" class="admin-input">
+              <option value="20">20 / page</option>
+              <option value="50" selected>50 / page</option>
+              <option value="100">100 / page</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="table-wrap">
+          <table class="records-table">
+            <thead>
+              <tr>
+                <th>Record ID</th>
+                <th>Domain</th>
+                <th>Source ID</th>
+                <th>Problem (Raw)</th>
+                <th>Action (Raw)</th>
+                <th>CSV Row</th>
+                <th>Duplicate Key</th>
+              </tr>
+            </thead>
+            <tbody id="recordsTableBody"></tbody>
+          </table>
+        </div>
+
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-top:12px;">
+          <button class="btn-header" id="browserPrevBtn" type="button">Previous</button>
+          <span class="score-pill" id="browserPageMeta">Page 1</span>
+          <button class="btn-header" id="browserNextBtn" type="button">Next</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 4. STORAGE & SYSTEM TAB (Light UI) -->
+    <div class="tab-pane" id="pane-storage" style="padding:16px 20px;">
+      <div class="card-light">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;">
+          <div style="display:flex;align-items:center;gap:10px;">
+            <h2 style="font-size:15px;font-weight:700;">Database & Index Storage</h2>
+            <button class="btn-header" id="refreshStorageBtn" type="button">Refresh</button>
+          </div>
+          <span class="tier-pill tier-direct" id="dbStatusVal">checking...</span>
+        </div>
+
+        <div style="display:grid;grid-template-columns:repeat(auto-fit, minmax(220px, 1fr));gap:12px;margin-bottom:16px;">
+          <div class="snippet-box">
+            <div style="font-size:11px;color:var(--text-dim);font-weight:600;">TOTAL CORPUS RECORDS</div>
+            <div style="font-size:22px;font-weight:700;font-family:var(--font-mono);margin-top:2px;" id="totalRecordsVal">-</div>
+            <div style="font-size:11px;color:var(--text-dim);" id="domainBreakdownVal">-</div>
+          </div>
+          <div class="snippet-box">
+            <div style="font-size:11px;color:var(--text-dim);font-weight:600;">DENSE VECTORS (384D)</div>
+            <div style="font-size:22px;font-weight:700;font-family:var(--font-mono);margin-top:2px;" id="totalVectorsVal">-</div>
+            <div style="font-size:11px;color:var(--text-dim);">Normalized unit vectors</div>
+          </div>
+          <div class="snippet-box">
+            <div style="font-size:11px;color:var(--text-dim);font-weight:600;">DENSE FLOAT32 MEMORY</div>
+            <div style="font-size:22px;font-weight:700;font-family:var(--font-mono);margin-top:2px;" id="indexMemoryVal">-</div>
+            <div style="font-size:11px;color:var(--text-dim);">In-memory matrix buffers</div>
+          </div>
+        </div>
+
+        <!-- Quota Card -->
+        <div class="snippet-box" style="margin-bottom:16px;">
+          <div style="display:flex;justify-content:space-between;font-size:11px;font-weight:600;margin-bottom:6px;">
+            <span>Free Plan Database Quota (configured 500MB)</span>
+            <span id="quotaTextVal">-</span>
+          </div>
+          <div style="background:#e2e8f0;height:8px;border-radius:4px;overflow:hidden;">
+            <div id="quotaProgressBar" style="background:var(--accent-blue);height:100%;width:0%;"></div>
+          </div>
+        </div>
+
+        <!-- Tables Table -->
+        <div style="font-weight:700;font-size:13px;margin-bottom:8px;">PostgreSQL Database Relations</div>
+        <div class="table-wrap">
+          <table class="records-table">
+            <thead>
+              <tr>
+                <th>Table Name</th>
+                <th>Total Relation Size</th>
+                <th>Row Count</th>
+              </tr>
+            </thead>
+            <tbody id="storageTablesBody"></tbody>
+          </table>
+        </div>
+
+        <div style="font-size:11px;color:var(--text-dim);margin-top:12px;text-align:right;">
+          Snapshot timestamp: <span id="storageTimestampVal" style="font-family:var(--font-mono);">-</span>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- RECORD DETAIL MODAL -->
+  <div class="modal-overlay" id="recordModalOverlay">
+    <div class="modal-dialog">
+      <div class="modal-header">
+        <div style="display:flex;align-items:center;gap:10px;">
+          <span style="font-weight:700;font-size:14px;" id="modalRecordId">Record Details</span>
+          <span class="tier-pill tier-direct" id="modalDomain">aviation</span>
+          <span id="modalFetchStatus" style="font-size:11px;color:var(--text-dim);font-family:var(--font-mono);"></span>
+        </div>
+        <button style="background:none;border:none;font-size:20px;cursor:pointer;color:var(--text-dim);" id="modalCloseBtn" type="button">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div class="snippet-box" style="margin-bottom:12px;">
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;">
+            <div><strong>Source ID:</strong> <span id="modalSourceId" style="font-family:var(--font-mono);">-</span></div>
+            <div><strong>CSV Row:</strong> <span id="modalCsvRow" style="font-family:var(--font-mono);">-</span></div>
+            <div style="grid-column:span 2;"><strong>Source File SHA256:</strong> <span id="modalSourceFileSha" style="font-family:var(--font-mono);font-size:10px;word-break:break-all;">-</span></div>
+          </div>
+        </div>
+
+        <div style="margin-bottom:8px;">
+          <div style="font-size:11px;font-weight:700;color:var(--text-dim);text-transform:uppercase;">Problem Raw:</div>
+          <div id="modalProblemRaw" style="font-size:13px;font-weight:600;margin-top:2px;">-</div>
+        </div>
+
+        <div style="margin-bottom:14px;">
+          <div style="font-size:11px;font-weight:700;color:var(--text-dim);text-transform:uppercase;">Action Raw:</div>
+          <div id="modalActionRaw" style="font-size:12px;color:var(--text-muted);margin-top:2px;">-</div>
+        </div>
+
+        <div style="font-weight:700;font-size:12px;margin-bottom:6px;">Exact Source CSV Fields & Field SHA256 Digests</div>
+        <table class="records-table">
+          <thead>
+            <tr>
+              <th style="width:25%;">Field Name</th>
+              <th style="width:35%;">Raw Value</th>
+              <th style="width:40%;">Field SHA256 Digest</th>
+            </tr>
+          </thead>
+          <tbody id="modalFieldsTableBody"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <script src="/static/retrieval_lab.js?v=20261022b"></script>
+</body>
+</html>

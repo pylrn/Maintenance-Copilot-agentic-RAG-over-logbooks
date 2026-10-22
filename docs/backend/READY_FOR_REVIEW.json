@@ -1,0 +1,64 @@
+{
+  "project": "maintenance-atlas",
+  "branch": "gdd/local-retrieval-providers",
+  "working_directory": "/Volumes/MAC/Projects_devolopment/nexai_gdd_backend",
+  "ready_for_review": true,
+  "snapshot_base_commit": "79915c7d7a8298579bd0126ef6093748969fd0de",
+  "final_commit_sha": "bd167f7",
+  "tests": {
+    "total": 69,
+    "passed": 69,
+    "failed": 0,
+    "skipped": 0,
+    "execution_time_seconds": 1.81,
+    "command": "PYTHONPATH=. .venv/bin/pytest -v"
+  },
+  "database": {
+    "local_integration_db": "maintenance_gdd_integration (localhost:55432)",
+    "local_test_db": "maintenance_gdd_tests (localhost:55432)",
+    "migrations_verified": "001_core.sql through 006_validate_state.sql",
+    "corpora_seeded": {
+      "aviation": {
+        "corpus_id": "2795c1d6-a5f4-5c8d-a773-4ac724d10e99",
+        "records": 6169
+      },
+      "facility": {
+        "corpus_id": "b5f9d886-1b2c-56cc-96fe-ae0488597043",
+        "records": 200
+      }
+    },
+    "vectors_stored": 12738,
+    "supabase_compatibility": {
+      "verified_project": "cjtokhnlwoqjeifmnwho",
+      "postgres_version": "17.11",
+      "schema": "maintenance",
+      "vector_schema": "extensions",
+      "ssl_mode": "verify-full",
+      "ca_certificate": "data/certs/supabase-root-2021.crt",
+      "preflight_script": "scripts/db_preflight.py",
+      "compose_override": "compose.supabase.yaml"
+    }
+  },
+  "providers": {
+    "supported": ["deepseek", "gemini"],
+    "model_allowlist": ["deepseek-flash", "gemini-3.8-flash", "gemini-2.5-flash"],
+    "gemini_endpoint": "https://generativelanguage.googleapis.com/v1beta/openai/",
+    "gemini_generation_status": "unverified (upstream endpoint read timeouts)",
+    "extractive_fallback": "verified independent of LLM API keys",
+    "credential_protection": "SecretStr wrapped, repr redacted, error bodies redacted in smoke script"
+  },
+  "api_verification": {
+    "port": 8100,
+    "health": "HTTP 200 (all ready)",
+    "aviation_search": "HTTP 200 (6 hits, RRF fusion: raw BM25 + norm BM25 + dense recall)",
+    "facility_search": "HTTP 200 (6 hits, zero invented action fields, literal preservation)",
+    "record_fetch": "HTTP 200 (exact problem/action with field SHA256 hashes)",
+    "session_lifecycle": "HTTP 200 (session -> run -> 12 evidence snapshots committed -> answer -> handover)",
+    "run_event_stream_authorization": "HTTP 404 on cross-owner or non-existent run ID"
+  },
+  "constraints_maintained": {
+    "zero_remote_git_actions": true,
+    "zero_external_repo_modifications": true,
+    "zero_secrets_committed": true
+  }
+}
