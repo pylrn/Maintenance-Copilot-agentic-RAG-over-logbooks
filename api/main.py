@@ -225,6 +225,12 @@ def create_app(settings=None, search_engine=None):
             if engine
             else [],
             "configured_models": settings.model_allowlist,
+            "model_default": provider.model_name if provider and provider.is_configured else "extractive/v1",
+            "synthesis_policy": {"prompt_version": "evidence-selection/v2",
+                "reasoning_effort": settings.synthesis_reasoning_effort,
+                "timeout_seconds": settings.synthesis_timeout_seconds,
+                "max_tokens": settings.synthesis_max_tokens,
+                "model_fallback": False},
             "provider_configured": is_provider_configured,
             "enabled_modes": list(app.state.workflow_capabilities.get("enabled_modes", []))
             if app.state.workflows_ready

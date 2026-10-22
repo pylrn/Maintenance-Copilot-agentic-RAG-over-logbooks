@@ -3,6 +3,7 @@
 import asyncio
 import json
 import logging
+import time
 from typing import Any
 from uuid import UUID
 
@@ -20,7 +21,8 @@ from maintenance.events import EventBus
 from maintenance.ingest.annotate import mentions
 from maintenance.models.provider import LLMProvider
 from maintenance.session_repository import SessionRepository
-from maintenance.telemetry import observed, trace_info
+from maintenance.telemetry import observation, observed, trace_info
+from maintenance.synthesis import (EvidenceSelection, PROMPT_VERSION, check_selection, synthesis_messages)
 from maintenance.tools import (
     RunDeps,
     tool_get_records,
@@ -50,10 +52,16 @@ class AgentRunner:
         repository: SessionRepository,
         event_bus: EventBus,
         provider: LLMProvider,
+        synthesis_reasoning_effort: str = "low",
+        synthesis_timeout_seconds: float = 12.0,
+        synthesis_max_tokens: int = 3072,
     ):
         self.repository = repository
         self.event_bus = event_bus
         self.provider = provider
+        self.synthesis_reasoning_effort = synthesis_reasoning_effort
+        self.synthesis_timeout_seconds = synthesis_timeout_seconds
+        self.synthesis_max_tokens = synthesis_max_tokens
 
     def _resolve_provider_for_run(self, model_id: str | None) -> LLMProvider | None:
         if not model_id or model_id == "extractive/v1":
@@ -81,64 +89,48 @@ class AgentRunner:
         provider: LLMProvider | None,
         query_text: str,
         fetched_evidence: dict[UUID, dict[str, Any]],
-    ) -> tuple[str, list[str], list[str]]:
-        """Invokes the LM to synthesize grounded summary, what can be concluded, and what cannot."""
-        if not provider or not provider.is_configured:
-            return "", [], []
-
-        if not fetched_evidence:
-            evidence_str = "None found in historical records."
-        else:
-            evidence_str = "\n".join(
-                f"Record {ev['record_id']}: [{ev['field']}] \"{ev['raw_text']}\""
-                for ev in fetched_evidence.values()
-            )
-
-        prompt = (
-            f"User Fault Complaint: {query_text}\n"
-            f"Authoritative Historical Log Evidence:\n{evidence_str}\n\n"
-            "Task: Generate a grounded executive synthesis of the historical maintenance evidence.\n"
-            "Respond ONLY with a valid JSON object containing exactly these three fields:\n"
-            "{\n"
-            '  "summary": "1-2 sentence executive summary of what the authoritative records report and how technicians addressed it.",\n'
-            '  "what_can_be_concluded": [\n'
-            '    "Bullet 1: Grounded statement of what technicians actually recorded/replaced/repaired.",\n'
-            '    "Bullet 2: Recorded operational checks or test results if documented."\n'
-            '  ],\n'
-            '  "what_cannot_be_concluded": [\n'
-            '    "Limitation regarding uncertified aircraft/engine serial applicability.",\n'
-            '    "Limitation that historical records do not replace approved AMM maintenance procedures."\n'
-            '  ]\n'
-            "}\n"
-            "Rules:\n"
-            "- If evidence is empty, what_can_be_concluded MUST BE EXACTLY [\"No evidence found for this complaint in the historical records.\"], and what_cannot_be_concluded must state that nothing can be concluded regarding causes or actions.\n"
-            "- Do NOT fabricate facts, part numbers, or procedures not in the evidence.\n"
-            "- Keep conclusions strictly grounded in the provided log text.\n"
-            "- Distinguish exact complaint matches from partial or unrelated cases; explicitly disclose side/component mismatches.\n"
-            "- Do not combine actions from different records into a single repair or imply they apply to the user aircraft.\n"
-            "- Be concise: at most two bullets per list."
-        )
-
-        try:
-            res = await asyncio.wait_for(
-                provider.chat_completion(
-                    messages=[{"role": "user", "content": prompt}],
-                    response_format={"type": "json_object"},
-                    timeout=12.0,
-                ),
-                timeout=12.0,
-            )
-            content = res.get("content", "")
-            if "{" in content and "}" in content:
-                data = json.loads(content[content.find("{") : content.rfind("}") + 1])
-                summary = str(data.get("summary", "")).strip()
-                can = [str(x).strip() for x in data.get("what_can_be_concluded", []) if str(x).strip()]
-                cannot = [str(x).strip() for x in data.get("what_cannot_be_concluded", []) if str(x).strip()]
-                return summary, can, cannot
-        except Exception as exc:
-            logger.warning("LM conclusion synthesis skipped due to %s", type(exc).__name__)
-
-        return "", [], []
+    ) -> tuple[EvidenceSelection | None, dict[str, Any]]:
+        """One bounded structured selection; rejected output is never released as prose."""
+        model = provider.model_name if provider else None
+        info = {"prompt_version": PROMPT_VERSION, "requested_model": model,
+                "effective_model": None, "reasoning_effort": self.synthesis_reasoning_effort,
+                "status": "not_requested", "fallback_reason": None}
+        if not provider or not provider.is_configured or not fetched_evidence:
+            return None, info
+        start = time.perf_counter()
+        with observation("synthesis.selection", "guardrail", requested_model=model) as span:
+            try:
+                res = await asyncio.wait_for(
+                    provider.chat_completion(
+                        messages=synthesis_messages(query_text, fetched_evidence),
+                        response_format={"type": "json_schema", "json_schema": {
+                            "name": "evidence_selection", "strict": True,
+                            "schema": EvidenceSelection.model_json_schema(),
+                        }},
+                        reasoning_effort=(self.synthesis_reasoning_effort
+                                          if provider.provider_type == "gemini" else None),
+                        max_tokens=self.synthesis_max_tokens,
+                        timeout=self.synthesis_timeout_seconds,
+                    ), timeout=self.synthesis_timeout_seconds,
+                )
+                info.update(effective_model=res.get("effective_model"), usage=res.get("usage", {}))
+                selection = EvidenceSelection.model_validate_json(res.get("content", ""))
+                check_selection(selection, fetched_evidence)
+                info.update(status="validated_selection", decision=selection.decision)
+                return selection, info
+            except Exception as exc:
+                # Exception type only: request objects/messages may include credentials or source data.
+                code = getattr(exc, "status_code", None)
+                reason = ("rate_limited" if code == 429 else "timeout"
+                          if isinstance(exc, (TimeoutError, asyncio.TimeoutError))
+                          else "provider_error" if code is not None else "invalid_selection")
+                info.update(status="extractive_fallback", fallback_reason=reason,
+                            error_type=type(exc).__name__)
+                logger.warning("Evidence selection fallback: %s", reason)
+                return None, info
+            finally:
+                info["latency_ms"] = round((time.perf_counter() - start) * 1000, 2)
+                span.update(metadata={k: v for k, v in info.items() if k != "usage"})
 
     @observed("agent.run", "agent",
         metadata=lambda self, deps, query_text, domain="aviation": {"run_id": str(deps.run_id), "session_id": str(deps.session_id), "mode": deps.mode, "domain": domain, "state_revision": deps.state_revision},
@@ -406,16 +398,16 @@ class AgentRunner:
                         supporting_evidence(query_text, deps.fetched_evidence)
                         if deps.mode == "EVIDENCE" else deps.fetched_evidence
                     )
-                    lm_summary = ""
-                    lm_can: list[str] = []
-                    lm_cannot: list[str] = []
+                    selection = None
+                    generation = {"status": "not_requested", "requested_model": getattr(deps, "model_id", None),
+                                  "effective_model": None, "prompt_version": PROMPT_VERSION,
+                                  "fallback_reason": "no_matching_evidence" if not answer_evidence else "extractive_selected"}
                     if run_provider and run_provider.is_configured and answer_evidence:
-                        try:
-                            lm_summary, lm_can, lm_cannot = await self.synthesize_conclusions(
-                                run_provider, query_text, answer_evidence
-                            )
-                        except Exception as exc:
-                            logger.warning("LM conclusion synthesis failed: %s", exc)
+                        selection, generation = await self.synthesize_conclusions(
+                            run_provider, query_text, answer_evidence
+                        )
+                        if selection and selection.decision == "insufficient_evidence":
+                            answer_evidence = {}
 
                     answer = render_extractive_answer(
                         run_id=deps.run_id,
@@ -424,14 +416,9 @@ class AgentRunner:
                         fetched_evidence=answer_evidence,
                         state_revision=deps.state_revision,
                         status="insufficient_evidence" if not answer_evidence else None,
-                        summary=lm_summary or (
-                            "Insufficient evidence: retrieved candidates do not establish a matching complaint in the authorized records. "
-                            "This does not prove that the fault is absent or identify a repair."
-                            if not answer_evidence else None
-                        ),
-                        what_can_be_concluded=lm_can or None,
-                        what_cannot_be_concluded=lm_cannot or None,
+                        synthesis_selection=selection,
                     )
+                    answer.generation = generation
 
             # 7. Deterministic validation gate applied to ALL candidate answers BEFORE board update
             val_res = validate_answer(answer, deps.fetched_evidence, deps.computed_receipts, deps.mode)
@@ -448,6 +435,8 @@ class AgentRunner:
                     status="insufficient_evidence",
                     limitations=["Evidence validation gate rejected unsupported or corrupted claim citations."],
                 )
+                answer.generation = {"status": "extractive_fallback", "fallback_reason": "source_validation_failed",
+                                     "requested_model": getattr(deps, "model_id", None), "effective_model": None}
                 val_report = {
                     "valid": False,
                     "errors": val_res.errors,

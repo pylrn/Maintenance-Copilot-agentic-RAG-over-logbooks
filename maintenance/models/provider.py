@@ -63,9 +63,6 @@ class LLMProvider:
             if model_name
             else PROVIDER_MODELS[self.provider_type][0]
         )
-        if self.provider_type == "gemini":
-            if self.model_name in ("gemini-3.8-flash", "gemini-3.7-flash", "gemini-3.5-flash"):
-                self.model_name = "gemini-3.5-flash-lite"
 
         # Validate exact HTTPS endpoint and model allowlist per provider
         parsed = urlparse(self.base_url)
@@ -101,6 +98,9 @@ class LLMProvider:
         tools: list[dict[str, Any]] | None = None,
         response_format: dict[str, Any] | None = None,
         timeout: float = 30.0,
+        reasoning_effort: str | None = None,
+        max_tokens: int | None = None,
+        allow_fallback: bool = False,
     ) -> dict[str, Any]:
         """Calls the configured OpenAI-compatible chat completions endpoint."""
         if not self.is_configured:
@@ -116,6 +116,14 @@ class LLMProvider:
         if self.provider_type == "deepseek":
             # DeepSeek non-thinking mode per documentation
             kwargs["extra_body"] = {"thinking": {"type": "disabled"}}
+        if reasoning_effort is not None:
+            if reasoning_effort not in {"none", "minimal", "low", "medium", "high"}:
+                raise ValueError("unsupported reasoning effort")
+            kwargs["reasoning_effort"] = reasoning_effort
+        if max_tokens is not None:
+            if not 1 <= max_tokens <= 8192:
+                raise ValueError("max_tokens outside allowed range")
+            kwargs["max_tokens"] = max_tokens
         if tools:
             kwargs["tools"] = tools
             kwargs["tool_choice"] = "auto"
@@ -127,7 +135,8 @@ class LLMProvider:
         except Exception as exc:
             # If rate-limited on gemini model, attempt gemini-3.5-flash-lite fallback
             if (
-                self.provider_type == "gemini"
+                allow_fallback
+                and self.provider_type == "gemini"
                 and kwargs.get("model") != "gemini-3.5-flash-lite"
                 and ("429" in str(exc) or "RateLimit" in type(exc).__name__ or "RESOURCE_EXHAUSTED" in str(exc))
             ):
@@ -159,24 +168,31 @@ class LLMProvider:
                     tc_dict["extra_content"] = tc.extra_content
                 tool_calls.append(tc_dict)
 
+        reasoning_tokens = (getattr(getattr(response.usage, "completion_tokens_details", None), "reasoning_tokens", None) if response.usage else None)
+        reasoning_tokens = reasoning_tokens if type(reasoning_tokens) is int else None
         return {
+            "requested_model": self.model_name,
+            "effective_model": getattr(response, "model", None) or kwargs["model"],
+            "fallback": kwargs["model"] != self.model_name,
+            "finish_reason": choice.finish_reason,
             "role": "assistant",
             "content": message.content or "",
             "tool_calls": tool_calls,
             "usage": {
                 "prompt_tokens": response.usage.prompt_tokens if response.usage else 0,
                 "completion_tokens": response.usage.completion_tokens if response.usage else 0,
+                "reasoning_tokens": reasoning_tokens,
             },
         }
 
     async def _traced_completion(self, **kwargs):
-        with observation("llm.generation", "generation", requested_model=kwargs.get("model"), provider=self.provider_type) as span:
+        with observation("llm.generation", "generation", requested_model=self.model_name, provider=self.provider_type) as span:
             response = await self.client.chat.completions.create(**kwargs)
             usage = response.usage
             effective_model = getattr(response, "model", None) or kwargs.get("model")
             span.update(model=effective_model,
                 usage={"input": usage.prompt_tokens, "output": usage.completion_tokens} if usage else None,
-                metadata={"effective_model": effective_model, "fallback": kwargs.get("model") != self.model_name})
+                metadata={"effective_model": effective_model, "requested_model": self.model_name, "fallback": kwargs.get("model") != self.model_name})
             return response
 
     async def roundtrip_tool_loop(

@@ -57,6 +57,9 @@ class Settings(BaseSettings):
     db_pool_max: int = Field(default=5, ge=1, le=10)
     max_upload_bytes: int = 5 * 1024 * 1024
     max_extracted_chars: int = 50000
+    synthesis_reasoning_effort: Literal["minimal", "low", "medium", "high"] = "low"
+    synthesis_timeout_seconds: float = Field(default=12.0, ge=1, le=30)
+    synthesis_max_tokens: int = Field(default=3072, ge=256, le=8192)
     run_deadline_seconds: int = 45
     max_tool_calls: int = 8
     max_model_requests: int = 4

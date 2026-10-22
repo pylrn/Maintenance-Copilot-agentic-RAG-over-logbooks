@@ -31,6 +31,8 @@ def test_direct_problem_matches_keep_paired_actions(query, problem):
     ('right intake leak', ['RIGHT INTAKE LOOSE.', 'LEFT INTAKE LEAKING.']),
     ('intake leak', ['NO INTAKE LEAK.']),
     ('quantum stabilizer resonance', ['INTAKE LEAKING.']),
+    ('baffle crack with unfamiliar actuator failure', ['BAFFLE CRACKED.']),
+    ('intake leak and unknown sensor malfunction', ['INTAKE LEAKING.']),
     ('intake leak', ['INTAKE REPLACED.']),
 ])
 def test_partial_conflicting_and_unknown_complaints_abstain(query, problems):

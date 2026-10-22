@@ -3,6 +3,8 @@
 from typing import Any
 from uuid import UUID, uuid4
 
+from maintenance.synthesis import (EvidenceSelection, default_selection, render_synthesis, selection_ids)
+
 from maintenance.contracts import (
     AllowedAction,
     AnswerEnvelope,
@@ -74,8 +76,14 @@ def render_extractive_answer(
     summary: str | None = None,
     what_can_be_concluded: list[str] | None = None,
     what_cannot_be_concluded: list[str] | None = None,
+    synthesis_selection: EvidenceSelection | None = None,
 ) -> AnswerEnvelope:
     """Builds a strictly grounded extractive answer directly from validated evidence snapshots."""
+    canonical_selection = synthesis_selection or default_selection(
+        {} if status == "insufficient_evidence" else fetched_evidence
+    )
+    if mode == "EVIDENCE":
+        summary, what_can_be_concluded, what_cannot_be_concluded = render_synthesis(canonical_selection, fetched_evidence)
     answer_id = uuid4()
     claims: list[Claim] = []
     fetched_record_ids: list[str] = []
@@ -217,54 +225,19 @@ def render_extractive_answer(
 
     allowed_actions = build_allowed_actions(answer_id, state_revision, unique_recs, mode)
 
-    # Dynamic synthesis of conclusions and summary directly from actual retrieved evidence
-    if not what_can_be_concluded:
-        what_can_be_concluded = []
-        distinct_acts = list(act_quotes_map.keys())
-        if distinct_acts:
-            cleaned_acts = []
-            for a in distinct_acts[:3]:
-                c = a.strip().rstrip(".")
-                if c:
-                    cleaned_acts.append(f"<strong>{c}</strong>")
-            if cleaned_acts:
-                what_can_be_concluded.append(
-                    f"Technicians responding to these complaints documented corrective actions including: {', '.join(cleaned_acts)}."
-                )
-            checks = [
-                a for a in distinct_acts
-                if any(k in a.upper() for k in ["LEAK", "CHECK", "CK", "RAN", "OPS", "TEST"])
-            ]
-            if checks:
-                what_can_be_concluded.append(
-                    f"Post-maintenance operational runs and leak checks were recorded in history (e.g. <code>{checks[0][:60]}</code>)."
-                )
-        if not what_can_be_concluded:
-            what_can_be_concluded.append(
-                f"Historical records confirm recorded maintenance activity associated with complaint terms across {len(unique_recs)} case(s)."
-            )
-
-    if not what_cannot_be_concluded:
-        what_cannot_be_concluded = [
-            "MaintNet research records omit specific airframe/engine serial applicability; historical records do not certify applicability to your specific aircraft.",
-            "Historical log entries document past technician actions as written; they do not replace approved Aircraft Maintenance Manual (AMM) procedures or guarantee permanent root-cause elimination.",
-        ]
-
-    if not summary:
-        distinct_probs = list(prob_quotes_map.keys())
-        prob_desc = f'"{distinct_probs[0][:60]}"' if distinct_probs else query_raw
-        act_summary = (
-            f'with recorded corrective actions such as "{list(act_quotes_map.keys())[0][:50]}"'
-            if act_quotes_map
-            else "with recorded historical maintenance interventions."
-        )
-        summary = f"Based on {len(unique_recs)} distinct matching log record(s), historical complaints report {prob_desc} {act_summary}."
+    # Other modes also get a conservative extractive default if no prose is supplied.
+    if not summary or not what_can_be_concluded or not what_cannot_be_concluded:
+        fallback_summary, fallback_can, fallback_cannot = render_synthesis(canonical_selection, fetched_evidence)
+        summary = summary or fallback_summary
+        what_can_be_concluded = what_can_be_concluded or fallback_can
+        what_cannot_be_concluded = what_cannot_be_concluded or fallback_cannot
 
     return AnswerEnvelope(
         answer_id=answer_id,
         run_id=run_id,
         mode=mode,
         status="supported_historical",
+        synthesis_evidence_ids=selection_ids(canonical_selection),
         headline=headline,
         claims=claims,
         limitations=limitations,

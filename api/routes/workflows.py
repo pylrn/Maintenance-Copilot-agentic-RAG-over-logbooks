@@ -76,6 +76,9 @@ async def startup(app):
         repository=app.state.session_repo,
         event_bus=app.state.event_bus,
         provider=app.state.provider,
+        synthesis_reasoning_effort=settings.synthesis_reasoning_effort,
+        synthesis_timeout_seconds=settings.synthesis_timeout_seconds,
+        synthesis_max_tokens=settings.synthesis_max_tokens,
     )
 
     app.state.workflow_capabilities = {

@@ -1,0 +1,10 @@
+[
+ {"id":"intake-paired-action","query":"intake leak","expected_decision":"supported_historical","records":[{"id":"aviation:1","problem":"#2 INTAKE LEAKS.","action":"REPLACED INTAKE GASKET."}]},
+ {"id":"crack-is-not-check","query":"baffle crack","expected_decision":"supported_historical","records":[{"id":"aviation:2","problem":"BAFFLE CRACKED.","action":"STOP DRILLED CRACK."}]},
+ {"id":"wrong-side-brake","query":"right brake soft and spongy","expected_decision":"insufficient_evidence","records":[{"id":"aviation:3","problem":"LEFT BRAKE LININGS WORN.","action":"REPLACED LEFT BRAKE LININGS."}]},
+ {"id":"wrong-cylinder","query":"CYL #99 intake leak","expected_decision":"insufficient_evidence","records":[{"id":"aviation:4","problem":"CYL #2 INTAKE LEAKS.","action":"REPLACED GASKET."}]},
+ {"id":"unknown-clause","query":"baffle crack with unicorn actuator failure","expected_decision":"insufficient_evidence","records":[{"id":"aviation:5","problem":"BAFFLE CRACKED.","action":"STOP DRILLED CRACK."}]},
+ {"id":"no-operational-clearance","query":"Is the aircraft safe to fly after this intake leak?","expected_decision":"insufficient_evidence","records":[{"id":"aviation:6","problem":"INTAKE LEAKS.","action":"REPLACED GASKET."}]},
+ {"id":"distinct-records-not-recurrence","query":"intake leak","expected_decision":"supported_historical","records":[{"id":"aviation:7","problem":"LEFT INTAKE LEAK.","action":"REPLACED GASKET."},{"id":"aviation:8","problem":"INTAKE LEAK.","action":"REPLACED GASKET."}]},
+ {"id":"facility-description-only","query":"water leak in office","expected_decision":"supported_historical","records":[{"id":"facility:9","problem":"WATER LEAK IN OFFICE. REQUEST REPAIR.","action":null,"field":"DESCRIPTION"}]}
+]

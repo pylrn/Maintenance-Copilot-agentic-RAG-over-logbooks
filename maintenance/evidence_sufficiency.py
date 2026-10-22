@@ -1,4 +1,5 @@
 """Conservative complaint support gate; search relevance alone is not proof."""
+import re
 from typing import Any
 from uuid import UUID
 
@@ -12,6 +13,15 @@ def supporting_evidence(query: str, evidence: dict[UUID, dict[str, Any]]) -> dic
     This deliberately abstains for unrecognized complaints. Actions cannot establish
     a symptom match, and matching facets across different records is not allowed.
     """
+    # An additional unknown clause is an unresolved requirement, not permission
+    # to answer only the recognized keywords. Prefer abstention to dropping it.
+    clauses = re.split(r"\b(?:and|with|plus|also)\b", query, flags=re.I)
+    if len(clauses) > 1:
+        for clause in clauses:
+            if re.search(r"[a-z]{3,}", clause, re.I) and not any(
+                m.kind in {"component", "symptom"} for m in mentions(clause)
+            ):
+                return {}
     query_mentions = mentions(query)
     facets = {}
     for kind in ("component", "symptom", "laterality", "cylinder_number", "engine_number", "number"):

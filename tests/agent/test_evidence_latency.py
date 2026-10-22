@@ -1,5 +1,6 @@
 """Evidence prefetch must not trigger redundant model tool loops."""
 import hashlib
+import json
 from types import SimpleNamespace
 from unittest.mock import AsyncMock
 from uuid import uuid4
@@ -29,9 +30,9 @@ async def test_evidence_uses_one_synthesis_and_keeps_validated_fallback(monkeypa
     search = AsyncMock(return_value={"hits": [{"record_id": "aviation:1", "compatibility": "direct"}]})
     monkeypatch.setattr("maintenance.agent_run.tool_search_records", search)
     monkeypatch.setattr("maintenance.agent_run.tool_get_records", AsyncMock(return_value={"records": []}))
-    provider = SimpleNamespace(is_configured=True, model_name="test-model",
+    provider = SimpleNamespace(is_configured=True, model_name="test-model", provider_type="gemini",
         roundtrip_tool_loop=AsyncMock(), chat_completion=AsyncMock(
-            return_value={"content": '{"summary":"Historical right-brake complaint.","what_can_be_concluded":[],"what_cannot_be_concluded":[]}'}))
+            return_value={"content": json.dumps({"decision":"supported_historical","records":[{"problem_evidence_id":str(eid),"action_evidence_ids":[]}]})}))
     if model_failure:
         provider.chat_completion.side_effect = TimeoutError("test timeout")
     repo = SimpleNamespace(get_session=AsyncMock(return_value=None),
@@ -41,6 +42,7 @@ async def test_evidence_uses_one_synthesis_and_keeps_validated_fallback(monkeypa
     provider.roundtrip_tool_loop.assert_not_awaited()
     if supported:
         provider.chat_completion.assert_awaited_once()
+        assert answer.generation["status"] == ("extractive_fallback" if model_failure else "validated_selection")
         assert answer.status == "supported_historical"
         assert answer.claims[0].supports[0].evidence_id == eid
     else:

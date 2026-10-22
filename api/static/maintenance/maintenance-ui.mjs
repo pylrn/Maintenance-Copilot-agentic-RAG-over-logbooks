@@ -453,6 +453,16 @@ function renderAnswer(rawAnswer, container) {
     node('h3', 'answer-headline', answer.headline || (isHypothesis ? 'Troubleshooting & Physical Mechanisms' : 'Investigation Findings'))
   );
 
+  if (answer.generation) {
+    const g = answer.generation;
+    const selected = g.requested_model || 'extractive/v1';
+    const effective = g.effective_model || (g.status === 'not_requested' ? 'not invoked' : 'no model response');
+    const outcome = g.status === 'validated_selection' ? 'source selection validated'
+      : g.status === 'extractive_fallback' ? `extractive fallback · ${g.fallback_reason || 'model unavailable'}`
+      : `no generation · ${g.fallback_reason || 'not required'}`;
+    el.append(node('div', 'answer-meta', `Requested: ${selected} · Effective: ${effective} · ${outcome}`));
+  }
+
   if (isHypothesis) {
     // Dedicated Airplane Troubleshooting Card grounded in FAA Technical References
     const hypoCard = node('div', 'answer-hypothesis-card');
@@ -1074,6 +1084,9 @@ async function boot() {
       const fallbackOpt = node('option', '', 'extractive/v1 (deterministic)');
       fallbackOpt.value = 'extractive/v1';
       $('agentModelSelect').append(fallbackOpt);
+    }
+    if (rawCap.model_default && [...$('agentModelSelect').options].some(o => o.value === rawCap.model_default)) {
+      $('agentModelSelect').value = rawCap.model_default;
     }
     $('domainSelect').replaceChildren();
     for (const domain of capabilities.domains || []) {
