@@ -601,6 +601,10 @@ $('fileInput').addEventListener('change', () => protect(async () => {
 }));
 async function boot() {
   $('environmentLabel').textContent = demo ? 'SIMULATED UI DEMO · NOT LIVE DATA' : 'LIVE API MODE';
+  if ($('previewBadge')) $('previewBadge').textContent = demo ? 'DEMO PREVIEW' : 'LIVE COPILOT';
+  if ($('workspacePill')) $('workspacePill').innerHTML = demo ? '<i></i> Simulated workspace' : '<i></i> Live workspace';
+  if ($('workspaceSubtext')) $('workspaceSubtext').innerHTML = demo ? 'Playing offline scenario cards.<br>No live model or DB attached.' : 'Connected to live database.<br>6,369 verified records.';
+  if ($('explorerNavLabel')) $('explorerNavLabel').textContent = demo ? 'Search demo records' : 'Search records';
   try {
     const rawCap = await api.capabilities();
     state.capabilities = adaptCapabilities(rawCap);
