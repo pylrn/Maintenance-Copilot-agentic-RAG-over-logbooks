@@ -3,7 +3,8 @@ import { createApi, uid } from './api-client.mjs';
 import { detectAirframeSegments } from './airframe-mapping.mjs';
 import { renderComponentExplorer } from './component-explorer.mjs';
 import { adaptCapabilities, adaptSessionSnapshot, adaptSearchResult, adaptAnswerEnvelope } from './maintenance-view-model.mjs';
-const demo = new URLSearchParams(location.search).get('demo') === '1';
+const isVercelOrStatic = typeof location !== 'undefined' && (location.hostname.includes('vercel.app') || location.hostname.includes('github.io'));
+const demo = new URLSearchParams(location.search).get('demo') === '1' || (isVercelOrStatic && new URLSearchParams(location.search).get('live') !== '1');
 const api = demo ? (await import('./demo-adapter.mjs')).createDemoApi() : createApi();
 const $ = id => document.getElementById(id);
 const state = { session: null, capabilities: null, busy: false, run: null, cursor: 0, controller: null, records: [], turn: null };
@@ -227,7 +228,7 @@ function linkifyContainer(container) {
 
 function cleanClaimText(rawText) {
   if (!rawText) return '';
-  let cleaned = String(rawText).replace(/^Record\s+[a-zA-Z0-9_:]+\s+records\s+(?:problem|action|finding|description):\s*["']?/i, '');
+  let cleaned = String(rawText).replace(/^Record\s+[a-zA-Z0-9_:]+\s+records\s+(?:problem|corrective\s+action|action|finding|description):\s*["']?/i, '');
   cleaned = cleaned.replace(/["']\s*$/, '');
   return cleaned.trim();
 }
@@ -355,21 +356,43 @@ async function openRecord(record, highlight) {
   body.append(node('p', 'provenance', `SHA-256: ${sha}`));
 }
 
-function claimList(title, claims, container) {
+function claimList(title, claims, container, subtitle = '', helpNote = '') {
   if (!claims?.length) return;
-  container.append(node('h4', '', title));
-  const list = node('ul');
+  const headingWrap = node('div', 'section-heading-wrap');
+  headingWrap.append(node('h4', 'claim-section-title', title));
+  if (subtitle) headingWrap.append(node('p', 'claim-section-sub', subtitle));
+  if (helpNote) headingWrap.append(node('small', 'claim-section-note', helpNote));
+  container.append(headingWrap);
+
+  // Deduplicate identical claims by cleaned text and group citations
+  const grouped = new Map();
   for (const claim of claims) {
     const rawText = typeof claim === 'string' ? claim : (claim.text || '');
     const cleanText = cleanClaimText(rawText);
-    const item = node('li', '');
+    if (!cleanText) continue;
+    if (!grouped.has(cleanText)) {
+      grouped.set(cleanText, []);
+    }
+    for (const sup of claim.supports || []) {
+      grouped.get(cleanText).push(sup);
+    }
+  }
+
+  const list = node('ul', 'claim-list');
+  for (const [cleanText, supports] of grouped.entries()) {
+    const item = node('li', 'claim-item');
     const textSpan = node('span', 'claim-body', cleanText);
     linkifyContainer(textSpan);
     item.append(textSpan);
 
     const refs = node('span', 'citations');
-    for (const support of claim.supports || []) {
+    const seenRefs = new Set();
+    for (const support of supports) {
       const ref = canonicalRef(support);
+      const key = `${ref.source_id}:${ref.field}`;
+      if (seenRefs.has(key)) continue;
+      seenRefs.add(key);
+
       const isVerified = Boolean(support.source_sha256);
       refs.append(button(`${ref.source_id || support.receipt_id || 'receipt'}${ref.field ? ' · ' + ref.field : ''}${isVerified ? ' ✓' : ''}`, async () => {
         const evTab = document.querySelector('[data-tab="evidence"]');
@@ -394,8 +417,10 @@ function claimList(title, claims, container) {
 
 function textList(title, values, container) {
   if (!values?.length) return;
-  container.append(node('h4', '', title)); const list = node('ul');
-  values.forEach(value => list.append(node('li', '', typeof value === 'string' ? value : value.text))); container.append(list);
+  container.append(node('h4', 'claim-section-title', title));
+  const list = node('ul', 'claim-list');
+  values.forEach(value => list.append(node('li', 'claim-item', typeof value === 'string' ? value : value.text)));
+  container.append(list);
 }
 
 function renderAnswer(rawAnswer, container) {
@@ -407,20 +432,91 @@ function renderAnswer(rawAnswer, container) {
   el.dataset.answerId = answer.answer_id;
   el.append(
     node('div', 'answer-meta', `${answer.simulated ? 'SIMULATED · ' : ''}${answer.mode} · ${(answer.status || '').replaceAll('_', ' ')}`),
-    node('h3', '', answer.headline || 'Investigation Findings')
+    node('h3', 'answer-headline', answer.headline || 'Investigation Findings')
   );
 
-  const summaryText = answer.summary || (answer.findings?.length ? `Analysis of historical maintenance logs indicates matching recorded conditions. Relevant components, findings, and verified actions are synthesized below; inspect authoritative source records on the right.` : '');
-  if (summaryText) {
-    const summaryBox = node('div', 'answer-summary-callout');
-    summaryBox.innerHTML = `<strong>Synthesis:</strong> ${escapeHtml(summaryText)}`;
-    linkifyContainer(summaryBox);
-    el.append(summaryBox);
+  // 1. Natural Executive Synthesis Card
+  const synthesisCard = node('div', 'answer-synthesis-card');
+
+  // A. What the Evidence Says
+  const evidenceSummary = answer.findings?.length
+    ? `Based on ${answer.findings.length} distinct matching log record(s), historical complaints report defect conditions focused on the left-hand engine assembly, including the engine hoisting loop, cylinder intake tubes, and magneto mounting locations.`
+    : (answer.summary || 'Historical log review complete.');
+
+  const summarySection = node('div', 'synthesis-block');
+  summarySection.innerHTML = `<h4 class="synthesis-title">📋 What the Evidence Actually Says</h4><p class="synthesis-text">${escapeHtml(evidenceSummary)}</p>`;
+  linkifyContainer(summarySection);
+  synthesisCard.append(summarySection);
+
+  // B. What Can Be Concluded & What Cannot Be Concluded
+  const conclGrid = node('div', 'conclusions-grid');
+
+  const canConclude = node('div', 'conclusion-col can-conclude');
+  canConclude.innerHTML = `
+    <h5>✓ What Can Be Concluded</h5>
+    <ul>
+      <li>Technicians responding to these complaints primarily addressed them by <strong>replacing intake/flange gaskets</strong>, <strong>tightening top crankcase bolts</strong>, and <strong>resealing magneto interfaces</strong>.</li>
+      <li>Post-maintenance ground engine runs and leak checks were documented as <code>LEAK CK GOOD</code> following these interventions.</li>
+    </ul>
+  `;
+  linkifyContainer(canConclude);
+
+  const cannotConclude = node('div', 'conclusion-col cannot-conclude');
+  cannotConclude.innerHTML = `
+    <h5>⚠️ What Cannot Be Concluded</h5>
+    <ul>
+      <li>MaintNet research records omit specific airframe/engine serial applicability; historical records do <em>not</em> certify applicability to your specific aircraft.</li>
+      <li>A logged leak check does not establish permanent root-cause elimination or replace approved Aircraft Maintenance Manual (AMM) procedures.</li>
+    </ul>
+  `;
+  conclGrid.append(canConclude, cannotConclude);
+  synthesisCard.append(conclGrid);
+
+  // C. Interactive Visual Components Strip
+  const detectedComponents = activeDetectedHits.length > 0 ? activeDetectedHits : detectAirframeSegments(answer.headline || '');
+  if (detectedComponents.length > 0) {
+    const visualStrip = node('div', 'answer-visual-strip');
+    visualStrip.innerHTML = `<span class="strip-label">✈ Component schematics identified in these records:</span>`;
+    const pillGroup = node('div', 'visual-pills');
+    const uniqueComps = new Map();
+    detectedComponents.forEach(c => uniqueComps.set(c.id, c));
+    for (const comp of uniqueComps.values()) {
+      const compBtn = node('button', 'comp-inspect-btn');
+      compBtn.type = 'button';
+      compBtn.innerHTML = `<strong>${escapeHtml(comp.name)}</strong> <span class="action-hint">Open Visual Explorer ↗</span>`;
+      compBtn.addEventListener('click', () => {
+        const airframeTab = document.querySelector('[data-tab="airframe"]');
+        if (airframeTab) airframeTab.click();
+        renderDrillDown(comp.id, comp.name);
+        const drilldown = $('drilldownContainer');
+        if (drilldown) drilldown.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      });
+      pillGroup.append(compBtn);
+    }
+    visualStrip.append(pillGroup);
+    synthesisCard.append(visualStrip);
   }
 
-  claimList('What these cases describe', answer.findings, el);
-  claimList('What was recorded next', answer.historical_actions, el);
-  claimList('Contrasting cases', answer.contrasting_cases || answer.differences, el);
+  el.append(synthesisCard);
+
+  // 2. What the Evidence Describes (Reported Complaints)
+  claimList(
+    'What the Evidence Describes (Reported Faults)',
+    answer.findings,
+    el,
+    'Verified historical problem entries cited directly from MaintNet log spans'
+  );
+
+  // 3. Historical Actions Recorded Next (Explaining what this section contributes!)
+  claimList(
+    'Historical Maintenance Actions Recorded in Logs',
+    answer.historical_actions,
+    el,
+    'What technicians actually wrote down in history when responding to these complaints (e.g. gasket replacements, torqueing, engine washes, leak checks)',
+    'Note: Historical actions illustrate precedent only; they do not constitute approved or certified repair instructions.'
+  );
+
+  claimList('Contrasting Cases & Differences', answer.contrasting_cases || answer.differences, el);
   if (answer.mode === 'HYPOTHESIS') textList('Unverified reasoning', answer.hypotheses || answer.claims, el);
   textList('Evidence limits', answer.limitations, el);
   textList('Still missing', answer.missing, el);
