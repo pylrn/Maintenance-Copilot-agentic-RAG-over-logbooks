@@ -1,0 +1,17 @@
+const $ = id => document.getElementById(id);
+const go = (id, focus) => { $(id).scrollIntoView({behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'instant':'smooth',block:'start'}); if(focus) $(focus).focus({preventScroll:true}); };
+document.querySelectorAll('[data-destination]').forEach(button=>button.addEventListener('click',()=>{
+ document.querySelectorAll('[data-destination]').forEach(n=>{n.classList.remove('active');n.removeAttribute('aria-current');});button.classList.add('active');button.setAttribute('aria-current','page');
+ const target=button.dataset.destination;$('viewName').textContent={home:'Overview',issue:'Investigate an issue',airframe:'Aircraft explorer',features:'All features'}[target];
+ if(target==='home')window.scrollTo({top:0,behavior:'smooth'});
+ if(target==='issue')go('issueComposer','heroInput');
+ if(target==='airframe')go('planeDiagnosticWrap');
+ if(target==='features') {
+ $('panelTitle').textContent='Everything you can do with Atlas';$('panelEyebrow').textContent='YOUR TOOLKIT · DEMO WORKSPACE';const body=$('panelBody');body.replaceChildren();const grid=document.createElement('div');grid.className='feature-directory';
+ const features=[['Investigate an issue','Describe a symptom in everyday language and review matching sample cases.','Start with the issue box'],['Aircraft explorer','Select a region, then explore internal components and their roles.','Available in Aircraft explorer'],['Oil-loss progression','Explore possible source areas and conditional consequences in a separate educational scenario.','Aircraft explorer → Engine → Oil-loss progression'],['Search records','Browse matching demo records and open their original fields.','Available in Search demo records'],['Save evidence','Pin useful records while you investigate.','Available on each record'],['Investigation history','Return to earlier demo investigations saved in this browser.','Available in Investigation history'],['Upload a report','Use a TXT or Markdown report as context in demo mode. Live PDF extraction is pending.','Available in Upload a report'],['Compare & challenge','Compare cases, challenge a conclusion, or explore alternative query wording.','Available on a result'],['Possible solutions','Separate unverified reasoning from historical evidence. Demo mode shows a placeholder.','Available on a result'],['Investigation board & handover','Keep reported facts and missing details together; export a source-labeled handover.','Available after an investigation']];
+ for(const [title,description,where] of features){const card=document.createElement('article');card.className='directory-item';for(const [tag,text] of [['strong',title],['p',description],['small',where]]){const n=document.createElement(tag);n.textContent=text;card.append(n);}grid.append(card);}body.append(grid);$('panelDialog').showModal();
+ }
+}));
+document.querySelectorAll('[data-scenario]').forEach(button=>button.addEventListener('click',()=>{const input=$('heroInput');input.value=button.dataset.scenario;input.dispatchEvent(new Event('input',{bubbles:true}));$('heroForm').requestSubmit();}));
+// Reflect the selected tool in the breadcrumb without duplicating its controller.
+for(const [id,label] of [['explorerBtn','Search records'],['historyBtn','History'],['pinsBtn','Saved evidence'],['settingsBtn','Settings']]) $(id).addEventListener('click',()=>{$('viewName').textContent=label;});

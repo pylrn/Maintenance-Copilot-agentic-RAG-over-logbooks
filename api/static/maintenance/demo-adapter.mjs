@@ -1,26 +1,37 @@
 // UI fixtures ONLY: these two rows, their matches and their events are simulated.
 // No MaintNet file, retrieval engine, LLM, validator or production database is used.
 import { uid } from './api-client.mjs';
-const KEY = 'maintenance-atlas-explicit-demo-v1';
+const KEY = 'maintenance-atlas-explicit-demo-v2';
 const copy = value => structuredClone(value);
 const rows = [
-  { domain: 'aviation', source_id: '100009', corpus_version: 'aviation-v1', source_type: 'historical', source_sha256: 'a70daa27ba9c44a68617d69be1352be7fde003145ca142cbe0b7b51e197c6c3a',
-    fields: { IDENT: '100009', PROBLEM: '#2 INTAKE IS LEAKING.', ACTION: 'REMOVED & REPLACED #2 INTAKE GASKET.' } },
-  { domain: 'aviation', source_id: '100086', corpus_version: 'aviation-v1', source_type: 'historical', source_sha256: 'a70daa27ba9c44a68617d69be1352be7fde003145ca142cbe0b7b51e197c6c3a',
-    fields: { IDENT: '100086', PROBLEM: '#2 INTAKE IS LEAKING.', ACTION: 'REMOVED & REPLACED #2 INTAKE GASKET.' } },
-  { domain: 'aviation', source_id: '100037', corpus_version: 'aviation-v1', source_type: 'historical', source_sha256: 'a70daa27ba9c44a68617d69be1352be7fde003145ca142cbe0b7b51e197c6c3a',
-    fields: { IDENT: '100037', PROBLEM: 'L/H ENG #2 INTAKE LEAKING.', ACTION: 'REMOVED TUBE, FOUND TO BE CRACKED. REMOVED TUBE FROM CO' } },
-  { domain: 'aviation', source_id: '100015', corpus_version: 'aviation-v1', source_type: 'historical', source_sha256: 'a70daa27ba9c44a68617d69be1352be7fde003145ca142cbe0b7b51e197c6c3a',
-    fields: { IDENT: '100015', PROBLEM: '#2 ROCKER COVER GASKET LEAKING.', ACTION: 'REMOVED & REPLACED #2 ROCKER COVER GASKET.' } },
-  { domain: 'aviation', source_id: '100112', corpus_version: 'aviation-v1', source_type: 'historical', source_sha256: 'a70daa27ba9c44a68617d69be1352be7fde003145ca142cbe0b7b51e197c6c3a',
-    fields: { IDENT: '100112', PROBLEM: 'L/H WING FUEL LEAK AT INBOARD TANK ACCESS PANEL.', ACTION: 'RESEALED ACCESS PANEL AND PERFORMED PRESSURE LEAK CHECK.' } },
-  { domain: 'aviation', source_id: '100204', corpus_version: 'aviation-v1', source_type: 'historical', source_sha256: 'a70daa27ba9c44a68617d69be1352be7fde003145ca142cbe0b7b51e197c6c3a',
-    fields: { IDENT: '100204', PROBLEM: 'COCKPIT PFD INTERMITTENT BLANK SCREEN UPON STARTUP.', ACTION: 'RESEATED AVIONICS CIRCUIT BREAKER AND DISPLAY CONNECTOR.' } },
+  { domain: 'aviation', source_id: 'DEMO-001', corpus_version: 'aviation-v1', source_type: 'historical', source_sha256: null,
+    fields: { IDENT: 'DEMO-001', PROBLEM: '#2 INTAKE IS LEAKING.', ACTION: 'REMOVED & REPLACED #2 INTAKE GASKET.' } },
+  { domain: 'aviation', source_id: 'DEMO-002', corpus_version: 'aviation-v1', source_type: 'historical', source_sha256: null,
+    fields: { IDENT: 'DEMO-002', PROBLEM: '#2 INTAKE IS LEAKING.', ACTION: 'REMOVED & REPLACED #2 INTAKE GASKET.' } },
+  { domain: 'aviation', source_id: 'DEMO-003', corpus_version: 'aviation-v1', source_type: 'historical', source_sha256: null,
+    fields: { IDENT: 'DEMO-003', PROBLEM: 'L/H ENG #2 INTAKE LEAKING.', ACTION: 'REMOVED TUBE, FOUND TO BE CRACKED. REMOVED TUBE FROM CO' } },
+  { domain: 'aviation', source_id: 'DEMO-004', corpus_version: 'aviation-v1', source_type: 'historical', source_sha256: null,
+    fields: { IDENT: 'DEMO-004', PROBLEM: '#2 ROCKER COVER GASKET LEAKING.', ACTION: 'REMOVED & REPLACED #2 ROCKER COVER GASKET.' } },
+  { domain: 'aviation', source_id: 'DEMO-005', corpus_version: 'aviation-v1', source_type: 'historical', source_sha256: null,
+    fields: { IDENT: 'DEMO-005', PROBLEM: 'L/H WING FUEL LEAK AT INBOARD TANK ACCESS PANEL.', ACTION: 'RESEALED ACCESS PANEL AND PERFORMED PRESSURE LEAK CHECK.' } },
+  { domain: 'aviation', source_id: 'DEMO-006', corpus_version: 'aviation-v1', source_type: 'historical', source_sha256: null,
+    fields: { IDENT: 'DEMO-006', PROBLEM: 'COCKPIT PFD INTERMITTENT BLANK SCREEN UPON STARTUP.', ACTION: 'RESEATED AVIONICS CIRCUIT BREAKER AND DISPLAY CONNECTOR.' } },
 ];
+rows.push(
+ {domain:'aviation',source_id:'DEMO-007',corpus_version:'demo-v2',source_type:'simulated',source_sha256:null,fields:{IDENT:'DEMO-007',PROBLEM:'OIL LEAK REPORTED BENEATH ENGINE 1. ORIGIN NOT CONFIRMED.',ACTION:'LOGGED OIL QUANTITY AND LEAK LOCATION FOR FURTHER ASSESSMENT.'}},
+ {domain:'aviation',source_id:'DEMO-008',corpus_version:'demo-v2',source_type:'simulated',source_sha256:null,fields:{IDENT:'DEMO-008',PROBLEM:'OIL RESIDUE REPORTED NEAR AN ENGINE OIL LINE CONNECTION.',ACTION:'RECORDED CONNECTION AREA AS A POSSIBLE SOURCE. LEAK CAUSE AND OUTCOME NOT ESTABLISHED.'}}
+);
 function match(query, topK = 5) {
-  const words = (query || '').toLowerCase().match(/[a-z0-9#]+/g)?.filter(x => x.length > 2 || /^\d+$/.test(x)) || [];
-  if (!words.length) return rows.slice(0, topK);
-  return rows.filter(row => words.some(word => `${row.fields.PROBLEM} ${row.fields.ACTION}`.toLowerCase().includes(word))).slice(0, topK);
+ const text=(query||'').toLowerCase();
+ let selected;
+ if (/oil/.test(text)) selected=rows.filter(r=>r.source_id==='DEMO-007'||r.source_id==='DEMO-008');
+ else if (/wing|fuel leak/.test(text)) selected=rows.filter(r=>r.source_id==='DEMO-005');
+ else if (/cockpit|display|screen|avionics/.test(text)) selected=rows.filter(r=>r.source_id==='DEMO-006');
+ else {
+ const words=text.match(/[a-z0-9#]+/g)?.filter(x=>x.length>2&&!['the','from','there','with','that','have','please','show','find','engine','left','right'].includes(x))||[];
+ selected=words.length?rows.filter(row=>words.some(word=>`${row.fields.PROBLEM} ${row.fields.ACTION}`.toLowerCase().includes(word))):[];
+ }
+ return selected.slice(0,topK);
 }
 export function createDemoApi() {
   let db;
@@ -43,7 +54,7 @@ export function createDemoApi() {
     const mode = action ? payload.action : 'EVIDENCE';
     const matches = match(query, payload.search_spec?.top_k);
     const answer = { answer_id: uid(), mode, status: matches.length ? 'partial_evidence' : 'insufficient_evidence',
-      headline: 'Simulated UI demonstration', findings: [], historical_actions: [],
+      headline: matches.length ? `${matches.length} related demo ${matches.length === 1 ? 'case' : 'cases'} to explore` : 'No matching demo cases yet', findings: [], historical_actions: [],
       limitations: ['All rows and responses in demo mode are invented UI fixtures. No actual maintenance recommendation is produced.',
         'Aircraft model, applicability and the outcome of the recorded action are unknown.'],
       missing: ['Confirmed aircraft and engine configuration', 'Applicable approved documentation', 'Verified inspection observations'],
@@ -84,8 +95,8 @@ export function createDemoApi() {
   }
   return {
     async capabilities() { return { models: [{ id: 'fixture-playback', label: 'simulated playback · no LLM' }],
-      domains: ['aviation'], corpus_summary: '2 invented UI records · aircraft model unknown',
-      examples: [{ query: 'Cylinder 2 intake leak', source_type: 'simulated' }, { query: 'Low compression at cylinder 2', source_type: 'simulated' }],
+      domains: ['aviation'], corpus_summary: '8 invented demo records · live logbook connection in progress',
+      examples: [{ query: 'Engine 1 oil leak', source_type: 'simulated' }, { query: 'Low compression at cylinder 2', source_type: 'simulated' }],
       rerank_available: false, visual_available: false, simulated: true }; },
     async listSessions() { return { items: Object.values(db.sessions).map(x => ({ session_id: x.session_id, title: x.title, revision: x.revision })).reverse() }; },
     async session(id) { return copy(session(id)); },
