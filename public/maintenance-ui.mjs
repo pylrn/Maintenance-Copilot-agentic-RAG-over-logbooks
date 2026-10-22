@@ -415,11 +415,28 @@ function claimList(title, claims, container, subtitle = '', helpNote = '') {
   container.append(list);
 }
 
-function textList(title, values, container) {
+function formatMarkdownLinks(str) {
+  if (!str) return '';
+  return str.replace(/\[([^\]]+)\]\((https?:\/\/[^\s)]+)\)/g, (match, text, url) => {
+    return `<a href="${encodeURI(url)}" target="_blank" rel="noopener noreferrer" class="external-manual-link"><strong>${escapeHtml(text)}</strong> ↗</a>`;
+  });
+}
+
+function textList(title, values, container, enableLinks = true) {
   if (!values?.length) return;
   container.append(node('h4', 'claim-section-title', title));
   const list = node('ul', 'claim-list');
-  values.forEach(value => list.append(node('li', 'claim-item', typeof value === 'string' ? value : value.text)));
+  values.forEach(value => {
+    const raw = typeof value === 'string' ? value : (value.text || '');
+    const li = node('li', 'claim-item');
+    if (enableLinks && /\[.+?\]\(https?:\/\/.+?\)/.test(raw)) {
+      li.innerHTML = formatMarkdownLinks(raw);
+    } else {
+      li.textContent = raw;
+    }
+    linkifyContainer(li);
+    list.append(li);
+  });
   container.append(list);
 }
 
@@ -428,119 +445,162 @@ function renderAnswer(rawAnswer, container) {
   const answer = adaptAnswerEnvelope(rawAnswer) || rawAnswer;
   if (!answer.answer_id) return;
   if (container.querySelector(`[data-answer-id="${CSS.escape(answer.answer_id)}"]`)) return;
-  const el = node('article', 'answer' + (answer.mode === 'HYPOTHESIS' ? ' hypothesis' : ''));
+  const isHypothesis = answer.mode === 'HYPOTHESIS';
+  const el = node('article', 'answer' + (isHypothesis ? ' hypothesis' : ''));
   el.dataset.answerId = answer.answer_id;
   el.append(
     node('div', 'answer-meta', `${answer.simulated ? 'SIMULATED · ' : ''}${answer.mode} · ${(answer.status || '').replaceAll('_', ' ')}`),
-    node('h3', 'answer-headline', answer.headline || 'Investigation Findings')
+    node('h3', 'answer-headline', answer.headline || (isHypothesis ? 'Troubleshooting & Physical Mechanisms' : 'Investigation Findings'))
   );
 
-  // 1. Natural Executive Synthesis Card
-  const synthesisCard = node('div', 'answer-synthesis-card');
+  if (isHypothesis) {
+    // Dedicated Airplane Troubleshooting Card grounded in FAA Technical References
+    const hypoCard = node('div', 'answer-hypothesis-card');
+    const summaryText = answer.summary || 'Conceptual airplane troubleshooting analysis grounded in official FAA Aviation Maintenance Technician (AMT) handbooks and advisory circulars.';
+    hypoCard.innerHTML = `
+      <div class="hypo-header-banner">
+        <span class="hypo-badge">💡 UNVERIFIED HYPOTHESIS</span>
+        <span class="hypo-scope">FAA Airplane Troubleshooting & Physical Mechanisms Analysis</span>
+      </div>
+      <div class="hypo-summary-block">
+        <h4 class="hypo-title">🛠 Technical Troubleshooting Assessment</h4>
+        <p class="hypo-summary-text">${escapeHtml(summaryText)}</p>
+      </div>
+    `;
+    linkifyContainer(hypoCard);
+    el.append(hypoCard);
 
-  // A. What the Evidence Says
-  const evidenceSummary = answer.summary || (answer.findings?.length
-    ? `Based on ${answer.findings.length} distinct matching log record(s), historical complaints report relevant defect conditions with recorded technician interventions.`
-    : (answer.status === 'insufficient_evidence'
-        ? 'No historical maintenance records found matching this fault complaint.'
-        : 'Historical log review complete.'));
-
-  const summarySection = node('div', 'synthesis-block');
-  summarySection.innerHTML = `<h4 class="synthesis-title">📋 What the Evidence Actually Says</h4><p class="synthesis-text">${escapeHtml(evidenceSummary)}</p>`;
-  linkifyContainer(summarySection);
-  synthesisCard.append(summarySection);
-
-  // B. What Can Be Concluded & What Cannot Be Concluded
-  const conclGrid = node('div', 'conclusions-grid');
-
-  const canItems = (answer.what_can_be_concluded && answer.what_can_be_concluded.length > 0)
-    ? answer.what_can_be_concluded
-    : (answer.status === 'insufficient_evidence'
-        ? ['No evidence found for this complaint in the historical records.']
-        : ['Historical records document relevant maintenance activity.']);
-
-  const canConclude = node('div', 'conclusion-col can-conclude');
-  canConclude.innerHTML = `
-    <h5>✓ What Can Be Concluded</h5>
-    <ul>
-      ${canItems.map(item => `<li>${item}</li>`).join('')}
-    </ul>
-  `;
-  linkifyContainer(canConclude);
-
-  const cannotItems = (answer.what_cannot_be_concluded && answer.what_cannot_be_concluded.length > 0)
-    ? answer.what_cannot_be_concluded
-    : (answer.status === 'insufficient_evidence'
-        ? ['Cannot conclude component involvement, defect mechanism, or corrective actions due to lack of matching records in the authorized dataset.']
-        : [
-            'Historical records omit specific airframe/engine serial applicability; historical records do not certify applicability to your specific aircraft.',
-            'Historical log entries document past technician actions as written; they do not replace approved Aircraft Maintenance Manual (AMM) procedures.'
-          ]);
-
-  const cannotConclude = node('div', 'conclusion-col cannot-conclude');
-  cannotConclude.innerHTML = `
-    <h5>⚠️ What Cannot Be Concluded</h5>
-    <ul>
-      ${cannotItems.map(item => `<li>${item}</li>`).join('')}
-    </ul>
-  `;
-  linkifyContainer(cannotConclude);
-  conclGrid.append(canConclude, cannotConclude);
-  synthesisCard.append(conclGrid);
-
-  // C. Interactive Visual Components Strip
-  const detectedComponents = activeDetectedHits.length > 0 ? activeDetectedHits : detectAirframeSegments(answer.headline || '');
-  if (detectedComponents.length > 0) {
-    const visualStrip = node('div', 'answer-visual-strip');
-    visualStrip.innerHTML = `<span class="strip-label">✈ Component schematics identified in these records:</span>`;
-    const pillGroup = node('div', 'visual-pills');
-    const uniqueComps = new Map();
-    detectedComponents.forEach(c => uniqueComps.set(c.id, c));
-    for (const comp of uniqueComps.values()) {
-      const compBtn = node('button', 'comp-inspect-btn');
-      compBtn.type = 'button';
-      compBtn.innerHTML = `<strong>${escapeHtml(comp.name)}</strong> <span class="action-hint">Open Visual Explorer ↗</span>`;
-      compBtn.addEventListener('click', () => {
-        const airframeTab = document.querySelector('[data-tab="airframe"]');
-        if (airframeTab) airframeTab.click();
-        renderDrillDown(comp.id, comp.name);
-        const drilldown = $('drilldownContainer');
-        if (drilldown) drilldown.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-      });
-      pillGroup.append(compBtn);
+    // 1. Possible Explanations & Physical Mechanisms
+    const explanations = answer.possible_explanations || answer.hypotheses || [];
+    if (explanations.length) {
+      textList('🔧 Possible Causes & Physical Failure Mechanisms', explanations, el);
     }
-    visualStrip.append(pillGroup);
-    synthesisCard.append(visualStrip);
+
+    // 2. Official Aircraft Troubleshooting References & Manuals (with clickable links to FAA websites!)
+    if (answer.basis?.length) {
+      textList('📚 Official Aircraft Troubleshooting References & Manuals (FAA)', answer.basis, el, true);
+    }
+
+    // 3. Concrete Diagnostic Steps & Measurements Needed
+    if (answer.information_needed?.length) {
+      textList('🔍 Recommended Diagnostic Inspections & Information Needed', answer.information_needed, el);
+    }
+
+    // 4. What Would Weaken / Rule Out These Causes
+    if (answer.what_would_weaken_this?.length) {
+      textList('⚖ Differentiating Observations (What Would Weaken / Disprove This)', answer.what_would_weaken_this, el);
+    }
+
+    // 5. Assumptions & Safety Limits
+    if (answer.assumptions?.length) {
+      textList('📌 Operational Assumptions', answer.assumptions, el);
+    }
+
+    textList('⚠️ Educational Limits & Regulatory Notice', answer.limits || answer.limitations, el);
+  } else {
+    // Normal EVIDENCE mode
+    // 1. Natural Executive Synthesis Card
+    const synthesisCard = node('div', 'answer-synthesis-card');
+
+    // A. What the Evidence Says
+    const evidenceSummary = answer.summary || (answer.findings?.length
+      ? `Based on ${answer.findings.length} distinct matching log record(s), historical complaints report relevant defect conditions with recorded technician interventions.`
+      : (answer.status === 'insufficient_evidence'
+          ? 'No historical maintenance records found matching this fault complaint.'
+          : 'Historical log review complete.'));
+
+    const summarySection = node('div', 'synthesis-block');
+    summarySection.innerHTML = `<h4 class="synthesis-title">📋 What the Evidence Actually Says</h4><p class="synthesis-text">${escapeHtml(evidenceSummary)}</p>`;
+    linkifyContainer(summarySection);
+    synthesisCard.append(summarySection);
+
+    // B. What Can Be Concluded & What Cannot Be Concluded
+    const conclGrid = node('div', 'conclusions-grid');
+
+    const canItems = (answer.what_can_be_concluded && answer.what_can_be_concluded.length > 0)
+      ? answer.what_can_be_concluded
+      : (answer.status === 'insufficient_evidence'
+          ? ['No evidence found for this complaint in the historical records.']
+          : ['Historical records document relevant maintenance activity.']);
+
+    const canConclude = node('div', 'conclusion-col can-conclude');
+    canConclude.innerHTML = `
+      <h5>✓ What Can Be Concluded</h5>
+      <ul>
+        ${canItems.map(item => `<li>${item}</li>`).join('')}
+      </ul>
+    `;
+    linkifyContainer(canConclude);
+
+    const cannotItems = (answer.what_cannot_be_concluded && answer.what_cannot_be_concluded.length > 0)
+      ? answer.what_cannot_be_concluded
+      : (answer.status === 'insufficient_evidence'
+          ? ['Cannot conclude component involvement, defect mechanism, or corrective actions due to lack of matching records in the authorized dataset.']
+          : [
+              'Historical records omit specific airframe/engine serial applicability; historical records do not certify applicability to your specific aircraft.',
+              'Historical log entries document past technician actions as written; they do not replace approved Aircraft Maintenance Manual (AMM) procedures.'
+            ]);
+
+    const cannotConclude = node('div', 'conclusion-col cannot-conclude');
+    cannotConclude.innerHTML = `
+      <h5>⚠️ What Cannot Be Concluded</h5>
+      <ul>
+        ${cannotItems.map(item => `<li>${item}</li>`).join('')}
+      </ul>
+    `;
+    linkifyContainer(cannotConclude);
+    conclGrid.append(canConclude, cannotConclude);
+    synthesisCard.append(conclGrid);
+
+    // C. Interactive Visual Components Strip
+    const detectedComponents = activeDetectedHits.length > 0 ? activeDetectedHits : detectAirframeSegments(answer.headline || '');
+    if (detectedComponents.length > 0) {
+      const visualStrip = node('div', 'answer-visual-strip');
+      visualStrip.innerHTML = `<span class="strip-label">✈ Component schematics identified in these records:</span>`;
+      const pillGroup = node('div', 'visual-pills');
+      const uniqueComps = new Map();
+      detectedComponents.forEach(c => uniqueComps.set(c.id, c));
+      for (const comp of uniqueComps.values()) {
+        const compBtn = node('button', 'comp-inspect-btn');
+        compBtn.type = 'button';
+        compBtn.innerHTML = `<strong>${escapeHtml(comp.name)}</strong> <span class="action-hint">Open Visual Explorer ↗</span>`;
+        compBtn.addEventListener('click', () => {
+          const airframeTab = document.querySelector('[data-tab="airframe"]');
+          if (airframeTab) airframeTab.click();
+          renderDrillDown(comp.id, comp.name);
+          const drilldown = $('drilldownContainer');
+          if (drilldown) drilldown.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        });
+        pillGroup.append(compBtn);
+      }
+      visualStrip.append(pillGroup);
+      synthesisCard.append(visualStrip);
+    }
+
+    el.append(synthesisCard);
+
+    // 2. What the Evidence Describes (Reported Complaints)
+    claimList(
+      'What the Evidence Describes (Reported Faults)',
+      answer.findings,
+      el,
+      'Verified historical problem entries cited directly from MaintNet log spans'
+    );
+
+    // 3. Historical Actions Recorded Next
+    claimList(
+      'Historical Maintenance Actions Recorded in Logs',
+      answer.historical_actions,
+      el,
+      'What technicians actually wrote down in history when responding to these complaints (e.g. gasket replacements, torqueing, engine washes, leak checks)',
+      'Note: Historical actions illustrate precedent only; they do not constitute approved or certified repair instructions.'
+    );
+
+    claimList('Contrasting Cases & Differences', answer.contrasting_cases || answer.differences, el);
+    textList('Evidence limits', answer.limitations, el);
+    textList('Still missing', answer.missing, el);
   }
 
-  el.append(synthesisCard);
-
-  // 2. What the Evidence Describes (Reported Complaints)
-  claimList(
-    'What the Evidence Describes (Reported Faults)',
-    answer.findings,
-    el,
-    'Verified historical problem entries cited directly from MaintNet log spans'
-  );
-
-  // 3. Historical Actions Recorded Next (Explaining what this section contributes!)
-  claimList(
-    'Historical Maintenance Actions Recorded in Logs',
-    answer.historical_actions,
-    el,
-    'What technicians actually wrote down in history when responding to these complaints (e.g. gasket replacements, torqueing, engine washes, leak checks)',
-    'Note: Historical actions illustrate precedent only; they do not constitute approved or certified repair instructions.'
-  );
-
-  claimList('Contrasting Cases & Differences', answer.contrasting_cases || answer.differences, el);
-  if (answer.mode === 'HYPOTHESIS') {
-    textList('Unverified reasoning & possible explanations', answer.hypotheses || answer.claims, el);
-    if (answer.basis?.length) textList('Engineering basis', answer.basis, el);
-    if (answer.assumptions?.length) textList('Assumptions', answer.assumptions, el);
-    if (answer.what_would_weaken_this?.length) textList('What would weaken this', answer.what_would_weaken_this, el);
-  }
-  textList('Evidence limits', answer.limitations, el);
-  textList('Still missing', answer.missing, el);
   if (answer.clarification) el.append(node('p', '', answer.clarification));
   const actions = node('div', 'answer-actions');
   for (const entry of answer.allowed_actions || []) {
