@@ -37,14 +37,15 @@
         <div class="hero-kicker"><span></span> MAINTENANCE WORKSPACE</div>
         <h1>Investigate an <em>issue.</em></h1>
         <p class="hero-copy">Describe what you noticed. Review the records, then select a highlighted aircraft component to look inside.</p>
-      <section class="chat-wrap" id="chatSection"><div class="chat-panel"><form class="chat-input-row unified-composer" id="chatForm"><label for="chatInput" class="composer-label">Describe the issue</label><textarea class="chat-input" id="chatInput" placeholder="e.g. Oil is leaking from the left engine…" rows="2" maxlength="8000" required></textarea><div class="composer-footer"><span>Use this box for the issue and any follow-up.</span><button class="primary-btn" id="chatSubmit" type="submit">Investigate <span>↗</span></button></div></form>
+      <section class="chat-wrap" id="chatSection"><div class="chat-panel">
         <div class="chat-top"><span class="ready-indicator" id="readyDot"></span><span class="copilot-status" id="chatStatus" role="status">connecting to copilot…</span><span class="toolbar-spacer"></span><div class="chat-toolbar">
           <label class="sr-only" for="agentModelSelect">Model for the next run</label><select class="toolbar-select" id="agentModelSelect" disabled></select>
+          <button class="mini-btn" id="newChatMiniBtn" type="button" title="Start a fresh investigation">＋ New</button>
           <button class="mini-btn" id="stopBtn" hidden>stop · esc</button><button class="mini-btn" id="resumeBtn" hidden>resume stream</button>
         </div></div>
         <div class="live-spec-card" id="liveSpecCard" hidden></div>
         <div class="investigation-layout" id="workspace">
-          <div class="conversation" id="thread" data-empty="Your results will appear here." tabindex="0" aria-label="Investigation conversation"></div>
+          <div class="conversation" id="thread" data-empty="Your investigation results will appear here." tabindex="0" aria-label="Investigation conversation"></div>
           <aside class="evidence-workspace" id="evidenceWorkspace" aria-label="Evidence and investigation state" hidden>
             <div class="workspace-tabs" role="group" aria-label="Investigation panels">
               <button class="chip active" data-tab="evidence">Evidence</button>
@@ -59,7 +60,20 @@
             </div>
           </aside>
         </div>
-
+        <!-- Bottom composer for primary and follow-up inquiries -->
+        <form class="chat-input-row unified-composer" id="chatForm">
+          <div class="composer-top-row">
+            <label for="chatInput" class="composer-label">Describe an issue or ask a follow-up question</label>
+            <span class="plain-language">Grounding in verified maintenance logs</span>
+          </div>
+          <div class="composer-input-wrap">
+            <textarea class="chat-input" id="chatInput" placeholder="e.g. Oil leak from left engine near intake... What were the recorded corrective actions?" rows="2" maxlength="8000" required></textarea>
+            <button class="primary-btn composer-submit" id="chatSubmit" type="submit">Investigate <span>↗</span></button>
+          </div>
+          <div class="composer-footer">
+            <span>Shift+Enter for newline · Enter to send · Grounded in 6,369 verified records</span>
+          </div>
+        </form>
       </div></section>
         <!-- Aircraft explorer -->
         <!-- Top-down 2D Plane Silhouette Workspace / Locator -->

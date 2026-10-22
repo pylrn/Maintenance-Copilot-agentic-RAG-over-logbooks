@@ -133,38 +133,198 @@ function panel(title, eyebrow = '') {
   return $('panelBody');
 }
 function userMessage(text) { $('thread').append(node('div', 'msg-user', text)); }
+
+function escapeHtml(str) {
+  return String(str ?? '')
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
+}
+
+const COMPONENT_PATTERNS = [
+  { regex: /\b(?:left|lh|port|left-hand|engine\s*#?1)\s+(?:engine|powerplant|intake\s*tube|intake|cylinder|rocker\s*cover|gasket)\b|\bleft\s+engine\b|\bengine\s*#?1\b/gi, id: 'seg-engine-l', name: 'Left Engine' },
+  { regex: /\b(?:right|rh|starboard|right-hand|engine\s*#?2)\s+(?:engine|powerplant|intake\s*tube|intake|cylinder|rocker\s*cover|gasket)\b|\bright\s+engine\b|\bengine\s*#?2\b/gi, id: 'seg-engine-r', name: 'Right Engine' },
+  { regex: /\b(?:engine|powerplant|intake\s+tube|cylinder|rocker\s+cover|crankcase)\b/gi, id: 'seg-engine-l', name: 'Engine' },
+  { regex: /\b(?:left|lh)\s+(?:wing|aileron|flap|slat|leading\s+edge)\b/gi, id: 'seg-wing-l-flaps', name: 'Left Wing' },
+  { regex: /\b(?:right|rh)\s+(?:wing|aileron|flap|slat|leading\s+edge)\b/gi, id: 'seg-wing-r-flaps', name: 'Right Wing' },
+  { regex: /\b(?:wings?|ailerons?|flaps?|slats?)\b/gi, id: 'seg-wing-l-flaps', name: 'Wing' },
+  { regex: /\b(?:nose\s+gear|nose\s+wheel)\b/gi, id: 'seg-gear-nose', name: 'Nose Gear' },
+  { regex: /\b(?:left|lh)\s+(?:main\s+gear|gear|wheel|brake)\b/gi, id: 'seg-gear-l', name: 'Left Main Gear' },
+  { regex: /\b(?:right|rh)\s+(?:main\s+gear|gear|wheel|brake)\b/gi, id: 'seg-gear-r', name: 'Right Main Gear' },
+  { regex: /\b(?:landing\s+gear|undercarriage|main\s+gear|brakes?)\b/gi, id: 'seg-gear-l', name: 'Landing Gear' },
+  { regex: /\b(?:cockpit|flight\s+deck|avionics\s+bay|avionics|windshield)\b/gi, id: 'seg-cockpit', name: 'Flight Deck' },
+  { regex: /\b(?:rudder|vertical\s+(?:fin|stabilizer)|elevator|horizontal\s+stabilizer|tail|tailcone|apu)\b/gi, id: 'seg-rudder', name: 'Empennage / Tail' },
+];
+
+function linkifyContainer(container) {
+  const walker = document.createTreeWalker(container, NodeFilter.SHOW_TEXT, null, false);
+  const textNodes = [];
+  let current;
+  while ((current = walker.nextNode())) {
+    if (current.parentElement && (current.parentElement.tagName === 'BUTTON' || current.parentElement.tagName === 'A' || current.parentElement.classList.contains('comp-badge'))) {
+      continue;
+    }
+    textNodes.push(current);
+  }
+
+  for (const textNode of textNodes) {
+    const text = textNode.nodeValue;
+    if (!text || text.length < 3) continue;
+
+    let matched = null;
+    let matchIndex = -1;
+    let matchLength = 0;
+    let matchPattern = null;
+
+    for (const pat of COMPONENT_PATTERNS) {
+      pat.regex.lastIndex = 0;
+      const m = pat.regex.exec(text);
+      if (m && (matchIndex === -1 || m.index < matchIndex)) {
+        matched = m[0];
+        matchIndex = m.index;
+        matchLength = m[0].length;
+        matchPattern = pat;
+      }
+    }
+
+    if (matched && matchPattern) {
+      const parent = textNode.parentNode;
+      if (!parent) continue;
+
+      const before = text.substring(0, matchIndex);
+      const after = text.substring(matchIndex + matchLength);
+
+      const frag = document.createDocumentFragment();
+      if (before) frag.appendChild(document.createTextNode(before));
+
+      const btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = 'comp-badge';
+      btn.dataset.compId = matchPattern.id;
+      btn.dataset.compName = matchPattern.name;
+      btn.title = `Click to inspect ${matchPattern.name} in Aircraft Explorer`;
+      btn.innerHTML = `${escapeHtml(matched)} <span class="comp-icon">✈</span>`;
+      btn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const airframeTab = document.querySelector('[data-tab="airframe"]');
+        if (airframeTab) airframeTab.click();
+        renderDrillDown(matchPattern.id, matchPattern.name);
+        const drilldown = $('drilldownContainer');
+        if (drilldown) drilldown.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      });
+      frag.appendChild(btn);
+
+      if (after) {
+        frag.appendChild(document.createTextNode(after));
+      }
+
+      parent.replaceChild(frag, textNode);
+    }
+  }
+}
+
+function cleanClaimText(rawText) {
+  if (!rawText) return '';
+  let cleaned = String(rawText).replace(/^Record\s+[a-zA-Z0-9_:]+\s+records\s+(?:problem|action|finding|description):\s*["']?/i, '');
+  cleaned = cleaned.replace(/["']\s*$/, '');
+  return cleaned.trim();
+}
+
 function newTurn() {
-  const element = node('section', 'turn'); const activity = node('details', 'run-card'); activity.open = true;
-  const summary = node('summary', '', 'Copilot activity'); const elapsed = node('span', 'run-elapsed', ''); summary.append(elapsed);
-  const steps = node('div', 'run-steps'); activity.append(summary, steps); element.append(activity); $('thread').append(element);
-  const started = performance.now(); const timer = setInterval(() => { elapsed.textContent = `${((performance.now() - started) / 1000).toFixed(1)}s`; }, 200);
-  return { element, activity, steps, timer, elapsed, started, tools: new Map(), terminal: false };
+  const element = node('section', 'turn');
+  const activity = node('details', 'run-card');
+  activity.open = true;
+
+  const summary = node('summary', '');
+
+  const headerLeft = node('span', 'run-header-left');
+  const icon = node('span', 'run-status-icon spinning', '⚙️');
+  const summaryText = node('span', 'run-summary-text', 'Investigating maintenance records…');
+  headerLeft.append(icon, summaryText);
+
+  const headerRight = node('span', 'run-header-right');
+  const elapsed = node('span', 'run-elapsed', '0.0s');
+  const chev = node('span', 'run-chev', '▼');
+  headerRight.append(elapsed, chev);
+
+  summary.append(headerLeft, headerRight);
+
+  const steps = node('div', 'run-steps');
+  activity.append(summary, steps);
+  element.append(activity);
+  $('thread').append(element);
+
+  const started = performance.now();
+  const timer = setInterval(() => {
+    elapsed.textContent = `${((performance.now() - started) / 1000).toFixed(1)}s`;
+  }, 200);
+
+  return { element, activity, steps, timer, elapsed, started, icon, summaryText, tools: new Map(), stepCount: 0, terminal: false };
 }
-function finishTurn() {
-  const turn = state.turn; if (!turn) return;
-  clearInterval(turn.timer); turn.elapsed.textContent = `${((performance.now() - turn.started) / 1000).toFixed(1)}s · client elapsed`;
-  turn.activity.open = false;
+
+function toolLabel(name) {
+  switch (name) {
+    case 'search_records': return { icon: '🔍', label: 'Searching historical MaintNet records' };
+    case 'get_records': return { icon: '📋', label: 'Fetching source log fields' };
+    case 'compare_records': return { icon: '⚖️', label: 'Comparing log differences' };
+    default: return { icon: '🔧', label: name || 'Tool activity' };
+  }
 }
+
 function toolStart(data) {
-  const row = node('div', 'tool-step running'); const line = node('div', 'tool-line');
-  const name = node('span', 'tool-name', data.tool_name || 'Tool'); const result = node('div', 'tool-result', 'Running…');
-  line.append(name); row.append(line, result); state.turn.steps.append(row);
+  if (!state.turn) return;
+  state.turn.stepCount++;
+  const meta = toolLabel(data.tool_name);
+  const row = node('div', 'tool-step running');
+  const icon = node('span', 'tool-icon', meta.icon);
+  const info = node('div', 'tool-info');
+  const name = node('span', 'tool-name', meta.label);
+
+  let paramSummary = 'Running…';
+  if (data.args) {
+    if (data.args.query) paramSummary = `Query: "${data.args.query}"`;
+    else if (Array.isArray(data.args.record_ids)) paramSummary = `Records: [${data.args.record_ids.join(', ')}]`;
+  }
+  const result = node('div', 'tool-result', paramSummary);
+  info.append(name, result);
+  row.append(icon, info);
+  state.turn.steps.append(row);
   state.turn.tools.set(data.tool_call_id || data.tool_name, { row, result, data });
 }
+
 function toolEnd(data) {
+  if (!state.turn) return;
   const key = data.tool_call_id || data.tool_name;
   if (!state.turn.tools.has(key)) toolStart(data);
-  const tool = state.turn.tools.get(key); tool.row.className = 'tool-step ' + (data.error ? 'error' : 'done');
-  tool.result.textContent = data.summary || 'Completed';
-  tool.row.append(button('Inspect public inputs / result', () => {
-    const body = panel(data.tool_name || 'Tool activity', 'Public tool trace');
+  const tool = state.turn.tools.get(key);
+  tool.row.className = 'tool-step ' + (data.error ? 'error' : 'done');
+  tool.result.textContent = data.summary || (data.error ? 'Failed' : 'Completed');
+  tool.row.append(button('Trace', () => {
+    const body = panel(data.tool_name || 'Tool activity', 'Execution trace');
     body.append(node('pre', '', JSON.stringify({ args: tool.data.args, summary: data.summary, result: data.result }, null, 2)));
   }, 'detail-btn'));
 }
+
+function finishTurn() {
+  const turn = state.turn;
+  if (!turn) return;
+  clearInterval(turn.timer);
+  const totalTime = ((performance.now() - turn.started) / 1000).toFixed(1);
+  turn.elapsed.textContent = `${totalTime}s`;
+  turn.icon.className = 'run-status-icon done';
+  turn.icon.textContent = '✓';
+  const stepsDone = turn.stepCount > 0 ? `${turn.stepCount} steps completed` : 'Investigation completed';
+  turn.summaryText.textContent = `${stepsDone} · ${totalTime}s`;
+  turn.activity.open = false;
+}
+
 function canonicalRef(value) {
   const [domain, ...rest] = (value.record_id || '').split(':');
   return { ...value, domain: value.domain || domain, source_id: value.source_id || rest.join(':') };
 }
+
 async function openSupport(value) {
   const ref = canonicalRef(value);
   if (ref.kind && ref.kind !== 'log_span') {
@@ -172,6 +332,7 @@ async function openSupport(value) {
   }
   await openRecord(await api.record(ref), ref);
 }
+
 async function openRecord(record, highlight) {
   const body = panel(record.source_id, record.source_type === 'simulated' ? 'SIMULATED SOURCE · NOT MAINTNET' : 'Original source record');
   body.append(node('p', 'provenance', `${record.domain} · corpus ${record.corpus_id || record.corpus_version || 'unknown'} · aircraft applicability: ${record.applicability || 'unknown'}`));
@@ -193,37 +354,76 @@ async function openRecord(record, highlight) {
   const sha = record.source_sha256 || record.text_sha256 || record.field_sha256?.[highlight?.field] || 'not available';
   body.append(node('p', 'provenance', `SHA-256: ${sha}`));
 }
+
 function claimList(title, claims, container) {
   if (!claims?.length) return;
-  container.append(node('h4', '', title)); const list = node('ul');
+  container.append(node('h4', '', title));
+  const list = node('ul');
   for (const claim of claims) {
-    const item = node('li', '', claim.text); const refs = node('span', 'citations');
+    const rawText = typeof claim === 'string' ? claim : (claim.text || '');
+    const cleanText = cleanClaimText(rawText);
+    const item = node('li', '');
+    const textSpan = node('span', 'claim-body', cleanText);
+    linkifyContainer(textSpan);
+    item.append(textSpan);
+
+    const refs = node('span', 'citations');
     for (const support of claim.supports || []) {
       const ref = canonicalRef(support);
       const isVerified = Boolean(support.source_sha256);
-      refs.append(button(`${ref.source_id || support.receipt_id || 'receipt'}${ref.field ? ' · ' + ref.field : ''}${isVerified ? ' ✓' : ''}`, () => openSupport(support), 'citation' + (isVerified ? ' verified' : '')));
+      refs.append(button(`${ref.source_id || support.receipt_id || 'receipt'}${ref.field ? ' · ' + ref.field : ''}${isVerified ? ' ✓' : ''}`, async () => {
+        const evTab = document.querySelector('[data-tab="evidence"]');
+        if (evTab) evTab.click();
+        const cards = document.querySelectorAll('#evidencePanel .record-card');
+        for (const card of cards) {
+          if (card.textContent.includes(ref.source_id)) {
+            card.classList.add('highlight-pulse');
+            card.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            setTimeout(() => card.classList.remove('highlight-pulse'), 3000);
+            break;
+          }
+        }
+        await openSupport(support);
+      }, 'citation' + (isVerified ? ' verified' : '')));
     }
-    item.append(refs); list.append(item);
+    item.append(refs);
+    list.append(item);
   }
   container.append(list);
 }
+
 function textList(title, values, container) {
   if (!values?.length) return;
   container.append(node('h4', '', title)); const list = node('ul');
   values.forEach(value => list.append(node('li', '', typeof value === 'string' ? value : value.text))); container.append(list);
 }
+
 function renderAnswer(rawAnswer, container) {
   if (!rawAnswer) return;
   const answer = adaptAnswerEnvelope(rawAnswer) || rawAnswer;
   if (!answer.answer_id) return;
   if (container.querySelector(`[data-answer-id="${CSS.escape(answer.answer_id)}"]`)) return;
-  const el = node('article', 'answer' + (answer.mode === 'HYPOTHESIS' ? ' hypothesis' : '')); el.dataset.answerId = answer.answer_id;
-  el.append(node('div', 'answer-meta', `${answer.simulated ? 'SIMULATED · ' : ''}${answer.mode} · ${(answer.status || '').replaceAll('_', ' ')}`), node('h3', '', answer.headline));
-  claimList('What these cases describe', answer.findings, el); claimList('What was recorded next', answer.historical_actions, el);
+  const el = node('article', 'answer' + (answer.mode === 'HYPOTHESIS' ? ' hypothesis' : ''));
+  el.dataset.answerId = answer.answer_id;
+  el.append(
+    node('div', 'answer-meta', `${answer.simulated ? 'SIMULATED · ' : ''}${answer.mode} · ${(answer.status || '').replaceAll('_', ' ')}`),
+    node('h3', '', answer.headline || 'Investigation Findings')
+  );
+
+  const summaryText = answer.summary || (answer.findings?.length ? `Analysis of historical maintenance logs indicates matching recorded conditions. Relevant components, findings, and verified actions are synthesized below; inspect authoritative source records on the right.` : '');
+  if (summaryText) {
+    const summaryBox = node('div', 'answer-summary-callout');
+    summaryBox.innerHTML = `<strong>Synthesis:</strong> ${escapeHtml(summaryText)}`;
+    linkifyContainer(summaryBox);
+    el.append(summaryBox);
+  }
+
+  claimList('What these cases describe', answer.findings, el);
+  claimList('What was recorded next', answer.historical_actions, el);
   claimList('Contrasting cases', answer.contrasting_cases || answer.differences, el);
-  // Hypotheses are rendered only inside a server-authorized HYPOTHESIS envelope.
   if (answer.mode === 'HYPOTHESIS') textList('Unverified reasoning', answer.hypotheses || answer.claims, el);
-  textList('Evidence limits', answer.limitations, el); textList('Still missing', answer.missing, el);
+  textList('Evidence limits', answer.limitations, el);
+  textList('Still missing', answer.missing, el);
   if (answer.clarification) el.append(node('p', '', answer.clarification));
   const actions = node('div', 'answer-actions');
   for (const entry of answer.allowed_actions || []) {
@@ -243,7 +443,8 @@ function renderAnswer(rawAnswer, container) {
   }
   actions.append(button('Export handover', exportHandover));
   actions.querySelectorAll('button').forEach(value => { value.disabled = state.busy; });
-  el.append(actions); container.append(el);
+  el.append(actions);
+  container.append(el);
 }
 function showVisuals(refs) {
   const body = panel('Component explanation', 'Reviewed educational context');
@@ -527,7 +728,38 @@ async function restore(id) {
     await watchRun(value.active_run_id, 0);
   }
 }
-async function newSession() { if (state.busy) return; const value = await api.createSession($('domainSelect').value || 'aviation'); await restore(value.session_id); $('directResults').replaceChildren(); $('chatInput').focus(); }
+async function newSession() {
+  if (state.busy) return;
+  state.controller?.abort();
+  state.run = null;
+  state.cursor = 0;
+  state.turn = null;
+  state.records = [];
+  currentFaultContext = '';
+
+  $('thread').replaceChildren();
+  $('evidencePanel').replaceChildren();
+  $('boardPanel').replaceChildren();
+  $('directResults').replaceChildren();
+  $('liveSpecCard').hidden = true;
+  $('liveSpecCard').textContent = '';
+  $('chatInput').value = '';
+  $('workspace').classList.remove('has-evidence');
+  $('evidenceWorkspace').hidden = true;
+  localStorage.removeItem(storageKey);
+
+  updateAirframeHighlight('');
+  notice();
+  status('starting fresh investigation…');
+  try {
+    const value = await api.createSession($('domainSelect').value || 'aviation');
+    await restore(value.session_id);
+    $('chatInput').focus();
+  } catch (err) {
+    notice(err.message || 'Failed to initialize session');
+    status('session error');
+  }
+}
 async function directSearch() {
   if (state.busy || state.run) return;
   const query = $('queryText').value.trim();
@@ -555,10 +787,19 @@ async function exportHandover() {
 $('chatInput').addEventListener('input', e => {
   updateAirframeHighlight(e.target.value);
 });
+$('chatInput').addEventListener('keydown', event => {
+  if (event.key === 'Enter' && !event.shiftKey) {
+    event.preventDefault();
+    if (!state.busy && $('chatInput').value.trim()) {
+      protect(() => sendMessage($('chatInput').value));
+    }
+  }
+});
 $('chatForm').addEventListener('submit', event => { event.preventDefault(); protect(() => sendMessage($('chatInput').value)); });
 $('searchBtn').addEventListener('click', () => protect(directSearch));
 $('reportBtn').addEventListener('click', () => protect(() => sendMessage(($('aircraftInput').value.trim() ? `User-reported aircraft / engine: ${$('aircraftInput').value.trim()}\n` : '') + $('reportText').value)));
 $('newSessionBtn').addEventListener('click', () => protect(newSession));
+$('newChatMiniBtn')?.addEventListener('click', () => protect(newSession));
 $('resumeBtn').addEventListener('click', () => protect(async () => { state.turn = newTurn(); await watchRun(state.run, state.cursor); }));
 async function cancelRun() {
   if (!state.run) return;
