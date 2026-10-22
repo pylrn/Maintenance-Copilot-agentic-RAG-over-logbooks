@@ -31,6 +31,7 @@ class RunDeps:
     computed_receipts: dict[UUID, dict[str, Any]]
     tool_events: list[dict[str, Any]]
     max_tool_calls: int = 8
+    model_id: str | None = None
 
 
 async def tool_search_records(

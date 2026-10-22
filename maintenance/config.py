@@ -28,9 +28,11 @@ class Settings(BaseSettings):
     gemini_model: str = "gemini-3.8-flash"
     llm_provider: Literal["auto", "deepseek", "gemini"] = "auto"
     model_allowlist: list[str] = [
-        "deepseek-flash",
         "gemini-3.8-flash",
+        "gemini-3.5-flash",
         "gemini-2.5-flash",
+        "deepseek-flash",
+        "extractive/v1",
     ]
     embedding_model: Literal["BAAI/bge-small-en-v1.5"] = "BAAI/bge-small-en-v1.5"
     embedding_dim: Literal[384] = 384

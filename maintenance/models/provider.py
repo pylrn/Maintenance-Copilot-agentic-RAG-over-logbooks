@@ -17,7 +17,7 @@ PROVIDER_ENDPOINTS = {
 
 PROVIDER_MODELS = {
     "deepseek": ["deepseek-flash"],
-    "gemini": ["gemini-3.8-flash", "gemini-2.5-flash"],
+    "gemini": ["gemini-3.8-flash", "gemini-3.5-flash", "gemini-2.5-flash"],
 }
 
 
@@ -117,16 +117,17 @@ class LLMProvider:
             tool_calls = []
             if message.tool_calls:
                 for tc in message.tool_calls:
-                    tool_calls.append(
-                        {
-                            "id": tc.id,
-                            "type": "function",
-                            "function": {
-                                "name": tc.function.name,
-                                "arguments": tc.function.arguments,
-                            },
-                        }
-                    )
+                    tc_dict = {
+                        "id": tc.id,
+                        "type": "function",
+                        "function": {
+                            "name": tc.function.name,
+                            "arguments": tc.function.arguments,
+                        },
+                    }
+                    if hasattr(tc, "extra_content") and tc.extra_content:
+                        tc_dict["extra_content"] = tc.extra_content
+                    tool_calls.append(tc_dict)
 
             return {
                 "role": "assistant",
@@ -174,21 +175,25 @@ class LLMProvider:
                 if not tool_calls:
                     break
 
+                assistant_tool_calls = []
+                for tc in tool_calls:
+                    call_entry = {
+                        "id": tc["id"],
+                        "type": "function",
+                        "function": {
+                            "name": tc["function"]["name"],
+                            "arguments": tc["function"]["arguments"],
+                        },
+                    }
+                    if "extra_content" in tc and tc["extra_content"]:
+                        call_entry["extra_content"] = tc["extra_content"]
+                    assistant_tool_calls.append(call_entry)
+
                 current_messages.append(
                     {
                         "role": "assistant",
                         "content": final_response.get("content") or "",
-                        "tool_calls": [
-                            {
-                                "id": tc["id"],
-                                "type": "function",
-                                "function": {
-                                    "name": tc["function"]["name"],
-                                    "arguments": tc["function"]["arguments"],
-                                },
-                            }
-                            for tc in tool_calls
-                        ],
+                        "tool_calls": assistant_tool_calls,
                     }
                 )
 

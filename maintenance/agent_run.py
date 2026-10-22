@@ -9,6 +9,7 @@ from maintenance.board import BoardManager
 from maintenance.contracts import (
     AnswerEnvelope,
     DraftAnswer,
+    ServiceScope,
 )
 from maintenance.events import EventBus
 from maintenance.models.provider import LLMProvider
@@ -46,6 +47,27 @@ class AgentRunner:
         self.repository = repository
         self.event_bus = event_bus
         self.provider = provider
+
+    def _resolve_provider_for_run(self, model_id: str | None) -> LLMProvider | None:
+        if not model_id or model_id == "extractive/v1":
+            return None
+        if self.provider and self.provider.is_configured and self.provider.model_name == model_id:
+            return self.provider
+        if "gemini" in model_id.lower() and self.provider and self.provider.api_key:
+            return LLMProvider(
+                api_key=self.provider.api_key if self.provider.provider_type == "gemini" else None,
+                base_url="https://generativelanguage.googleapis.com/v1beta/openai/",
+                model_name=model_id,
+                provider_type="gemini",
+            )
+        if "deepseek" in model_id.lower() and self.provider and self.provider.api_key:
+            return LLMProvider(
+                api_key=self.provider.api_key if self.provider.provider_type == "deepseek" else None,
+                base_url="https://api.deepseek.com",
+                model_name=model_id,
+                provider_type="deepseek",
+            )
+        return self.provider if (self.provider and self.provider.is_configured) else None
 
     async def execute_run(
         self,
@@ -100,6 +122,7 @@ class AgentRunner:
             seq += 1
 
             # 5. Fetch authoritative records
+            fetched_records = []
             if hit_ids:
                 await self.event_bus.emit(
                     deps.run_id,
@@ -110,6 +133,31 @@ class AgentRunner:
                 seq += 1
 
                 records_res = await tool_get_records(deps, hit_ids)
+                if deps.record_service:
+                    try:
+                        scope = ServiceScope(owner_id=deps.owner_id, corpus_ids=deps.corpus_ids)
+                        records_list = await deps.record_service.fetch(hit_ids, scope)
+                        for rec in records_list:
+                            fetched_records.append(
+                                {
+                                    "record_id": rec.record_id,
+                                    "domain": rec.domain,
+                                    "source_id": rec.source_id,
+                                    "corpus_id": str(rec.corpus_id) if rec.corpus_id else None,
+                                    "problem_raw": rec.problem_raw,
+                                    "action_raw": rec.action_raw,
+                                    "fields": {
+                                        **(rec.original_fields or {}),
+                                        **({"PROBLEM": rec.problem_raw} if rec.problem_raw else {}),
+                                        **({"ACTION": rec.action_raw} if rec.action_raw else {}),
+                                    },
+                                    "original_fields": rec.original_fields,
+                                    "source_sha256": rec.field_sha256.get("PROBLEM") or rec.field_sha256.get("DESCRIPTION") or "",
+                                }
+                            )
+                    except Exception as exc:
+                        logger.warning("Failed to fetch full record snapshots for UI: %s", exc)
+
                 await self.event_bus.emit(
                     deps.run_id,
                     seq,
@@ -122,7 +170,10 @@ class AgentRunner:
                 deps.run_id,
                 seq,
                 "evidence_ready",
-                {"evidence_snapshots_count": len(deps.fetched_evidence)},
+                {
+                    "evidence_snapshots_count": len(deps.fetched_evidence),
+                    "records": fetched_records,
+                },
             )
             seq += 1
 
@@ -156,7 +207,8 @@ class AgentRunner:
                 answer.headline = "Requested procedural specification absent from historical logs."
             else:
                 answer = None
-                if self.provider.is_configured:
+                run_provider = self._resolve_provider_for_run(getattr(deps, "model_id", None))
+                if run_provider and run_provider.is_configured:
                     try:
                         async def dispatch_search(args):
                             return await tool_search_records(
@@ -211,7 +263,7 @@ class AgentRunner:
                             },
                         ]
 
-                        final_resp, message_history = await self.provider.roundtrip_tool_loop(
+                        final_resp, message_history = await run_provider.roundtrip_tool_loop(
                             messages=messages,
                             tools=AGENT_TOOLS,
                             tool_dispatch=tool_dispatch,
@@ -225,7 +277,7 @@ class AgentRunner:
                                 run_id=deps.run_id,
                                 turn_index=0,
                                 messages=message_history,
-                                provider=self.provider.provider_type,
+                                provider=run_provider.provider_type,
                             )
                         content = final_resp.get("content", "")
                         if "{" in content and "proposed_status" in content:
@@ -331,6 +383,7 @@ class AgentRunner:
             seq += 1
 
             # 10. answer_validated
+            envelope_data = answer.model_dump(mode="json")
             await self.event_bus.emit(
                 deps.run_id,
                 seq,
@@ -341,7 +394,8 @@ class AgentRunner:
                     "headline": answer.headline,
                     "claims_count": len(answer.claims),
                     "new_state_revision": new_rev,
-                    "envelope": answer.model_dump(mode="json"),
+                    "envelope": envelope_data,
+                    "answer": envelope_data,
                 },
             )
             seq += 1

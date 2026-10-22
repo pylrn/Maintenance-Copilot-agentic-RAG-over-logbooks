@@ -73,6 +73,9 @@ export function adaptSearchResult(raw) {
 export function adaptAnswerEnvelope(env) {
   if (!env) return null;
   const claims = env.claims || [];
+  const findings = claims.filter(c => c.claim_type === 'historical_problem' || c.claim_type === 'finding' || c.claim_type === 'problem');
+  const actions = claims.filter(c => c.claim_type === 'historical_action' || c.claim_type === 'action');
+  const differences = claims.filter(c => c.claim_type === 'comparison' || c.claim_type === 'difference' || c.claim_type === 'source_difference');
   return {
     answer_id: env.answer_id,
     run_id: env.run_id,
@@ -80,9 +83,11 @@ export function adaptAnswerEnvelope(env) {
     status: env.status || 'supported_historical',
     headline: env.headline || '',
     claims,
-    findings: claims.filter(c => c.claim_type === 'historical_problem' || c.claim_type === 'finding'),
-    actions: claims.filter(c => c.claim_type === 'historical_action' || c.claim_type === 'action'),
-    differences: claims.filter(c => c.claim_type === 'comparison' || c.claim_type === 'difference'),
+    findings,
+    actions,
+    historical_actions: actions,
+    differences,
+    contrasting_cases: differences,
     limitations: env.limitations || [],
     missing: env.missing || [],
     clarification: env.clarification || null,

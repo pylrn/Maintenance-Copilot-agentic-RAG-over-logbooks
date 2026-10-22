@@ -288,8 +288,22 @@ function renderBoard(board) {
     if (!board?.[key]?.length) section.append(node('p', 'empty', 'Nothing recorded yet.')); el.append(section);
   }
 }
+function normalizeRecord(r) {
+  if (!r) return {};
+  const snap = r.record_snapshot || r.snapshot || {};
+  return {
+    ...r,
+    domain: r.domain || snap.domain || (r.record_id ? r.record_id.split(':')[0] : 'aviation'),
+    source_id: r.source_id || snap.source_id || (r.record_id ? r.record_id.split(':')[1] : r.record_id),
+    problem_raw: r.problem_raw || snap.problem_raw || snap.description_raw || r.fields?.PROBLEM || r.fields?.DESCRIPTION || r.problem || '',
+    action_raw: r.action_raw || snap.action_raw || r.fields?.ACTION || r.action || '',
+    corpus_id: r.corpus_id || snap.corpus_id || null,
+    original_fields: r.original_fields || snap.original_fields || r.fields || {},
+  };
+}
 function showEvidence(records) {
-  state.records = records; $('evidenceWorkspace').hidden = false; $('workspace').classList.add('has-evidence'); renderRecords(records);
+  const norm = (records || []).map(normalizeRecord);
+  state.records = norm; $('evidenceWorkspace').hidden = false; $('workspace').classList.add('has-evidence'); renderRecords(norm);
 }
 async function receive(event) {
   const keepFollowing = nearBottom(); const data = event.data || {};
@@ -313,7 +327,7 @@ async function receive(event) {
       break;
     case 'validation_started': status(demo ? 'demo · fixture release step…' : 'checking claims against retrieved evidence…'); break;
     case 'answer_validated':
-      renderAnswer(data.answer, state.turn.element);
+      renderAnswer(data.answer || data.envelope, state.turn.element);
       break;
     case 'run_failed':
       state.turn.terminal = true;

@@ -59,11 +59,25 @@ async def run_smoke(model_arg: str):
         if tool_calls:
             print("Testing tool response roundtrip...")
             roundtrip_messages = list(messages)
+            assistant_tcs = []
+            for tc in tool_calls:
+                entry = {
+                    "id": tc["id"],
+                    "type": "function",
+                    "function": {
+                        "name": tc["function"]["name"],
+                        "arguments": tc["function"]["arguments"],
+                    },
+                }
+                if "extra_content" in tc and tc["extra_content"]:
+                    entry["extra_content"] = tc["extra_content"]
+                assistant_tcs.append(entry)
+
             roundtrip_messages.append(
                 {
                     "role": "assistant",
                     "content": resp.get("content") or "",
-                    "tool_calls": tool_calls,
+                    "tool_calls": assistant_tcs,
                 }
             )
             for tc in tool_calls:

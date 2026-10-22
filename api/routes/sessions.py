@@ -165,6 +165,7 @@ async def post_message(
             fetched_evidence={},
             computed_receipts={},
             tool_events=[],
+            model_id=model_id,
         )
         task = asyncio.create_task(runner.execute_run(deps, payload.text, domain=session_snap.domain))
         if not hasattr(request.app.state, "active_tasks"):
