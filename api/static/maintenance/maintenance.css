@@ -144,7 +144,7 @@
   fill: #dc2626 !important;
   stroke: #991b1b !important;
   stroke-width: 2.5 !important;
-  filter: drop-shadow(0 0 10px rgba(220, 38, 38, 0.65)) !important;
+  filter: drop-shadow(0 0 10px rgba(220, 38, 38, 0.65));
 }
 .plane-seg.highlight-warn {
   fill: #ea580c !important;

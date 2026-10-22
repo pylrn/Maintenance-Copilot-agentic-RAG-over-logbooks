@@ -33,18 +33,34 @@
     <header class="topbar"><div class="topbar-inner"><div class="breadcrumb">Workspace <span>/</span> <strong id="viewName">Overview</strong></div><div class="top-actions"><span class="preview-label">DEMO PREVIEW</span><button class="primary-btn" id="newSessionBtn">＋ New investigation</button></div></div></header>
     <main>
       <section class="hero">
-        <div class="hero-kicker"><span></span> A LITTLE CLARITY. A BETTER NEXT STEP.</div>
-        <h1>What’s happening<br>with your <em>aircraft?</em></h1>
-        <p class="hero-copy">Start with what you noticed. We’ll bring the related records, affected components, and missing details into one clear view.</p>
-        <div class="issue-composer" id="issueComposer"><div class="composer-label"><span class="step-marker">1</span> Describe the issue <span class="plain-language">No technical wording needed</span></div>
-        <form class="ai-search" id="heroForm"><label class="sr-only" for="heroInput">Describe the reported fault</label><textarea class="ai-input" id="heroInput" placeholder="e.g. There’s oil leaking from the left engine…" required maxlength="8000" rows="2"></textarea><div class="composer-footer"><span>✧ Plain language is a great place to start</span><button class="send-round" aria-label="Investigate fault">Investigate issue <span>↗</span></button></div></form></div>
-        <div class="workflow-steps"><span><b>1</b> Describe the issue</span><i>→</i><span><b>2</b> Review related cases</span><i>→</i><span><b>3</b> Explore the details</span></div>
-        <section class="demo-scenarios" aria-labelledby="scenarioTitle"><div class="section-heading"><div><span class="eyebrow">NOT SURE WHERE TO START?</span><h2 id="scenarioTitle">Take a sample issue for a spin</h2></div><span class="sample-caption">Invented cases · click to try</span></div><div class="scenario-grid">
-          <button class="scenario-card" data-scenario="Engine 1 oil leak"><span class="scenario-symbol coral">◉</span><span class="scenario-tag">FLUID LEAK</span><strong>Oil beneath the engine</strong><span>“I noticed oil leaking from the left engine.”</span><small>Explore this issue <b>↗</b></small></button>
-          <button class="scenario-card" data-scenario="Left wing fuel leak"><span class="scenario-symbol amber">◈</span><span class="scenario-tag">WING & STRUCTURE</span><strong>A leak near the wing</strong><span>“There’s a fuel leak near the left wing.”</span><small>Explore this issue <b>↗</b></small></button>
-          <button class="scenario-card" data-scenario="Cockpit display blank screen"><span class="scenario-symbol violet">▣</span><span class="scenario-tag">AVIONICS</span><strong>A screen that goes blank</strong><span>“The cockpit display cuts out on startup.”</span><small>Explore this issue <b>↗</b></small></button>
-        </div></section>
-        <!-- Top-down 2D Plane Silhouette Workspace / Locator -->
+        <div class="hero-kicker"><span></span> MAINTENANCE WORKSPACE</div>
+        <h1>Investigate an <em>issue.</em></h1>
+        <p class="hero-copy">Describe what you noticed. Review the records, then select a highlighted aircraft component to look inside.</p>
+      <section class="chat-wrap" id="chatSection"><div class="chat-panel"><form class="chat-input-row unified-composer" id="chatForm"><label for="chatInput" class="composer-label">Describe the issue</label><textarea class="chat-input" id="chatInput" placeholder="e.g. Oil is leaking from the left engine…" rows="2" maxlength="8000" required></textarea><div class="composer-footer"><span>Use this box for the issue and any follow-up.</span><button class="primary-btn" id="chatSubmit" type="submit">Investigate <span>↗</span></button></div></form>
+        <div class="chat-top"><span class="ready-indicator" id="readyDot"></span><span class="copilot-status" id="chatStatus" role="status">connecting to copilot…</span><span class="toolbar-spacer"></span><div class="chat-toolbar">
+          <label class="sr-only" for="agentModelSelect">Model for the next run</label><select class="toolbar-select" id="agentModelSelect" disabled></select>
+          <button class="mini-btn" id="stopBtn" hidden>stop · esc</button><button class="mini-btn" id="resumeBtn" hidden>resume stream</button>
+        </div></div>
+        <div class="live-spec-card" id="liveSpecCard" hidden></div>
+        <div class="investigation-layout" id="workspace">
+          <div class="conversation" id="thread" data-empty="Your results will appear here." tabindex="0" aria-label="Investigation conversation"></div>
+          <aside class="evidence-workspace" id="evidenceWorkspace" aria-label="Evidence and investigation state" hidden>
+            <div class="workspace-tabs" role="group" aria-label="Investigation panels">
+              <button class="chip active" data-tab="evidence">Evidence</button>
+              <button class="chip" data-tab="board">Known / reported / missing</button>
+              <button class="chip" data-tab="airframe">Airframe Visual</button>
+            </div>
+            <div id="evidencePanel"></div>
+            <div id="boardPanel" hidden></div>
+            <div id="airframePanel" hidden>
+              <div class="panel-airframe-note" id="panelAirframeNote">Inspecting detected component on airframe</div>
+              <div class="panel-airframe-svg-wrap" id="panelAirframeSvgWrap"></div>
+            </div>
+          </aside>
+        </div>
+
+      </div></section>
+        <!-- Aircraft explorer -->
         <!-- Top-down 2D Plane Silhouette Workspace / Locator -->
         <div class="plane-diagnostic-wrap" id="planeDiagnosticWrap">
           <div class="plane-diagnostic-card">
@@ -58,76 +74,14 @@
 
             <!-- View 1: Main Full Aircraft Silhouette (Top-Down Structural Breakdown) -->
             <div class="plane-svg-container" id="planeSvgContainer">
-              <svg id="planeSvg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 700 520" width="100%" height="100%" preserveAspectRatio="xMidYMid meet">
-                <!-- Guidance Centerline & Stations -->
-                <line x1="350" y1="20" x2="350" y2="500" class="plane-line" />
-                <line x1="80" y1="240" x2="620" y2="240" class="plane-line" />
-
-                <!-- 1. Radome / Nose Cone -->
-                <path id="seg-nose" data-name="Radome / Nose Radar Fairing" class="plane-seg" d="M 335,60 Q 350,22 365,60 L 365,80 L 335,80 Z" />
-
-                <!-- 2. Forward Avionics Bay -->
-                <path id="seg-avionics" data-name="Forward Avionics &amp; Instruments Bay" class="plane-seg" d="M 335,80 L 365,80 L 367,115 L 333,115 Z" />
-
-                <!-- 3. Cockpit & Windshield -->
-                <path id="seg-cockpit" data-name="Flight Deck &amp; Windshield Section" class="plane-seg" d="M 333,115 L 367,115 L 369,145 L 331,145 Z" />
-
-                <!-- 4. Forward Fuselage / Cabin Section A -->
-                <path id="seg-fuselage-fwd" data-name="Forward Fuselage Section" class="plane-seg" d="M 331,145 L 369,145 L 370,210 L 330,210 Z" />
-
-                <!-- 5. Center Wing Box & Keel Beam -->
-                <rect id="seg-center-box" data-name="Center Wing Box &amp; Keel Beam" class="plane-seg" x="330" y="210" width="40" height="70" rx="3" />
-
-                <!-- 6. Aft Fuselage Section -->
-                <path id="seg-fuselage-aft" data-name="Aft Fuselage Section" class="plane-seg" d="M 330,280 L 370,280 L 362,395 L 338,395 Z" />
-
-                <!-- 7. Tail Cone & APU Compartment -->
-                <path id="seg-apu" data-name="APU Fire Containment &amp; Tail Cone" class="plane-seg" d="M 338,395 L 362,395 L 355,475 L 345,475 Z" />
-
-                <!-- LEFT WING SECTIONS -->
-                <!-- 8. Left Leading Edge / Slats -->
-                <path id="seg-wing-l-slats" data-name="Left Wing Leading Edge &amp; Slats" class="plane-seg" d="M 330,205 L 110,270 L 115,285 L 330,225 Z" />
-                <!-- 9. Left Main Wing Box & Fuel Tank -->
-                <path id="seg-wing-l-tank" data-name="Left Wing Main Box &amp; Fuel Tank" class="plane-seg" d="M 330,225 L 115,285 L 125,320 L 330,265 Z" />
-                <!-- 10. Left Trailing Edge Flaps & Ailerons -->
-                <path id="seg-wing-l-flaps" data-name="Left Wing Inboard Flaps &amp; Aileron" class="plane-seg" d="M 330,265 L 125,320 L 70,335 L 75,348 L 330,285 Z" />
-
-                <!-- RIGHT WING SECTIONS -->
-                <!-- 11. Right Leading Edge / Slats -->
-                <path id="seg-wing-r-slats" data-name="Right Wing Leading Edge &amp; Slats" class="plane-seg" d="M 370,205 L 590,270 L 585,285 L 370,225 Z" />
-                <!-- 12. Right Main Wing Box & Fuel Tank -->
-                <path id="seg-wing-r-tank" data-name="Right Wing Main Box &amp; Fuel Tank" class="plane-seg" d="M 370,225 L 585,285 L 575,320 L 370,265 Z" />
-                <!-- 13. Right Trailing Edge Flaps & Ailerons -->
-                <path id="seg-wing-r-flaps" data-name="Right Wing Inboard Flaps &amp; Aileron" class="plane-seg" d="M 370,265 L 575,320 L 630,335 L 625,348 L 370,285 Z" />
-
-                <!-- PYLONS & ENGINES -->
-                <!-- 14. Left Pylon -->
-                <rect id="seg-pylon-l" data-name="Engine #1 Pylon &amp; Mount Strut" class="plane-seg" x="238" y="195" width="8" height="45" rx="3" />
-                <!-- 15. Left Engine (Powerplant #1) -->
-                <rect id="seg-engine-l" data-name="Engine #1 (Left Powerplant)" class="plane-seg" x="227" y="165" width="30" height="85" rx="10" />
-
-                <!-- 16. Right Pylon -->
-                <rect id="seg-pylon-r" data-name="Engine #2 Pylon &amp; Mount Strut" class="plane-seg" x="454" y="195" width="8" height="45" rx="3" />
-                <!-- 17. Right Engine (Powerplant #2) -->
-                <rect id="seg-engine-r" data-name="Engine #2 (Right Powerplant)" class="plane-seg" x="443" y="165" width="30" height="85" rx="10" />
-
-                <!-- EMPENNAGE / TAIL -->
-                <!-- 18. Left Horizontal Stabilizer & Elevator -->
-                <path id="seg-tail-l" data-name="Left Horizontal Stabilizer &amp; Elevator" class="plane-seg" d="M 338,405 L 210,460 L 215,488 L 342,448 Z" />
-                <!-- 19. Right Horizontal Stabilizer & Elevator -->
-                <path id="seg-tail-r" data-name="Right Horizontal Stabilizer &amp; Elevator" class="plane-seg" d="M 362,405 L 490,460 L 485,488 L 358,448 Z" />
-                <!-- 20. Vertical Stabilizer & Rudder -->
-                <path id="seg-rudder" data-name="Vertical Stabilizer &amp; Rudder Surface" class="plane-seg" d="M 346,380 L 354,380 L 353,485 L 347,485 Z" />
-
-                <!-- Informative Station Labels -->
-                <text x="350" y="48" class="plane-label">STA 0 · NOSE</text>
-                <text x="350" y="135" class="plane-label">FLIGHT DECK</text>
-                <text x="242" y="270" class="plane-label">ENG 1 (L)</text>
-                <text x="458" y="270" class="plane-label">ENG 2 (R)</text>
-                <text x="180" y="305" class="plane-label">L WING ROOT</text>
-                <text x="520" y="305" class="plane-label">R WING ROOT</text>
-                <text x="350" y="495" class="plane-label">EMPENNAGE / APU</text>
-              </svg>
+<svg id="planeSvg" xmlns="http://www.w3.org/2000/svg" viewBox="55 20 890 630" role="group" aria-label="Interactive aircraft regions"><defs>
+ <linearGradient id="aircraftMetal" x1="0" x2="1"><stop stop-color="#c3d9d4"/><stop offset=".32" stop-color="#f8fffc"/><stop offset=".67" stop-color="#e4f2ed"/><stop offset="1" stop-color="#9fbbb4"/></linearGradient>
+ <linearGradient id="wingMetal" x1="0" y1="0" x2=".3" y2="1"><stop stop-color="#e3f2ed"/><stop offset="1" stop-color="#a6c4b9"/></linearGradient>
+ <linearGradient id="engineMetal"><stop stop-color="#91b0aa"/><stop offset=".4" stop-color="#f4fcf8"/><stop offset="1" stop-color="#adc9c0"/></linearGradient>
+ <filter id="aircraftShadow" x="-20%" y="-20%" width="140%" height="140%"><feDropShadow dx="0" dy="10" stdDeviation="10" flood-color="#2e6253" flood-opacity=".14"/></filter>
+ </defs><ellipse cx="500" cy="350" rx="335" ry="250" fill="#dcebe380"/>
+ <g filter="url(#aircraftShadow)"><g><path id="seg-wing-l-slats" data-name="Left wing leading edge" class="plane-seg wing-slat" d="M476 230 138 355 102 407 146 389 475 274Z"/><path id="seg-wing-l-tank" data-name="Left wing wing box &amp; fuel tank" class="plane-seg wing-box" d="M475 274 146 389 160 420 474 325Z"/><path id="seg-wing-l-flaps" data-name="Left wing inboard flaps" class="plane-seg wing-control" d="M474 325 292 380 285 408 477 359Z"/><path id="seg-wing-l-aileron" data-name="Left wing outboard aileron" class="plane-seg wing-control" d="M292 380 160 420 147 441 285 408Z"/><path id="seg-wing-l-spoiler" data-name="Left wing spoiler panels" class="plane-seg wing-spoiler" d="M202 365 292 334 296 349 205 381Z"/><path id="seg-wing-l-tip" data-name="Left wing winglet" class="plane-seg wing-tip" d="M138 355 104 344 80 421 102 407Z"/><path id="seg-pylon-l" data-name="Left engine pylon" class="plane-seg pylon" d="M333 284 359 283 360 338 333 342Z"/><path id="seg-engine-l" data-name="Engine 1 · Left powerplant" class="plane-seg engine-body" d="M317 257 Q340 242 363 257 L368 326 Q366 353 340 365 Q314 353 312 326Z"/><g class="aircraft-decoration"><ellipse cx="340" cy="261" rx="21" ry="10" fill="#355c58"/><ellipse cx="340" cy="261" rx="14" ry="6" fill="#9ec6b8"/><path d="M320 332Q340 344 360 332" fill="none" stroke="#789d91" stroke-width="2"/></g><path id="seg-tail-l" data-name="Left horizontal stabilizer" class="plane-seg tail-body" d="M485 490 342 548 332 576 489 542Z"/><path id="seg-elevator-l" data-name="Left elevator" class="plane-seg wing-control" d="M489 542 332 576 337 589 490 558Z"/><path id="seg-gear-l" data-name="Left main landing gear" class="plane-seg gear-panel" d="M462 352 476 352 476 391 455 391 455 365Z"/></g><g transform="translate(1000 0) scale(-1 1)"><path id="seg-wing-r-slats" data-name="Right wing leading edge" class="plane-seg wing-slat" d="M476 230 138 355 102 407 146 389 475 274Z"/><path id="seg-wing-r-tank" data-name="Right wing wing box &amp; fuel tank" class="plane-seg wing-box" d="M475 274 146 389 160 420 474 325Z"/><path id="seg-wing-r-flaps" data-name="Right wing inboard flaps" class="plane-seg wing-control" d="M474 325 292 380 285 408 477 359Z"/><path id="seg-wing-r-aileron" data-name="Right wing outboard aileron" class="plane-seg wing-control" d="M292 380 160 420 147 441 285 408Z"/><path id="seg-wing-r-spoiler" data-name="Right wing spoiler panels" class="plane-seg wing-spoiler" d="M202 365 292 334 296 349 205 381Z"/><path id="seg-wing-r-tip" data-name="Right wing winglet" class="plane-seg wing-tip" d="M138 355 104 344 80 421 102 407Z"/><path id="seg-pylon-r" data-name="Right engine pylon" class="plane-seg pylon" d="M333 284 359 283 360 338 333 342Z"/><path id="seg-engine-r" data-name="Engine 2 · Right powerplant" class="plane-seg engine-body" d="M317 257 Q340 242 363 257 L368 326 Q366 353 340 365 Q314 353 312 326Z"/><g class="aircraft-decoration"><ellipse cx="340" cy="261" rx="21" ry="10" fill="#355c58"/><ellipse cx="340" cy="261" rx="14" ry="6" fill="#9ec6b8"/><path d="M320 332Q340 344 360 332" fill="none" stroke="#789d91" stroke-width="2"/></g><path id="seg-tail-r" data-name="Right horizontal stabilizer" class="plane-seg tail-body" d="M485 490 342 548 332 576 489 542Z"/><path id="seg-elevator-r" data-name="Right elevator" class="plane-seg wing-control" d="M489 542 332 576 337 589 490 558Z"/><path id="seg-gear-r" data-name="Right main landing gear" class="plane-seg gear-panel" d="M462 352 476 352 476 391 455 391 455 365Z"/></g><path id="seg-nose" data-name="Nose &amp; radome" class="plane-seg fuselage-body" d="M478 100 Q481 61 500 40 Q519 61 522 100Z"/><path id="seg-avionics" data-name="Forward avionics bay" class="plane-seg fuselage-body" d="M478 100 522 100 526 141 474 141Z"/><path id="seg-cockpit" data-name="Flight deck" class="plane-seg fuselage-body" d="M474 141 526 141 527 177 473 177Z"/><path id="seg-fuselage-fwd" data-name="Forward cabin" class="plane-seg fuselage-body" d="M473 177 527 177 530 275 470 275Z"/><path id="seg-center-box" data-name="Center wing box" class="plane-seg fuselage-body" d="M470 275 530 275 529 362 471 362Z"/><path id="seg-fuselage-aft" data-name="Aft cabin" class="plane-seg fuselage-body" d="M471 362 529 362 521 483 479 483Z"/><path id="seg-apu" data-name="Tail cone &amp; APU" class="plane-seg fuselage-body" d="M479 483 521 483 Q518 561 500 606 Q482 561 479 483Z"/><path id="seg-rudder" data-name="Vertical fin &amp; rudder" class="plane-seg rudder-body" d="M496 469 504 469 507 584 500 612 493 584Z"/><path id="seg-gear-nose" data-name="Nose landing gear" class="plane-seg gear-panel" d="M493 187 507 187 507 214 493 214Z"/><path id="seg-door-fwd" data-name="Forward cabin doors" class="plane-seg door-panel" d="M474 183 484 183 484 202 474 202Z M516 183 526 183 526 202 516 202Z"/><path id="seg-door-aft" data-name="Aft cabin doors" class="plane-seg door-panel" d="M480 456 489 456 489 475 480 475Z M511 456 520 456 520 475 511 475Z"/><g class="aircraft-decoration"><path d="M482 149Q500 135 518 149L515 159Q500 153 485 159Z" fill="#386660"/><path d="M500 145V156" stroke="#d3e6df" stroke-width="2"/><rect x="477" y="218" width="3" height="4" rx="1.4" fill="#739c91"/><rect x="477" y="227" width="3" height="4" rx="1.4" fill="#739c91"/><rect x="477" y="236" width="3" height="4" rx="1.4" fill="#739c91"/><rect x="477" y="245" width="3" height="4" rx="1.4" fill="#739c91"/><rect x="477" y="254" width="3" height="4" rx="1.4" fill="#739c91"/><rect x="477" y="263" width="3" height="4" rx="1.4" fill="#739c91"/><rect x="477" y="374" width="3" height="4" rx="1.4" fill="#739c91"/><rect x="477" y="383" width="3" height="4" rx="1.4" fill="#739c91"/><rect x="477" y="392" width="3" height="4" rx="1.4" fill="#739c91"/><rect x="477" y="401" width="3" height="4" rx="1.4" fill="#739c91"/><rect x="477" y="410" width="3" height="4" rx="1.4" fill="#739c91"/><rect x="477" y="419" width="3" height="4" rx="1.4" fill="#739c91"/><rect x="477" y="428" width="3" height="4" rx="1.4" fill="#739c91"/><rect x="477" y="437" width="3" height="4" rx="1.4" fill="#739c91"/><rect x="477" y="446" width="3" height="4" rx="1.4" fill="#739c91"/><rect x="520" y="218" width="3" height="4" rx="1.4" fill="#739c91"/><rect x="520" y="227" width="3" height="4" rx="1.4" fill="#739c91"/><rect x="520" y="236" width="3" height="4" rx="1.4" fill="#739c91"/><rect x="520" y="245" width="3" height="4" rx="1.4" fill="#739c91"/><rect x="520" y="254" width="3" height="4" rx="1.4" fill="#739c91"/><rect x="520" y="263" width="3" height="4" rx="1.4" fill="#739c91"/><rect x="520" y="374" width="3" height="4" rx="1.4" fill="#739c91"/><rect x="520" y="383" width="3" height="4" rx="1.4" fill="#739c91"/><rect x="520" y="392" width="3" height="4" rx="1.4" fill="#739c91"/><rect x="520" y="401" width="3" height="4" rx="1.4" fill="#739c91"/><rect x="520" y="410" width="3" height="4" rx="1.4" fill="#739c91"/><rect x="520" y="419" width="3" height="4" rx="1.4" fill="#739c91"/><rect x="520" y="428" width="3" height="4" rx="1.4" fill="#739c91"/><rect x="520" y="437" width="3" height="4" rx="1.4" fill="#739c91"/><rect x="520" y="446" width="3" height="4" rx="1.4" fill="#739c91"/><path d="M500 70V127M500 223V269M500 381V453" stroke="#ffffff" stroke-opacity=".7" stroke-width="2"/></g></g>
+<g class="aircraft-labels"><text x="205" y="315">LEFT WING</text><text x="795" y="315">RIGHT WING</text><text x="270" y="265">ENGINE 1</text><text x="730" y="265">ENGINE 2</text><text x="500" y="636">ILLUSTRATIVE AIRFRAME · SELECT A REGION</text></g></svg>
             </div>
 
             <!-- View 2: Drill-down Structural Detail View (Wing / Engine / Avionics Inspection) -->
@@ -145,7 +99,7 @@
           </div>
         </div>
         <div class="explorer-caption"><span><i class="legend-dot neutral"></i> Explore a component</span><span><i class="legend-dot coral"></i> Mentioned in your issue</span><span>Illustrative model · not a live diagnosis</span></div>
-        <div class="coverage-strip"><span class="coverage-icon">▤</span><div><strong>Every useful answer starts with a source.</strong><p id="coverage">Loading demo source details…</p></div><span class="preview-label">SAMPLE DATA</span></div>
+        <span id="coverage" hidden></span>
         <div class="toggle-row">
           <button class="toggle-pill" data-drawer="queryDrawer" aria-expanded="false">Direct log search <span class="chev">▼</span></button>
           <button class="toggle-pill" data-drawer="reportDrawer" aria-expanded="false">Paste fault report <span class="chev">▼</span></button>
@@ -161,30 +115,6 @@
         </div><p class="helper">Changing a filter applies to the next run. Unknown aircraft applicability remains unknown.</p></section>
       </section>
       <div id="notice" role="status" hidden></div>
-      <section class="chat-wrap" id="chatSection"><div class="section-heading"><div><span class="eyebrow">YOUR INVESTIGATION</span><h2>Let’s make sense of it</h2></div><span class="sample-caption">Demo answers · sample records</span></div><div class="chat-panel">
-        <div class="chat-top"><span class="ready-indicator" id="readyDot"></span><span class="copilot-status" id="chatStatus" role="status">connecting to copilot…</span><span class="toolbar-spacer"></span><div class="chat-toolbar">
-          <label class="sr-only" for="agentModelSelect">Model for the next run</label><select class="toolbar-select" id="agentModelSelect" disabled></select>
-          <button class="mini-btn" id="stopBtn" hidden>stop · esc</button><button class="mini-btn" id="resumeBtn" hidden>resume stream</button>
-        </div></div>
-        <div class="live-spec-card" id="liveSpecCard" hidden></div>
-        <div class="investigation-layout" id="workspace">
-          <div class="conversation" id="thread" data-empty="Your investigation starts here. Describe an issue above, or try one of the sample cases." tabindex="0" aria-label="Investigation conversation"></div>
-          <aside class="evidence-workspace" id="evidenceWorkspace" aria-label="Evidence and investigation state" hidden>
-            <div class="workspace-tabs" role="group" aria-label="Investigation panels">
-              <button class="chip active" data-tab="evidence">Evidence</button>
-              <button class="chip" data-tab="board">Known / reported / missing</button>
-              <button class="chip" data-tab="airframe">Airframe Visual</button>
-            </div>
-            <div id="evidencePanel"></div>
-            <div id="boardPanel" hidden></div>
-            <div id="airframePanel" hidden>
-              <div class="panel-airframe-note" id="panelAirframeNote">Inspecting detected component on airframe</div>
-              <div class="panel-airframe-svg-wrap" id="panelAirframeSvgWrap"></div>
-            </div>
-          </aside>
-        </div>
-        <form class="chat-input-row" id="chatForm"><label class="sr-only" for="chatInput">Ask a follow-up</label><input class="chat-input" id="chatInput" placeholder="Refine the complaint, compare cases, or ask what is missing…" autocomplete="off" maxlength="8000" required><button class="send-round" id="chatSubmit" aria-label="Send follow-up" type="submit">→</button></form>
-      </div></section>
       <section class="results-section"><div class="starter" id="starterBlock"><div class="starter-title">Try asking</div><div class="starter-row" id="starters"></div></div><div id="directResults"></div></section>
     </main>
     <footer class="footer"><div class="footer-inner"><span class="footer-brand">MAINTENANCE ATLAS</span><span>Made for clearer investigations. Not a maintenance release.</span><span class="footer-mono" id="environmentLabel"></span></div></footer>
