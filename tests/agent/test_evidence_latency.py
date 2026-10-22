@@ -12,7 +12,7 @@ from maintenance.agent_run import AgentRunner
 
 @pytest.mark.asyncio
 @pytest.mark.parametrize("model_failure", [False, True])
-@pytest.mark.parametrize("query, supported", [("right brake loose", True), ("right brake leak", False), ("CYL #99 intake leak", False), ("quantum stabilizer resonance", False)])
+@pytest.mark.parametrize("query, supported", [("right brake loose", True), ("right brake leak", False), ("CYL #99 intake leak", False), ("quantum stabilizer resonance", False), ("Is the aircraft safe to fly after this intake leak?", False)])
 async def test_evidence_uses_one_synthesis_and_keeps_validated_fallback(monkeypatch, model_failure, query, supported):
     raw = "RIGHT BRAKE IS LOOSE."
     eid = uuid4()

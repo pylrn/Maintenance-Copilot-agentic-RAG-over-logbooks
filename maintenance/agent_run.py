@@ -43,6 +43,11 @@ UNSUPPORTED_KEYWORDS = [
     "installation sequence",
     "clearance limit",
     "manufacturer specification",
+    "safe to fly",
+    "airworthy",
+    "approved procedure",
+    "guaranteed fix",
+    "permanently fixed",
 ]
 
 
