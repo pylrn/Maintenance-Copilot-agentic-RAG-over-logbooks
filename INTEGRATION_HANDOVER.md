@@ -130,6 +130,8 @@ SSE envelope is `protocol_version='maintenance/v1'`, run UUID, positive monotoni
 
 ## 8. How to integrate evidence into the aircraft red box
 
+For the researched source hierarchy and proposed hypothesis context packet, read [hypothesis-context-research.md](docs/p2/hypothesis-context-research.md). This is a proposal, not implemented functionality; it documents FAA/OEM/incident sources, access/applicability limits, separate technical-reference retrieval and validation requirements.
+
 Currently there is no live log-to-internal-part binding. `airframe-mapping.mjs` maps user text to exterior IDs. `wing-profiles.mjs`, `airframe-profiles.mjs` and `issueScenario()` provide static educational context. They must not become authoritative evidence merely because a matching record is returned.
 
 Agree a reviewed catalog and mapping revision with P1. Preserve existing exterior IDs (`seg-wing-l-flaps`, etc.) or provide an explicit migration; local profile arrays use numeric callout indices, which are not durable backend component identifiers yet.
