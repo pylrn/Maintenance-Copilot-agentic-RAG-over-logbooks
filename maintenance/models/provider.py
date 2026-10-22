@@ -63,6 +63,9 @@ class LLMProvider:
             if model_name
             else PROVIDER_MODELS[self.provider_type][0]
         )
+        if self.provider_type == "gemini":
+            if self.model_name in ("gemini-3.8-flash", "gemini-3.7-flash", "gemini-3.5-flash"):
+                self.model_name = "gemini-3.5-flash-lite"
 
         # Validate exact HTTPS endpoint and model allowlist per provider
         parsed = urlparse(self.base_url)

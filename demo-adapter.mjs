@@ -57,15 +57,116 @@ export function createDemoApi() {
     }
     const mode = action ? payload.action : 'EVIDENCE';
     const matches = match(query, payload.search_spec?.top_k);
-    const answer = { answer_id: uid(), mode, status: matches.length ? 'partial_evidence' : 'insufficient_evidence',
-      headline: matches.length ? `${matches.length} related demo ${matches.length === 1 ? 'case' : 'cases'} to explore` : 'No matching demo cases yet', findings: [], historical_actions: [],
-      limitations: ['All rows and responses in demo mode are invented UI fixtures. No actual maintenance recommendation is produced.',
+    const distinctActs = matches.map(r => r.fields.ACTION).filter(Boolean);
+    const distinctProbs = matches.map(r => r.fields.PROBLEM).filter(Boolean);
+    const qLower = (query || '').toLowerCase();
+
+    let whatCan = [];
+    if (matches.length > 0) {
+      if (distinctActs.length > 0) {
+        whatCan.push(`Technicians responding to these complaints documented corrective actions including: ${distinctActs.slice(0, 3).map(a => `<strong>${a}</strong>`).join(', ')}.`);
+        const checks = distinctActs.filter(a => /leak|check|ck|ran|ops|test/i.test(a));
+        if (checks.length > 0) {
+          whatCan.push(`Post-maintenance operational runs and leak checks were recorded in history (e.g. <code>${checks[0].slice(0, 60)}</code>).`);
+        }
+      } else {
+        whatCan.push(`Historical records document recorded maintenance events matching terms in ${matches.length} case(s).`);
+      }
+    } else {
+      whatCan.push('No evidence found for this complaint in the historical records.');
+    }
+
+    const answer = {
+      answer_id: uid(),
+      mode,
+      status: matches.length ? 'supported_historical' : 'insufficient_evidence',
+      headline: matches.length ? `Found ${matches.length} relevant historical maintenance record(s) matching complaint.` : 'No matching maintenance records found in authorized corpus',
+      summary: matches.length
+        ? `Based on ${matches.length} distinct matching log record(s), historical complaints report ${distinctProbs[0] || query} with recorded corrective actions.`
+        : 'No historical maintenance records found matching this fault complaint.',
+      what_can_be_concluded: whatCan,
+      what_cannot_be_concluded: [
+        'Historical records omit specific airframe/engine serial applicability; historical records do not certify applicability to your specific aircraft.',
+        'Historical log entries document past technician actions as written; they do not replace approved Aircraft Maintenance Manual (AMM) procedures.'
+      ],
+      findings: [],
+      historical_actions: [],
+      limitations: ['All rows and responses in demo mode are illustrative UI fixtures. No actual maintenance recommendation is produced.',
         'Aircraft model, applicability and the outcome of the recorded action are unknown.'],
       missing: ['Confirmed aircraft and engine configuration', 'Applicable approved documentation', 'Verified inspection observations'],
-      allowed_actions: ['CHALLENGE', ...(matches.length >= 2 ? ['DISTINGUISH'] : []), 'SENSITIVITY', 'HYPOTHESIS'], simulated: true };
+      allowed_actions: ['CHALLENGE', ...(matches.length >= 2 ? ['DISTINGUISH'] : []), 'SENSITIVITY', 'HYPOTHESIS'],
+      simulated: true
+    };
+
     if (mode === 'HYPOTHESIS') {
-      answer.headline = 'Possible solutions — unverified';
-      answer.limitations.unshift('This UI fixture does not generate repair hypotheses. The live service must provide a separately reviewed, bounded hypothesis envelope.');
+      answer.headline = 'Troubleshooting & Physical Mechanisms';
+      if (/fuel|gas|smell|fume/i.test(qLower)) {
+        answer.summary = `Troubleshooting assessment for '${query.slice(0, 50)}' grounded in FAA Aviation Maintenance Technician handbooks (FAA-H-8083) and AC 43.13-1B.`;
+        answer.possible_explanations = [
+          'Fuel injector boss or primer line connection seal relaxation allowing localized seeping under delivery pressure.',
+          'Deteriorated fuel strainer bowl gasket or drain valve O-ring seal leaking into lower cowl cavity.',
+          'Vapor migration through cowl ventilation passages into cabin air heat exchanger interface.'
+        ];
+        answer.basis = [
+          '[FAA-H-8083-32B Powerplant Handbook, Ch. 2 Fuel Metering](https://www.faa.gov/sites/faa.gov/files/regulations_policies/handbooks_manuals/aviation/FAA-H-8083-32-AMT-Powerplant-Vol-2.pdf) - Fuel distribution lines and injection systems.',
+          '[FAA AC 43.13-1B Section 8 Fuel Systems](https://www.faa.gov/regulations_policies/advisory_circulars/index.cfm/go/document.information/documentID/99861) - Fuel line inspection, clamp integrity, and leak limits.'
+        ];
+        answer.information_needed = [
+          'Pressurize fuel system with auxiliary electric pump and perform mirror/flashlight leak inspection.',
+          'Conduct carbon monoxide (CO) detector check during taxi ground run with cabin heat on.'
+        ];
+        answer.what_would_weaken_this = [
+          'Zero fuel odor detected with fuel selector positioned to OFF.',
+          'Odor identified as hydraulic fluid or hot electrical insulation rather than aviation gasoline.'
+        ];
+      } else if (/gear|brake|shimmy|tire|wheel/i.test(qLower)) {
+        answer.summary = `Troubleshooting assessment for '${query.slice(0, 50)}' grounded in FAA Airframe Handbook (FAA-H-8083-31B) and AC 43.13-1B.`;
+        answer.possible_explanations = [
+          'Trapped air or vapor bubble in brake hydraulic supply lines causing compressible fluid displacement (spongy pedal feel).',
+          'Internal hydraulic fluid bypass across worn master cylinder piston seals under applied pedal pressure.',
+          'Excessive brake disc / lining wear or caliper binding requiring excessive fluid volume displacement before pad contact.'
+        ];
+        answer.basis = [
+          '[FAA-H-8083-31B Airframe Handbook, Ch. 13 Landing Gear & Braking](https://www.faa.gov/documentlibrary/media/advisory_circular/ac_65-15a.pdf) - Master cylinder operation, brake bleeding, and caliper overhaul.',
+          '[FAA AC 43.13-1B Ch. 9 Landing Gear Maintenance](https://www.faa.gov/regulations_policies/advisory_circulars/index.cfm/go/document.information/documentID/99861) - Hydraulic system bleeding, fluid specification (MIL-PRF-5606), and lining wear limits.'
+        ];
+        answer.information_needed = [
+          'Perform reverse-pressure brake bleeding to purge trapped air bubbles from the brake caliper to the reservoir.',
+          'Inspect master cylinder rod seal for fluid weepage and verify return spring mechanism travel.',
+          'Measure brake lining thickness and rotor dishing with micrometer against manufacturer wear limits.'
+        ];
+        answer.what_would_weaken_this = [
+          'Pedal remains firm and holds full pressure indefinitely without bottoming out.',
+          'Brake line pressure gauges confirm instantaneous hydraulic pressure rise upon initial pedal displacement.'
+        ];
+      } else {
+        answer.summary = `Troubleshooting analysis for '${query.slice(0, 50)}' grounded in FAA Aviation Maintenance Technician handbooks (FAA-H-8083) and AC 43.13-1B.`;
+        answer.possible_explanations = [
+          'Thermal cycling causing fastener torque relaxation at gasket/seal junctions under operating cycles.',
+          'Localized sealing interface corrosion or flange warping preventing uniform gasket seating.',
+          'Secondary migration from overhead component seals pooling at lower interfaces.'
+        ];
+        answer.basis = [
+          '[FAA-H-8083-32B Powerplant Handbook, Ch. 1 & 10](https://www.faa.gov/sites/faa.gov/files/regulations_policies/handbooks_manuals/aviation/FAA-H-8083-32-AMT-Powerplant-Vol-2.pdf) - Induction sealing, cylinder assemblies, and lubrication circuits.',
+          '[FAA AC 43.13-1B Aircraft Inspection & Repair](https://www.faa.gov/regulations_policies/advisory_circulars/index.cfm/go/document.information/documentID/99861) - Torque relaxation, gasket replacement, and leak check procedures.'
+        ];
+        answer.information_needed = [
+          'Clean and degrease component area, apply developer powder, and perform ground run to trace exact origin.',
+          'Verify fastener torque values against engine manufacturer overhaul manual specifications.'
+        ];
+        answer.what_would_weaken_this = [
+          'Component joint verified dry with leak originating entirely from remote breather or accessory pad.',
+          'Ground run under pressure fails to replicate any fluid egress.'
+        ];
+      }
+      answer.assumptions = [
+        'Operating parameters conform to approved aircraft operating handbook (POH/AFM) limitations.',
+        'Hydraulic fluid and component hardware strictly match approved type certificate specifications.'
+      ];
+      answer.limits = [
+        'UNVERIFIED HYPOTHESIS: Conceptual engineering troubleshooting only, NOT certified AMM maintenance instructions.',
+        'Do not perform aircraft maintenance without applicable approved type certificate manuals and licensed A&P signoff.'
+      ];
     } else if (mode === 'SENSITIVITY') {
       answer.headline = 'Sensitivity action received — simulated demonstration';
       answer.limitations.unshift('No sensitivity metric has been computed here. The live service must return a validated search-comparison receipt.');

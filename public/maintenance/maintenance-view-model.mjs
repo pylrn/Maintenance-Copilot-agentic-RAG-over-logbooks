@@ -77,6 +77,7 @@ export function adaptAnswerEnvelope(env) {
   const actions = claims.filter(c => c.claim_type === 'historical_action' || c.claim_type === 'action');
   const differences = claims.filter(c => c.claim_type === 'comparison' || c.claim_type === 'difference' || c.claim_type === 'source_difference');
   return {
+    ...env,
     answer_id: env.answer_id,
     run_id: env.run_id,
     mode: env.mode || 'EVIDENCE',
@@ -88,11 +89,17 @@ export function adaptAnswerEnvelope(env) {
     historical_actions: actions,
     differences,
     contrasting_cases: differences,
+    summary: env.summary,
+    what_can_be_concluded: env.what_can_be_concluded || [],
+    what_cannot_be_concluded: env.what_cannot_be_concluded || [],
+    possible_explanations: env.possible_explanations || env.hypotheses || [],
     hypotheses: env.possible_explanations || env.hypotheses || [],
     basis: env.basis || [],
     assumptions: env.assumptions || [],
+    information_needed: env.information_needed || [],
     what_would_weaken_this: env.what_would_weaken_this || [],
     limitations: env.limitations || env.limits || [],
+    limits: env.limits || env.limitations || [],
     missing: env.missing || env.information_needed || [],
     clarification: env.clarification || null,
     visual_refs: env.visual_refs || [],
