@@ -17,7 +17,14 @@ PROVIDER_ENDPOINTS = {
 
 PROVIDER_MODELS = {
     "deepseek": ["deepseek-flash"],
-    "gemini": ["gemini-3.5-flash", "gemini-3.7-flash", "gemini-3.8-flash", "gemini-2.5-flash"],
+    "gemini": [
+        "gemini-3.5-flash-lite",
+        "gemini-3.1-flash-lite",
+        "gemini-3.5-flash",
+        "gemini-3.7-flash",
+        "gemini-3.8-flash",
+        "gemini-2.5-flash",
+    ],
 }
 
 
@@ -111,36 +118,50 @@ class LLMProvider:
 
         try:
             response = await self.client.chat.completions.create(**kwargs)
-            choice = response.choices[0]
-            message = choice.message
-
-            tool_calls = []
-            if message.tool_calls:
-                for tc in message.tool_calls:
-                    tc_dict = {
-                        "id": tc.id,
-                        "type": "function",
-                        "function": {
-                            "name": tc.function.name,
-                            "arguments": tc.function.arguments,
-                        },
-                    }
-                    if hasattr(tc, "extra_content") and tc.extra_content:
-                        tc_dict["extra_content"] = tc.extra_content
-                    tool_calls.append(tc_dict)
-
-            return {
-                "role": "assistant",
-                "content": message.content or "",
-                "tool_calls": tool_calls,
-                "usage": {
-                    "prompt_tokens": response.usage.prompt_tokens if response.usage else 0,
-                    "completion_tokens": response.usage.completion_tokens if response.usage else 0,
-                },
-            }
         except Exception as exc:
-            logger.error("LLM provider completion error (%s): %s", self.provider_type, type(exc).__name__)
-            raise
+            # If rate-limited on gemini model, attempt gemini-3.5-flash-lite fallback
+            if (
+                self.provider_type == "gemini"
+                and kwargs.get("model") != "gemini-3.5-flash-lite"
+                and ("429" in str(exc) or "RateLimit" in type(exc).__name__ or "RESOURCE_EXHAUSTED" in str(exc))
+            ):
+                logger.warning(
+                    "Gemini model %s rate-limited; attempting fallback to gemini-3.5-flash-lite",
+                    kwargs.get("model"),
+                )
+                kwargs["model"] = "gemini-3.5-flash-lite"
+                response = await self.client.chat.completions.create(**kwargs)
+            else:
+                logger.error("LLM provider completion error (%s): %s", self.provider_type, type(exc).__name__)
+                raise
+
+        choice = response.choices[0]
+        message = choice.message
+
+        tool_calls = []
+        if message.tool_calls:
+            for tc in message.tool_calls:
+                tc_dict = {
+                    "id": tc.id,
+                    "type": "function",
+                    "function": {
+                        "name": tc.function.name,
+                        "arguments": tc.function.arguments,
+                    },
+                }
+                if hasattr(tc, "extra_content") and tc.extra_content:
+                    tc_dict["extra_content"] = tc.extra_content
+                tool_calls.append(tc_dict)
+
+        return {
+            "role": "assistant",
+            "content": message.content or "",
+            "tool_calls": tool_calls,
+            "usage": {
+                "prompt_tokens": response.usage.prompt_tokens if response.usage else 0,
+                "completion_tokens": response.usage.completion_tokens if response.usage else 0,
+            },
+        }
 
     async def roundtrip_tool_loop(
         self,
