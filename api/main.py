@@ -14,7 +14,7 @@ from fastapi.responses import FileResponse, JSONResponse
 from fastapi.staticfiles import StaticFiles
 from starlette.exceptions import HTTPException
 
-from api.routes import records, search
+from api.routes import lab, records, search
 from maintenance.auth import IdentitySigner
 from maintenance.config import Settings
 from maintenance.db import Database
@@ -78,6 +78,7 @@ def create_app(settings=None, search_engine=None):
                             Reranker, settings.rerank_revision, settings.model_cache_dir
                         )
                     app.state.search_engine = RetrievalEngine(corpora, matrices, encoder, reranker)
+                    await asyncio.to_thread(encoder.encode_queries, ["warmup"])
             except Exception as exc:
                 # Never include exception text; a driver error may contain connection details.
                 app.state.startup_errors.append(type(exc).__name__)
@@ -117,6 +118,7 @@ def create_app(settings=None, search_engine=None):
     app.state.identity_signer = IdentitySigner(secret, settings.owner_cookie_max_age)
     app.include_router(search.router, prefix=PREFIX)
     app.include_router(records.router, prefix=PREFIX)
+    app.include_router(lab.router, prefix=PREFIX + "/lab")
     if workflows:
         app.include_router(workflows.router, prefix=PREFIX)
 
@@ -229,6 +231,20 @@ def create_app(settings=None, search_engine=None):
         if not path.exists() or not app.state.workflows_ready:
             raise HTTPException(503, "person_two_ui_pending")
         return FileResponse(path)
+
+    @app.get("/retrieval-lab")
+    async def retrieval_lab():
+        path = ROOT / "api/static/retrieval_lab.html"
+        if not path.exists():
+            raise HTTPException(404, "retrieval_lab_not_found")
+        return FileResponse(
+            path,
+            headers={
+                "Cache-Control": "no-cache, no-store, must-revalidate",
+                "Pragma": "no-cache",
+                "Expires": "0",
+            },
+        )
 
     static = ROOT / "api/static"
     if static.is_dir():

@@ -37,3 +37,26 @@ def test_maintenance_page_and_assets_served():
     assert svg_resp.status_code == 200
     assert "engine-concept-svg" in svg_resp.text
     assert "data-component-id" in svg_resp.text
+
+
+def test_retrieval_lab_page_and_assets_served():
+    settings = Settings(app_env="test")
+    app = create_app(settings=settings)
+    client = TestClient(app)
+
+    # Check /retrieval-lab serves HTML
+    resp = client.get("/retrieval-lab")
+    assert resp.status_code == 200
+    assert "Retrieval Lab" in resp.text
+    assert "retrieval_lab.js" in resp.text
+
+    # Check static CSS
+    css_resp = client.get("/static/retrieval_lab.css")
+    assert css_resp.status_code == 200
+    assert "--accent-blue" in css_resp.text
+
+    # Check static JS
+    js_resp = client.get("/static/retrieval_lab.js")
+    assert js_resp.status_code == 200
+    assert "compute_deterministic_pca2" not in js_resp.text  # Frontend renders, backend computes PCA
+    assert "executeSearch" in js_resp.text

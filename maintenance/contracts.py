@@ -144,6 +144,24 @@ class SearchHit(Contract):
     duplicate_ids: list[str]
     duplicate_count: int
     reranker_score: float | None = None
+    record_snapshot: RecordSnapshot | None = None
+
+
+class StageTrace(Contract):
+    stage: str
+    duration_ms: float
+    count_in: int | None = None
+    count_out: int | None = None
+    details: dict[str, Any] = Field(default_factory=dict)
+
+
+class SearchTrace(Contract):
+    stages: list[StageTrace] = Field(default_factory=list)
+    stage_timings_ms: dict[str, float] = Field(default_factory=dict)
+    stage_counts: dict[str, int] = Field(default_factory=dict)
+    original_query: str = ""
+    normalized_query: str = ""
+    query_mentions: list[Mention] = Field(default_factory=list)
 
 
 class SearchResult(Contract):
@@ -157,6 +175,7 @@ class SearchResult(Contract):
     degraded_branches: list[str] = Field(default_factory=list)
     limitations: list[str] = Field(default_factory=list)
     fixture_only: bool = False
+    trace: SearchTrace | None = None
 
 
 class EvidenceSpan(Contract):
