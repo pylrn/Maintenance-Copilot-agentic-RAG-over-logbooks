@@ -32,8 +32,10 @@
 
   <!-- Cooling Baffles & Shrouds -->
   <g id="node-cooling-baffles" class="hotspot" data-component-id="baffle_assembly">
-    <path d="M 160 120 L 640 120 L 650 380 L 150 380 Z" fill="#edf2f7" stroke="#cbd5e0" stroke-width="2" stroke-dasharray="6 3"/>
-    <text x="170" y="140" class="comp-label">Cooling Baffles &amp; Air Shrouds</text>
+    <g id="node-baffle" data-component-id="baffle_cooling">
+      <path d="M 160 120 L 640 120 L 650 380 L 150 380 Z" fill="#edf2f7" stroke="#cbd5e0" stroke-width="2" stroke-dasharray="6 3"/>
+      <text x="170" y="140" class="comp-label">Cooling Baffles &amp; Air Shrouds</text>
+    </g>
   </g>
 
   <!-- Central Crankcase -->
@@ -57,13 +59,15 @@
   <g id="node-cylinder-bank" class="hotspot" data-component-id="cylinder_assembly">
     <!-- Cyl #2 (Top Left) -->
     <g id="cyl-2">
-      <rect x="200" y="160" width="140" height="55" rx="4" fill="url(#metal-grad)" stroke="#081726" stroke-width="1.5"/>
-      <!-- Fins -->
-      <line x1="215" y1="160" x2="215" y2="215" stroke="#718096" stroke-width="1"/>
-      <line x1="235" y1="160" x2="235" y2="215" stroke="#718096" stroke-width="1"/>
-      <line x1="255" y1="160" x2="255" y2="215" stroke="#718096" stroke-width="1"/>
-      <line x1="275" y1="160" x2="275" y2="215" stroke="#718096" stroke-width="1"/>
-      <text x="210" y="195" font-family="sans-serif" font-size="12" font-weight="bold" fill="#f7fafc">CYLINDER #2</text>
+      <g id="node-cylinder" data-component-id="cylinder_assembly">
+        <rect x="200" y="160" width="140" height="55" rx="4" fill="url(#metal-grad)" stroke="#081726" stroke-width="1.5"/>
+        <!-- Fins -->
+        <line x1="215" y1="160" x2="215" y2="215" stroke="#718096" stroke-width="1"/>
+        <line x1="235" y1="160" x2="235" y2="215" stroke="#718096" stroke-width="1"/>
+        <line x1="255" y1="160" x2="255" y2="215" stroke="#718096" stroke-width="1"/>
+        <line x1="275" y1="160" x2="275" y2="215" stroke="#718096" stroke-width="1"/>
+        <text x="210" y="195" font-family="sans-serif" font-size="12" font-weight="bold" fill="#f7fafc">CYLINDER #2</text>
+      </g>
     </g>
 
     <!-- Cyl #4 (Mid Left) -->
@@ -95,25 +99,29 @@
 
   <!-- Rocker Covers (Valve Covers on Cylinder Heads) -->
   <g id="node-rocker-cover" class="hotspot" data-component-id="rocker_cover">
-    <!-- Cyl 2 Rocker Cover -->
-    <rect x="160" y="163" width="38" height="48" rx="6" fill="#c53030" stroke="#742a2a" stroke-width="2"/>
-    <!-- Cyl 4 Rocker Cover -->
-    <rect x="160" y="238" width="38" height="48" rx="6" fill="#c53030" stroke="#742a2a" stroke-width="2"/>
-    <!-- Cyl 1 Rocker Cover -->
-    <rect x="602" y="163" width="38" height="48" rx="6" fill="#c53030" stroke="#742a2a" stroke-width="2"/>
-    <!-- Cyl 3 Rocker Cover -->
-    <rect x="602" y="238" width="38" height="48" rx="6" fill="#c53030" stroke="#742a2a" stroke-width="2"/>
-    <text x="100" y="150" class="comp-label" fill="#c53030">Rocker Covers &amp; Gaskets</text>
+    <g id="node-rocker" data-component-id="rocker_cover">
+      <!-- Cyl 2 Rocker Cover -->
+      <rect x="160" y="163" width="38" height="48" rx="6" fill="#c53030" stroke="#742a2a" stroke-width="2"/>
+      <!-- Cyl 4 Rocker Cover -->
+      <rect x="160" y="238" width="38" height="48" rx="6" fill="#c53030" stroke="#742a2a" stroke-width="2"/>
+      <!-- Cyl 1 Rocker Cover -->
+      <rect x="602" y="163" width="38" height="48" rx="6" fill="#c53030" stroke="#742a2a" stroke-width="2"/>
+      <!-- Cyl 3 Rocker Cover -->
+      <rect x="602" y="238" width="38" height="48" rx="6" fill="#c53030" stroke="#742a2a" stroke-width="2"/>
+      <text x="100" y="150" class="comp-label" fill="#c53030">Rocker Covers &amp; Gaskets</text>
+    </g>
   </g>
 
   <!-- Intake Pipes & Induction System -->
   <g id="node-intake-manifold" class="hotspot" data-component-id="intake_system">
-    <!-- Runner lines from plenum -->
-    <path d="M 400 370 Q 300 350 290 215" fill="none" stroke="#3182ce" stroke-width="6" stroke-linecap="round"/>
-    <path d="M 400 370 Q 300 360 290 290" fill="none" stroke="#3182ce" stroke-width="6" stroke-linecap="round"/>
-    <path d="M 400 370 Q 500 350 510 215" fill="none" stroke="#3182ce" stroke-width="6" stroke-linecap="round"/>
-    <path d="M 400 370 Q 500 360 510 290" fill="none" stroke="#3182ce" stroke-width="6" stroke-linecap="round"/>
-    <text x="320" y="465" class="comp-label" fill="#2b6cb0">Induction Plenum &amp; Manifold</text>
+    <g id="node-intake" data-component-id="intake_manifold">
+      <!-- Runner lines from plenum -->
+      <path d="M 400 370 Q 300 350 290 215" fill="none" stroke="#3182ce" stroke-width="6" stroke-linecap="round"/>
+      <path d="M 400 370 Q 300 360 290 290" fill="none" stroke="#3182ce" stroke-width="6" stroke-linecap="round"/>
+      <path d="M 400 370 Q 500 350 510 215" fill="none" stroke="#3182ce" stroke-width="6" stroke-linecap="round"/>
+      <path d="M 400 370 Q 500 360 510 290" fill="none" stroke="#3182ce" stroke-width="6" stroke-linecap="round"/>
+      <text x="320" y="465" class="comp-label" fill="#2b6cb0">Induction Plenum &amp; Manifold</text>
+    </g>
   </g>
 
   <!-- Intake Pipe Individual Highlight -->
@@ -137,9 +145,11 @@
 
   <!-- Exhaust System -->
   <g id="node-exhaust-manifold" class="hotspot" data-component-id="exhaust_system">
-    <path d="M 230 215 L 230 350 Q 230 370 200 390 L 180 430" fill="none" stroke="#e53e3e" stroke-width="5" stroke-linecap="round"/>
-    <path d="M 570 215 L 570 350 Q 570 370 600 390 L 620 430" fill="none" stroke="#e53e3e" stroke-width="5" stroke-linecap="round"/>
-    <text x="130" y="450" class="comp-label" fill="#e53e3e">Exhaust Riser / Manifold</text>
+    <g id="node-exhaust" data-component-id="exhaust_manifold">
+      <path d="M 230 215 L 230 350 Q 230 370 200 390 L 180 430" fill="none" stroke="#e53e3e" stroke-width="5" stroke-linecap="round"/>
+      <path d="M 570 215 L 570 350 Q 570 370 600 390 L 620 430" fill="none" stroke="#e53e3e" stroke-width="5" stroke-linecap="round"/>
+      <text x="130" y="450" class="comp-label" fill="#e53e3e">Exhaust Riser / Manifold</text>
+    </g>
   </g>
 
   <!-- Fuel Injector / Primer Lines -->

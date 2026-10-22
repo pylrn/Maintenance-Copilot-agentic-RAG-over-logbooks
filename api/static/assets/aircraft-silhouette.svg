@@ -1,0 +1,108 @@
+<svg id="planeSvg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 500" width="100%" height="100%" preserveAspectRatio="xMidYMid meet">
+  <defs>
+    <filter id="glow-orange" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="3" result="blur" />
+      <feComposite in="SourceGraphic" in2="blur" operator="over" />
+    </filter>
+  </defs>
+
+  <style>
+    .plane-seg {
+      fill: #14283b;
+      stroke: #2e4a68;
+      stroke-width: 1.5;
+      transition: fill 0.3s ease, stroke 0.3s ease, filter 0.3s ease;
+      cursor: pointer;
+    }
+    .plane-seg:hover {
+      fill: #1d3b58;
+      stroke: #6187af;
+    }
+    .plane-seg.highlight-alert {
+      fill: #c25f38 !important;
+      stroke: #ff9d76 !important;
+      stroke-width: 2.5 !important;
+      filter: drop-shadow(0 0 6px rgba(194, 95, 56, 0.75));
+    }
+    .plane-seg.highlight-warn {
+      fill: #b45309 !important;
+      stroke: #f59e0b !important;
+      stroke-width: 2.5 !important;
+      filter: drop-shadow(0 0 6px rgba(180, 83, 9, 0.75));
+    }
+    .plane-line {
+      stroke: #243f5a;
+      stroke-width: 1;
+      stroke-dasharray: 3,3;
+      fill: none;
+    }
+    .plane-label {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 10px;
+      fill: #6c8296;
+      text-anchor: middle;
+      user-select: none;
+      pointer-events: none;
+    }
+  </style>
+
+  <!-- Outline Guide Lines -->
+  <line x1="300" y1="20" x2="300" y2="480" class="plane-line" />
+
+  <!-- 1. Radome / Nose Cone -->
+  <path id="seg-nose" data-name="Radome / Nose" class="plane-seg" d="M 285,55 Q 300,20 315,55 L 315,75 L 285,75 Z" />
+  
+  <!-- 2. Cockpit / Forward Fuselage -->
+  <path id="seg-cockpit" data-name="Cockpit & Forward Avionics" class="plane-seg" d="M 285,75 L 315,75 L 318,125 L 282,125 Z" />
+
+  <!-- 3. Mid Fuselage / Center Cabin -->
+  <path id="seg-fuselage-mid" data-name="Center Fuselage & Keel" class="plane-seg" d="M 282,125 L 318,125 L 320,270 L 280,270 Z" />
+
+  <!-- 4. Aft Fuselage -->
+  <path id="seg-fuselage-aft" data-name="Aft Fuselage Section" class="plane-seg" d="M 280,270 L 320,270 L 312,390 L 288,390 Z" />
+
+  <!-- 5. Left Wing - Inboard / Slat -->
+  <path id="seg-wing-l-inboard" data-name="Left Inboard Wing & Root" class="plane-seg" d="M 282,150 L 190,210 L 190,265 L 280,225 Z" />
+
+  <!-- 6. Left Wing - Outboard / Aileron -->
+  <path id="seg-wing-l-outboard" data-name="Left Outboard Wing & Tip" class="plane-seg" d="M 190,210 L 50,290 L 60,315 L 190,265 Z" />
+
+  <!-- 7. Right Wing - Inboard / Slat -->
+  <path id="seg-wing-r-inboard" data-name="Right Inboard Wing & Root" class="plane-seg" d="M 318,150 L 410,210 L 410,265 L 320,225 Z" />
+
+  <!-- 8. Right Wing - Outboard / Aileron -->
+  <path id="seg-wing-r-outboard" data-name="Right Outboard Wing & Tip" class="plane-seg" d="M 410,210 L 550,290 L 540,315 L 410,265 Z" />
+
+  <!-- 9. Left Engine / Pylon -->
+  <g id="seg-engine-l" data-name="Engine #1 (Left Powerplant)" class="plane-seg">
+    <rect x="200" y="155" width="28" height="75" rx="10" />
+    <ellipse cx="214" cy="158" rx="11" ry="5" fill="#0f2540" stroke="currentColor" stroke-width="1" />
+  </g>
+
+  <!-- 10. Right Engine / Pylon -->
+  <g id="seg-engine-r" data-name="Engine #2 (Right Powerplant)" class="plane-seg">
+    <rect x="372" y="155" width="28" height="75" rx="10" />
+    <ellipse cx="386" cy="158" rx="11" ry="5" fill="#0f2540" stroke="currentColor" stroke-width="1" />
+  </g>
+
+  <!-- 11. Left Horizontal Stabilizer / Elevator -->
+  <path id="seg-tail-l" data-name="Left Horizontal Stabilizer" class="plane-seg" d="M 288,380 L 180,430 L 185,455 L 292,425 Z" />
+
+  <!-- 12. Right Horizontal Stabilizer / Elevator -->
+  <path id="seg-tail-r" data-name="Right Horizontal Stabilizer" class="plane-seg" d="M 312,380 L 420,430 L 415,455 L 308,425 Z" />
+
+  <!-- 13. Vertical Fin & Rudder -->
+  <path id="seg-rudder" data-name="Vertical Stabilizer & Rudder" class="plane-seg" d="M 296,365 L 304,365 L 303,455 L 297,455 Z" />
+
+  <!-- 14. APU / Tail Cone -->
+  <path id="seg-apu" data-name="APU Compartment & Tail Cone" class="plane-seg" d="M 292,435 L 308,435 L 303,468 L 297,468 Z" />
+
+  <!-- Subtle Segment Labels -->
+  <text x="300" y="45" class="plane-label">NOSE</text>
+  <text x="300" y="105" class="plane-label">COCKPIT</text>
+  <text x="214" y="248" class="plane-label">ENG 1</text>
+  <text x="386" y="248" class="plane-label">ENG 2</text>
+  <text x="120" y="275" class="plane-label">L WING</text>
+  <text x="480" y="275" class="plane-label">R WING</text>
+  <text x="300" y="482" class="plane-label">APU / TAIL</text>
+</svg>
