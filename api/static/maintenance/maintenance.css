@@ -144,7 +144,7 @@
   fill: #dc2626 !important;
   stroke: #991b1b !important;
   stroke-width: 2.5 !important;
-  filter: drop-shadow(0 0 10px rgba(220, 38, 38, 0.65)) !important;
+  filter: drop-shadow(0 0 10px rgba(220, 38, 38, 0.65));
 }
 .plane-seg.highlight-warn {
   fill: #ea580c !important;
@@ -499,3 +499,44 @@ dialog {
 @media(prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation: none !important; transition: none !important; scroll-behavior: auto !important; }
 }
+
+/* Component atlas: schematic and source boundaries */
+.drilldown-container[hidden], .ce-progression[hidden] { display:none; }
+.drilldown-canvas { height:auto; display:block; padding:24px; overflow:visible; background:#f8fafb; }
+.drilldown-canvas svg { height:auto; max-height:none; display:block; }
+.ce-intro h3,.ce-progression h3 { font-size:25px; margin:8px 0; color:#18354b; }
+.ce-intro p,.ce-progression p,.ce-part-detail p { line-height:1.65; color:#526474; font-size:14px; }
+.ce-eyebrow { font-family:var(--mono); font-size:10px; letter-spacing:.12em; color:#687d8d; }
+.ce-layout { display:grid; grid-template-columns:minmax(0,2.2fr) minmax(230px,1fr); gap:22px; margin-top:22px; }
+.ce-drawing { border:1px solid #dae3e9; border-radius:16px; background:#f1f5f8; align-self:start; overflow:hidden; }
+.ce-shell { fill:#e7eef3; fill-opacity:.75; stroke:#657f93; stroke-width:2; }
+.ce-metal { fill:#d2dfe8; stroke:#7892a5; stroke-width:2; }
+.ce-flow { fill:none; stroke:#c28a3b; stroke-width:6; stroke-linejoin:round; stroke-dasharray:9 5; }
+.ce-reservoir { fill:#f4e4c9; stroke:#b58239; stroke-width:2; }
+.ce-bearing { fill:#f6f9fb; stroke:#486c86; stroke-width:5; }
+.ce-hotspot { cursor:pointer; outline:none; }
+.ce-hotspot circle { fill:#fff; stroke:#345e7b; stroke-width:2; }
+.ce-hotspot text { fill:#244b66; font:bold 14px sans-serif; pointer-events:none; }
+.ce-hotspot.selected circle,.ce-hotspot:focus circle { fill:#193f5b; stroke:#55afc9; stroke-width:4; }
+.ce-hotspot.selected text,.ce-hotspot:focus text { fill:white; }
+.ce-svg-note { fill:#718695; font:9px monospace; letter-spacing:1.2px; }
+.ce-part { display:grid; width:100%; grid-template-columns:28px 1fr; gap:3px 10px; text-align:left; border:1px solid transparent; background:transparent; border-radius:10px; padding:11px; cursor:pointer; color:#29495f; font:600 13px var(--font,sans-serif); }
+.ce-part small { grid-column:2; color:#798995; font-size:11px; font-weight:400; }
+.ce-part[aria-pressed=true] { background:#e5eff5; border-color:#b8d0df; }
+.ce-number { grid-row:span 2; border:1px solid #b8ccd9; border-radius:50%; height:26px; display:grid; place-items:center; }
+.ce-part-detail { padding:16px 10px 0; border-top:1px solid #dce5eb; margin-top:12px; }
+.ce-part-detail h4,.ce-stage-detail h4 { margin:7px 0; color:#193e58; font-size:17px; }
+.ce-context { font-size:12px; color:#667d8b; border-top:1px solid #dce5eb; padding-top:16px; line-height:1.6; overflow-wrap:anywhere; }
+.ce-progression-toggle { background:#163b55; color:white; border:0; padding:13px 18px; border-radius:9px; cursor:pointer; font-weight:600; margin-top:8px; }
+.ce-progression { margin-top:20px; padding:24px; border:1px solid #e1c99f; border-radius:14px; background:#fffdf7; }
+.ce-branches { display:flex; gap:8px; flex-wrap:wrap; margin:10px 0 24px; }
+.ce-branches span { border:1px solid #e6d6ba; padding:9px 12px; border-radius:8px; color:#80613b; font-size:12px; }
+.ce-stages { display:grid; grid-template-columns:repeat(4,1fr); gap:8px; }
+.ce-stages button { padding:13px; border:1px solid #dcd8cc; border-radius:8px; text-align:left; background:white; color:#6d6454; cursor:pointer; line-height:1.5; }
+.ce-stages button[aria-pressed=true] { background:#f2e3c9; border-color:#b58a43; color:#62451d; }
+.ce-stage-detail { border-left:3px solid #b58a43; padding:8px 18px; margin:20px 0; }
+.ce-missing { padding:12px; background:#f3f0e8; border-radius:8px; }
+.ce-source { font-size:12px; color:#526f85; }
+.plane-seg:focus { stroke:#0284c7; stroke-width:3; outline:none; }
+@media(max-width:760px) { .ce-layout { grid-template-columns:1fr; } .ce-stages { grid-template-columns:1fr 1fr; } .drilldown-canvas { padding:14px; } .drilldown-toolbar { gap:12px; flex-wrap:wrap; } .drilldown-details { align-items:flex-start; flex-direction:column; } .ce-progression { padding:16px; } }
+@media(prefers-reduced-motion:reduce) { .plane-seg,.drilldown-container { animation:none!important; transition:none!important; } }
