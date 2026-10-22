@@ -18,3 +18,6 @@ __pycache__/
 generate_presentation.py
 .vercel
 .env*
+
+# Local HTTPS tunnel process/logs
+/.runtime/

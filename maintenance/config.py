@@ -11,6 +11,7 @@ class Settings(BaseSettings):
     model_config = SettingsConfigDict(env_file=".env", extra="ignore")
     app_env: Literal["development", "test", "production"] = "development"
     app_origin: str = "http://localhost:8000"
+    additional_app_origins: list[str] = Field(default_factory=list)
     port: int = 8000
     database_url: SecretStr | None = None
     database_schema: str = "public"

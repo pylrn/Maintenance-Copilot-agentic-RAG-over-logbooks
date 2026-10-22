@@ -64,3 +64,17 @@ def test_exported_fixtures_validate_against_canonical_models():
     SessionSnapshot.model_validate(json.loads((fixtures / "session.json").read_text())["session"])
     for e in json.loads((fixtures / "events.json").read_text()):
         PublicEvent.model_validate(e)
+
+
+def test_vercel_origin_is_explicit_and_other_origins_remain_rejected():
+    from types import SimpleNamespace
+    from fastapi import HTTPException
+    from maintenance.auth import check_origin
+    settings=SimpleNamespace(app_origin='http://localhost:8000',additional_app_origins=['https://maintenance-copilot-dun.vercel.app'])
+    def request(origin):
+        return SimpleNamespace(method='POST',headers={'origin':origin,'content-type':'application/json'},app=SimpleNamespace(state=SimpleNamespace(settings=settings)))
+    check_origin(request('http://localhost:8000'))
+    check_origin(request('https://maintenance-copilot-dun.vercel.app'))
+    with pytest.raises(HTTPException) as rejected:
+        check_origin(request('https://attacker.example'))
+    assert rejected.value.status_code==403

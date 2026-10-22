@@ -1,10 +1,11 @@
 // Complete proposed UI controller. Original source: ../reference/hybrid-search/.
 import { createApi, uid } from './api-client.mjs';
+import { deploymentMode } from './deployment-config.mjs';
 import { detectAirframeSegments } from './airframe-mapping.mjs';
 import { renderComponentExplorer } from './component-explorer.mjs';
 import { adaptCapabilities, adaptSessionSnapshot, adaptSearchResult, adaptAnswerEnvelope } from './maintenance-view-model.mjs';
 const isVercelOrStatic = typeof location !== 'undefined' && (location.hostname.includes('vercel.app') || location.hostname.includes('github.io'));
-const demo = new URLSearchParams(location.search).get('demo') === '1' || (isVercelOrStatic && new URLSearchParams(location.search).get('live') !== '1');
+const demo = new URLSearchParams(location.search).get('demo') === '1' || (deploymentMode !== 'live' && isVercelOrStatic && new URLSearchParams(location.search).get('live') !== '1');
 const api = demo ? (await import('./demo-adapter.mjs')).createDemoApi() : createApi();
 const $ = id => document.getElementById(id);
 const state = { session: null, capabilities: null, busy: false, run: null, cursor: 0, controller: null, records: [], turn: null };

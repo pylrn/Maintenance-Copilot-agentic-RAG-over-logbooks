@@ -29,7 +29,8 @@ def check_origin(request: Request):
     if request.method in {"POST", "PUT", "PATCH", "DELETE"}:
         origin = request.headers.get("origin")
         # Cookie-authenticated browser mutations must provide exact origin.
-        if origin != request.app.state.settings.app_origin:
+        allowed = {request.app.state.settings.app_origin, *request.app.state.settings.additional_app_origins}
+        if origin not in allowed:
             raise HTTPException(403, "origin_not_allowed")
         mime = request.headers.get("content-type", "").split(";")[0]
         if mime not in {"application/json", "multipart/form-data"}:
@@ -49,7 +50,9 @@ async def require_owner(request: Request, response: Response) -> UUID:
             COOKIE_NAME,
             signer.dumps(owner),
             httponly=True,
-            secure=request.app.state.settings.app_env == "production",
+            secure=(request.app.state.settings.app_env == "production"
+                    or request.url.scheme == "https"
+                    or request.headers.get("x-forwarded-proto") == "https"),
             samesite="strict",
             max_age=signer.max_age,
         )

@@ -1,0 +1,5 @@
+# Adds only the verified Vercel browser origins; localhost remains usable.
+services:
+  api:
+    environment:
+      ADDITIONAL_APP_ORIGINS: ${ADDITIONAL_APP_ORIGINS:?Set verified frontend origins in .env.vercel-local}
