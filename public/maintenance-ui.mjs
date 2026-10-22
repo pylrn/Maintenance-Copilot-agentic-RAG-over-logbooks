@@ -683,10 +683,20 @@ function showEvidence(records) {
   const norm = (records || []).map(normalizeRecord);
   state.records = norm; $('evidenceWorkspace').hidden = false; $('workspace').classList.add('has-evidence'); renderRecords(norm);
 }
+function telemetryLink(info, target) {
+  if (!info?.trace_url || !target) return;
+  let url;
+  try { url = new URL(info.trace_url); } catch { return; }
+  if (url.origin !== 'https://jp.cloud.langfuse.com' || !url.pathname.startsWith('/project/')) return;
+  if (target.querySelector('.langfuse-trace-link')) return;
+  const link = node('a', 'mini-btn langfuse-trace-link', 'View Langfuse trace ↗');
+  link.href = url.href; link.target = '_blank'; link.rel = 'noopener noreferrer';
+  target.append(link);
+}
 async function receive(event) {
   const keepFollowing = nearBottom(); const data = event.data || {};
   switch (event.type) {
-    case 'run_started': status(demo ? 'demo · playing simulated activity…' : 'copilot investigating…'); break;
+    case 'run_started': telemetryLink(data.telemetry, state.turn?.element); status(demo ? 'demo · playing simulated activity…' : 'copilot investigating…'); break;
     case 'query_interpreted':
       $('liveSpecCard').hidden = false;
       const qText = data.query_raw || data.query || '';
@@ -1041,6 +1051,17 @@ async function boot() {
   try {
     const rawCap = await api.capabilities();
     state.capabilities = adaptCapabilities(rawCap);
+    if (rawCap.telemetry?.enabled && rawCap.telemetry.dashboard_url) {
+      const actions = document.querySelector('.top-actions');
+      if (actions && !document.getElementById('langfuseDashboardLink')) {
+        const link = node('a', 'mini-btn', 'Telemetry ↗');
+        const url = new URL(rawCap.telemetry.dashboard_url);
+        if (url.origin === 'https://jp.cloud.langfuse.com') {
+          link.id = 'langfuseDashboardLink'; link.href = url.href;
+          link.target = '_blank'; link.rel = 'noopener noreferrer'; actions.prepend(link);
+        }
+      }
+    }
     const capabilities = state.capabilities;
     $('coverage').textContent = capabilities.corpus_summary || 'Source metadata unavailable';
     $('agentModelSelect').replaceChildren();

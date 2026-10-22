@@ -15,6 +15,7 @@ from fastapi.staticfiles import StaticFiles
 from starlette.exceptions import HTTPException
 
 from api.routes import lab, records, search
+from maintenance import telemetry
 from maintenance.auth import IdentitySigner
 from maintenance.config import Settings
 from maintenance.db import Database
@@ -34,6 +35,7 @@ def create_app(settings=None, search_engine=None):
 
     @asynccontextmanager
     async def lifespan(app):
+        telemetry.configure(settings)
         app.state.db = None
         app.state.startup_errors = []
         if settings.database_url:
@@ -100,6 +102,7 @@ def create_app(settings=None, search_engine=None):
         finally:
             if workflows and hasattr(workflows, "shutdown"):
                 await workflows.shutdown(app)
+            await telemetry.shutdown()
             if app.state.db:
                 await app.state.db.close()
 
@@ -121,6 +124,17 @@ def create_app(settings=None, search_engine=None):
     app.include_router(lab.router, prefix=PREFIX + "/lab")
     if workflows:
         app.include_router(workflows.router, prefix=PREFIX)
+
+    @app.middleware("http")
+    async def trace_action(request, call_next):
+        if request.method == "POST" and request.url.path.endswith("/actions"):
+            parts = request.url.path.split("/")
+            session_id = parts[-2] if len(parts) > 2 else ""
+            with telemetry.observation("api.action", session_id=session_id) as span:
+                response = await call_next(request)
+                span.update(metadata={"status": str(response.status_code)})
+                return response
+        return await call_next(request)
 
     @app.exception_handler(HTTPException)
     async def http_error(request, exc):
@@ -201,6 +215,7 @@ def create_app(settings=None, search_engine=None):
             )
 
         return {
+            "telemetry": telemetry.status(),
             "protocol_version": "maintenance/v1",
             "workflows_ready": app.state.workflows_ready,
             "domains": sorted({c.manifest.domain for c in engine.corpora.values()})

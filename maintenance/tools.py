@@ -12,6 +12,7 @@ from maintenance.contracts import (
     ServiceScope,
 )
 from maintenance.features.visuals import VisualService
+from maintenance.telemetry import observed
 
 
 @dataclass
@@ -34,6 +35,7 @@ class RunDeps:
     model_id: str | None = None
 
 
+@observed("tool.search_records", "tool")
 async def tool_search_records(
     deps: RunDeps,
     query: str,
@@ -78,6 +80,7 @@ async def tool_search_records(
     }
 
 
+@observed("tool.get_records", "tool")
 async def tool_get_records(
     deps: RunDeps,
     record_ids: list[str],
@@ -164,6 +167,7 @@ async def tool_get_records(
     return {"records": results}
 
 
+@observed("tool.compare_records", "tool")
 async def tool_compare_records(
     deps: RunDeps,
     record_ids: list[str],
@@ -196,6 +200,7 @@ async def tool_compare_records(
     return {"receipt_id": str(receipt_id), "result": receipt.result}
 
 
+@observed("tool.get_pattern_summary", "tool")
 async def tool_get_pattern_summary(
     deps: RunDeps,
     component: str,
@@ -230,6 +235,7 @@ async def tool_get_pattern_summary(
     return {"receipt_id": str(receipt_id), "result": receipt.result}
 
 
+@observed("tool.get_component_context", "tool")
 async def tool_get_component_context(
     deps: RunDeps,
     component_id: str,
