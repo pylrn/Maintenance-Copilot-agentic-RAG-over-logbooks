@@ -88,6 +88,11 @@ main,.footer { margin-left:236px; }main { padding:0 40px; max-width:1550px; }.he
 .ce-part small { font-size:9px; }.ce-number { height:22px; width:22px; font-size:10px; }
 .ce-part-detail { grid-column:1/-1; margin-top:5px; padding:12px 0 0; }.ce-part-detail h4 { font-size:14px; margin:5px 0; }.ce-part-detail p { font-size:11px; margin:5px 0; line-height:1.65; }
 .ce-issue-note { grid-column:1/-1; margin-top:8px; padding:12px; }.ce-issue-note h4 { font-size:12px; margin:6px 0; }.ce-issue-note p { font-size:11px; line-height:1.65; }.ce-issue-note .ce-eyebrow { font-size:8px; letter-spacing:.6px; }
+.ce-logs-note { grid-column:1/-1; margin-top:8px; padding:12px; background:#f4f8fa; border:1px solid #d0e2e8; border-left:3px solid #4a8ca4; border-radius:9px; }
+.ce-logs-note .ce-eyebrow { color:#457688; font-size:8px; letter-spacing:.6px; }
+.ce-logs-note h4 { font-size:12px; margin:6px 0; color:#305d6e; }
+.ce-logs-note p { font-size:11px; line-height:1.65; color:#42616f; margin:6px 0; }
+.ce-logs-note small { display:block; font-size:9.5px; color:#688694; margin-top:6px; }
 @media(max-width:1100px) { .ce-layout { grid-template-columns:minmax(0,1.3fr) minmax(260px,1fr); }.ce-drawing svg { min-height:230px; } }
 @media(max-width:900px) { .ce-layout { grid-template-columns:1fr; }.ce-drawing svg { min-height:0; }.ce-parts { grid-template-columns:repeat(4,1fr); }.ce-part { grid-template-columns:1fr; }.ce-part small { grid-column:1; }.ce-number { grid-row:auto; }.plane-svg-container { height:490px; } }
 @media(max-width:600px) { .plane-svg-container { height:410px; padding:6px 0; }.ce-parts { grid-template-columns:1fr 1fr; }.ce-part { grid-template-columns:23px 1fr; }.ce-part small { grid-column:2; }.drilldown-canvas { padding:12px; }.ce-layout { gap:12px; }.aircraft-labels text { font-size:9px; } }

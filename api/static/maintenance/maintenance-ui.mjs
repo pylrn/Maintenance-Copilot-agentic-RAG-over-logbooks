@@ -54,7 +54,7 @@ function updateAirframeHighlight(text) {
   const container = $('drilldownContainer');
   if (!container.hidden && container.dataset.component) {
     const mentioned = activeDetectedHits.some(hit => hit.id === container.dataset.component);
-    renderComponentExplorer(container.dataset.component, container.dataset.name, mentioned ? text : '');
+    renderComponentExplorer(container.dataset.component, container.dataset.name, mentioned ? text : '', state.records);
   }
 }
 
@@ -65,7 +65,7 @@ function renderDrillDown(componentType, hitName) {
   $('planeSvgContainer').hidden = true;
   $('drilldownContainer').hidden = false;
   const mentioned = activeDetectedHits.some(hit => hit.id === componentType);
-  renderComponentExplorer(componentType, hitName, mentioned ? currentFaultContext : '');
+  renderComponentExplorer(componentType, hitName, mentioned ? currentFaultContext : '', state.records);
 }
 
 function initAirframeInteractions() {
@@ -231,7 +231,16 @@ function renderAnswer(rawAnswer, container) {
     const upperKind = kind.toUpperCase();
     if (labels[upperKind]) actions.append(button(labels[upperKind], () => performAction(kind, answer)));
   }
-  if (answer.visual_refs?.length) actions.append(button('Explain component', () => showVisuals(answer.visual_refs)));
+  if (answer.visual_refs?.length || activeDetectedHits.length > 0) {
+    actions.append(button('Explain component', () => {
+      if (activeDetectedHits.length > 0) {
+        renderDrillDown(activeDetectedHits[0].id, activeDetectedHits[0].name);
+        $('drilldownContainer').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      } else if (answer.visual_refs?.length) {
+        showVisuals(answer.visual_refs);
+      }
+    }));
+  }
   actions.append(button('Export handover', exportHandover));
   actions.querySelectorAll('button').forEach(value => { value.disabled = state.busy; });
   el.append(actions); container.append(el);

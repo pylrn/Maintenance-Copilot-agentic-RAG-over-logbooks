@@ -50,7 +50,7 @@ function diagram(kind, profile = null) {
  const points = profile?.points || (kind==='engine'?[[260,66],[396,117],[495,174],[370,278]]:kind==='wing'?[[281,93],[390,160],[514,211],[408,253]]:kind==='avionics'?[[210,165],[416,172],[593,86],[595,249]]:[[185,174],[310,126],[510,229],[648,174]]);
  return `<svg viewBox="0 0 800 330" role="img" aria-label="Illustrative ${profile?.name || kind} schematic"><defs><pattern id="ce-grid" width="24" height="24" patternUnits="userSpaceOnUse"><path d="M24 0H0V24" fill="none" stroke="#dce5eb" stroke-width=".6"/></pattern></defs><rect width="800" height="330" fill="url(#ce-grid)"/>${profile?.scene || {engine,wing,avionics,structure}[kind]}${points.map(([x,y],i)=>`<ellipse class="ce-region" data-zone="${i}" cx="${x}" cy="${y}" rx="48" ry="27"/>`).join('')}${points.map(([x,y],i)=>`<g class="ce-hotspot" data-part="${i}" role="button" tabindex="0" aria-label="Explore ${items[i][0]}"><circle cx="${x}" cy="${y}" r="16"/><text x="${x}" y="${y+5}" text-anchor="middle">${i+1}</text></g>`).join('')}<text x="24" y="309" class="ce-svg-note">ILLUSTRATIVE / NOT TO SCALE / CONFIGURATION UNKNOWN</text></svg>`;
 }
-export function renderComponentExplorer(component, name, query) {
+export function renderComponentExplorer(component, name, query, records = []) {
  const kind = /engine/.test(component)?'engine':/wing/.test(component)?'wing':/cockpit|avionics/.test(component)?'avionics':'structure';
  const airframeProfile = getAirframeProfile(component);
  const profile = getWingProfile(component) || airframeProfile;
@@ -87,4 +87,28 @@ export function renderComponentExplorer(component, name, query) {
  if(scenario.source){const link=el('a','ce-source','Educational source · FAA');link.href=scenario.source;link.target='_blank';link.rel='noopener noreferrer';effect.append(link);}
  reveal.onclick=()=>{effect.hidden=!effect.hidden;reveal.setAttribute('aria-expanded',String(!effect.hidden));};note.append(reveal,effect);sidebar.append(note);
  }
+
+ const logNote=el('aside','ce-logs-note');logNote.setAttribute('aria-label','Matching historical records');
+ logNote.append(el('span','ce-eyebrow','WHAT MATCHING LOGS RECORD / HISTORICAL EVIDENCE'));
+ const recList=Array.isArray(records)?records:[];
+ const compWords=(name||component||'').toLowerCase().split(/[\s-_/]+/).filter(w=>w.length>3);
+ const matching=recList.filter(r=>{
+   const text=(r.problem_raw||r.description_raw||r.summary||'').toLowerCase();
+   return compWords.some(w=>text.includes(w));
+ });
+ const displayRecs=matching.length?matching.slice(0,2):recList.slice(0,1);
+ if(displayRecs.length>0){
+   for(const rec of displayRecs){
+     const pText=rec.problem_raw||rec.description_raw||rec.summary||'Record text unavailable';
+     logNote.append(el('h4','',`${rec.domain||'Source'} record [${rec.source_id}]`));
+     logNote.append(el('p','',`Observed fault: “${pText.slice(0,220)}${pText.length>220?'…':''}”`));
+     if(rec.action_raw){
+       logNote.append(el('p','',`Recorded action: “${rec.action_raw.slice(0,220)}${rec.action_raw.length>220?'…':''}”`));
+     }
+   }
+   logNote.append(el('small','','Historical log similarity does not establish aircraft applicability.'));
+ }else{
+   logNote.append(el('p','','No retrieved historical records currently loaded for this component. Run a search or prompt the copilot to view matching cases.'));
+ }
+ sidebar.append(logNote);
 }
